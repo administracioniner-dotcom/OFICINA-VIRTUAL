@@ -3,9 +3,8 @@ import { mamparasVisibles, rejillaBloqueada, zonaEn, type Plano, type TipoZona, 
 import { bus } from '../state/bus';
 import { instalarControles, type ControlCamara } from './camara/controles';
 import { PALETA, TILE } from './paleta';
-import { crearAgentes } from '../domain/agentes';
-import { SimuladorAgentes } from '../source/simulado';
 import type { AgentSource, EventoOficina } from '../source/tipos';
+import type { Almacen } from '../state/almacen';
 import { Actor } from './Actor';
 import { asientosDelPlano, type Asiento } from './asientos';
 import { generarGlobos, generarHoja } from './sprites/hojas';
@@ -18,10 +17,11 @@ import { generarTexturas } from './texturas/registro';
 export class OfficeScene extends Phaser.Scene {
   private camara!: ControlCamara;
   private readonly actores = new Map<string, Actor>();
-  private fuente?: AgentSource;
+  private seleccionGfx?: Phaser.GameObjects.Graphics;
+  private readonly zonasPuesto = new Map<string, { x: number; y: number; w: number; h: number }>();
   private resalte?: Phaser.GameObjects.Graphics;
 
-  constructor(private readonly plano: Plano) {
+  constructor(private readonly plano: Plano, private readonly fuente: AgentSource, private readonly almacen: Almacen) {
     super('oficina');
   }
 
@@ -136,16 +136,13 @@ export class OfficeScene extends Phaser.Scene {
     const porId = new Map<string, Asiento>(asientos.map((a) => [a.id, a]));
     const bloqueada = rejillaBloqueada(p);
     generarGlobos(this);
-    const agentes = crearAgentes(asientos);
-    const sillasReunion = asientos.filter((a) => a.tipo === 'reuniones').map((a) => a.id);
-    // ?velocidad=4 acelera la simulación (para pruebas)
-    const escala = Number(new URLSearchParams(window.location.search).get('velocidad')) || 1;
-    this.fuente = new SimuladorAgentes(agentes, sillasReunion, Math.random, escala);
     const alRecibir = (e: EventoOficina) => {
       if (e.tipo === 'agente.alta') {
         generarHoja(this, e.agente);
-        this.actores.set(e.agente.id, new Actor(this, e.agente, porId, bloqueada));
-        this.actores.get(e.agente.id)!.setEstado(e.agente.estado);
+        const actor = new Actor(this, e.agente, porId, bloqueada);
+        actor.setEstado(e.agente.estado);
+        actor.alPulsar(() => this.almacen.seleccionar({ tipo: 'agente', id: e.agente.id }));
+        this.actores.set(e.agente.id, actor);
       } else if (e.tipo === 'agente.estado') {
         this.actores.get(e.id)?.setEstado(e.estado);
       } else if (e.tipo === 'agente.reunion') {
@@ -155,17 +152,25 @@ export class OfficeScene extends Phaser.Scene {
     };
     // ?depurar expone el estado de los actores para las pruebas automáticas del navegador
     if (new URLSearchParams(window.location.search).has('depurar')) {
+      const cam = this.cameras.main;
       (window as unknown as Record<string, unknown>).__oficina = () => ({
         bloqueada,
+        puestos: [...this.zonasPuesto.entries()].map(([id, r]) => ({ id, ...r })),
+        aPantalla: { zoom: cam.zoom, x: cam.worldView.x, y: cam.worldView.y },
         actores: [...this.actores.values()].map((a) => ({
           id: a.agente.id, sentado: a.estaSentado, x: a.posicion.x, y: a.posicion.y,
           asiento: a.asientoActual.id, tipo: a.asientoActual.tipo, propio: a.agente.asientoId,
         })),
       });
     }
+    this.crearZonasDePuesto(asientos);
+    this.seleccionGfx = this.add.graphics().setDepth(99999);
+    this.input.on('pointerup', (p: Phaser.Input.Pointer, sobre: unknown[]) => {
+      if (p.button === 0 && sobre.length === 0 && p.getDistance() < 5) this.almacen.seleccionar(null);
+    });
     const quitar = this.fuente.suscribir(alRecibir);
     this.fuente.iniciar();
-    const parar = () => { quitar(); this.fuente?.detener(); };
+    const parar = () => { quitar(); this.fuente.detener(); };
     this.events.once('shutdown', parar);
     this.events.once('destroy', parar);
   }
@@ -174,6 +179,39 @@ export class OfficeScene extends Phaser.Scene {
     const dt = Math.min(delta / 1000, 0.1);
     const todos = [...this.actores.values()];
     for (const a of todos) a.actualizar(dt, todos);
+    this.dibujarSeleccion();
+  }
+
+  /** Zonas invisibles para poder pulsar los escritorios y las sillas. */
+  private crearZonasDePuesto(asientos: readonly Asiento[]): void {
+    for (const a of asientos) {
+      const o = this.plano.objetos.find((x) => x.x === a.objeto.x && x.y === a.objeto.y && ['escritorio', 'mesa', 'mesa4'].includes(x.tipo));
+      const r = a.tipo === 'escritorio' && o
+        ? { x: o.x * TILE, y: o.y * TILE, w: o.ancho * TILE, h: o.alto * TILE }
+        : { x: a.x - TILE / 2 + 1, y: a.y - TILE / 2 + 1, w: TILE - 2, h: TILE - 2 };
+      const zona = this.add.zone(r.x + r.w / 2, r.y + r.h / 2, r.w, r.h).setInteractive({ useHandCursor: true }).setDepth(a.fondo - 3);
+      zona.on('pointerup', (p: Phaser.Input.Pointer) => {
+        if (p.button === 0 && p.getDistance() < 5) this.almacen.seleccionar({ tipo: 'puesto', id: a.id });
+      });
+      this.zonasPuesto.set(a.id, r);
+    }
+  }
+
+  /** Marco naranja alrededor del agente seleccionado o del puesto seleccionado. */
+  private dibujarSeleccion(): void {
+    const g = this.seleccionGfx;
+    if (!g) return;
+    g.clear();
+    const s = this.almacen.getState().seleccion;
+    if (!s) return;
+    g.lineStyle(3, 0xf57c00, 1);
+    if (s.tipo === 'agente') {
+      const a = this.actores.get(s.id);
+      if (a) g.strokeRect(a.posicion.x - 14, a.posicion.y - 31, 28, 35);
+    } else {
+      const r = this.zonasPuesto.get(s.id);
+      if (r) g.strokeRect(r.x - 2, r.y - 2, r.w + 4, r.h + 4);
+    }
   }
 
   /** Lleva la cámara a todas las zonas de ese tipo y resalta su rectángulo. */

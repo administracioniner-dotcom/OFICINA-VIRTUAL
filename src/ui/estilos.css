@@ -19,3 +19,34 @@
 .zoom .nivel { min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
 .zoom .boton { width: 34px; padding: 0; font-size: 18px; }
 .marca { left: 12px; bottom: 12px; padding: 6px 10px; font-size: 12px; opacity: 0.85; }
+
+/* ---- Fichas ---- */
+.ficha { right: 12px; top: 12px; width: min(320px, calc(100% - 24px)); max-height: calc(100% - 90px); overflow: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.ficha header { display: flex; align-items: flex-start; gap: 10px; }
+.ficha header > div { flex: 1; min-width: 0; }
+.ficha h2 { margin: 0 0 4px; font-size: 15px; line-height: 1.25; }
+.ficha h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #aab1bd; }
+.ficha .muestra { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #0006; margin-top: 3px; flex: none; }
+.ficha .sello { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #3a3f4a; color: #cfd4dc; }
+.ficha .cerrar { width: 30px; min-height: 30px; padding: 0; flex: none; }
+.ficha dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; }
+.ficha dt { color: #aab1bd; }
+.ficha dd { margin: 0; }
+.pildora { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; background: color-mix(in srgb, var(--c) 22%, #1d1f24); border: 1px solid var(--c); font-weight: 600; }
+.pildora::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.ficha .acciones { display: flex; flex-wrap: wrap; gap: 6px; }
+.ventana-tareas { border: 1px solid var(--borde); border-radius: 8px; padding: 6px; background: #181a1f; }
+.ventana-tareas .plegable { width: 100%; text-align: left; }
+.ventana-tareas ul, .actividad { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.tarea { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 6px; }
+.tarea .marca { width: 10px; height: 10px; border-radius: 2px; border: 2px solid #8a93a1; flex: none; }
+.tarea.en_curso .marca { border-color: var(--naranja); background: var(--naranja); }
+.tarea.hecha .marca { border-color: #3fae5a; background: #3fae5a; }
+.tarea.hecha .texto { text-decoration: line-through; opacity: .65; }
+.tarea .texto { flex: 1; min-width: 0; }
+.etiqueta-tarea { font-size: 11px; color: #aab1bd; }
+.actividad li { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.actividad time { color: #8a93a1; white-space: nowrap; }
+.vacio { margin: 0; color: #8a93a1; font-size: 12px; }
+.ficha .aviso { margin: 0; font-size: 11px; color: #8a93a1; }
+@media (max-width: 700px) { .ficha { right: 8px; left: 8px; width: auto; top: auto; bottom: 64px; max-height: 55%; } }

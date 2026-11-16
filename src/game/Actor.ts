@@ -47,6 +47,12 @@ export class Actor {
     this.sentarEn(this.asiento);
   }
 
+  /** Llama a `fn` cuando se pulsa al personaje (un clic, no un arrastre). */
+  alPulsar(fn: () => void): void {
+    this.sprite.setInteractive({ useHandCursor: true });
+    this.sprite.on('pointerup', (p: Phaser.Input.Pointer) => { if (p.button === 0 && p.getDistance() < 5) fn(); });
+  }
+
   get posicion(): Punto { return { x: this.sprite.x, y: this.sprite.y }; }
   get estaSentado(): boolean { return this.modo === 'sentado'; }
   get asientoActual(): Asiento { return this.asiento; }
