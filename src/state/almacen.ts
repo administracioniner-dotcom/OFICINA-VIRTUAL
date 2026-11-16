@@ -1,4 +1,4 @@
-import type { Agente, EstadoAgente, PuestoAsignable } from '../domain/agentes';
+import { esReal, type Agente, type EstadoAgente, type PuestoAsignable } from '../domain/agentes';
 import { generarTareas, type Tarea } from '../domain/tareas';
 import { NOMBRE_ESTADO } from '../game/sprites/globos';
 import type { AgentSource, EventoOficina } from '../source/tipos';
@@ -13,6 +13,8 @@ export interface EstadoAlmacen {
   /** Lo más reciente primero, como máximo 60 anotaciones. */
   actividad: Actividad[];
   puestos: Record<string, PuestoAsignable>;
+  /** Solo para agentes reales: si dan señal y cuándo fue la última. */
+  conexion: Record<string, { conectado: boolean; ultimaSenal: number | null }>;
   seleccion: Seleccion;
 }
 
@@ -25,6 +27,7 @@ export interface Almacen {
 
 const MAX_ACTIVIDAD = 60;
 const MAX_HECHAS = 3;
+const MAX_TAREAS_REALES = 8;
 
 /** Deja solo las últimas tareas hechas, para que la lista no crezca sin límite. */
 const recortarHechas = (tareas: Tarea[]): Tarea[] => {
@@ -41,7 +44,7 @@ const recortarHechas = (tareas: Tarea[]): Tarea[] => {
 export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsignable[], reloj: () => number = () => Date.now()): Almacen {
   let estado: EstadoAlmacen = {
     agentes: {}, ordenAgentes: [], tareas: {}, actividad: [],
-    puestos: Object.fromEntries(puestos.map((p) => [p.id, p])), seleccion: null,
+    puestos: Object.fromEntries(puestos.map((p) => [p.id, p])), conexion: {}, seleccion: null,
   };
   const oyentes = new Set<() => void>();
   let siguienteActividad = 1;
@@ -65,13 +68,16 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
     if (ev.tipo === 'agente.alta') {
       const a = ev.agente;
       contadorTareas.set(a.id, 4);
-      let tareas = generarTareas(a, 1);
-      if (a.estado === 'trabajando') tareas = trabajar(tareas);
+      const real = esReal(a);
+      let tareas: Tarea[] = [];
+      if (!real) { tareas = generarTareas(a, 1); if (a.estado === 'trabajando') tareas = trabajar(tareas); }
+      const { [a.id]: _c, ...sinConexion } = estado.conexion;
       cambiar({
         ...estado,
         agentes: { ...estado.agentes, [a.id]: a },
         ordenAgentes: estado.ordenAgentes.includes(a.id) ? estado.ordenAgentes : [...estado.ordenAgentes, a.id],
         tareas: { ...estado.tareas, [a.id]: tareas },
+        conexion: real ? { ...estado.conexion, [a.id]: { conectado: false, ultimaSenal: null } } : sinConexion,
       });
       return;
     }
@@ -79,10 +85,11 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
       if (!estado.agentes[ev.id]) return;
       const { [ev.id]: _a, ...agentes } = estado.agentes;
       const { [ev.id]: _t, ...tareas } = estado.tareas;
+      const { [ev.id]: _c, ...conexion } = estado.conexion;
       contadorTareas.delete(ev.id);
       const sel = estado.seleccion;
       cambiar({
-        ...estado, agentes, tareas,
+        ...estado, agentes, tareas, conexion,
         ordenAgentes: estado.ordenAgentes.filter((x) => x !== ev.id),
         actividad: estado.actividad.filter((x) => x.agenteId !== ev.id),
         seleccion: sel && sel.tipo === 'agente' && sel.id === ev.id ? null : sel,
@@ -104,9 +111,33 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
     }
     const agente = estado.agentes[ev.id];
     if (!agente) return;
+    // los avisos de un agente real cuentan como señal suya
+    const conSenal = (e: EstadoAlmacen): EstadoAlmacen => (esReal(agente)
+      ? { ...e, conexion: { ...e.conexion, [ev.id]: { conectado: true, ultimaSenal: reloj() } } }
+      : e);
+    if (ev.tipo === 'agente.tarea') {
+      const previas = estado.tareas[ev.id] ?? [];
+      const nueva: Tarea = { id: ev.tarea.id, agenteId: ev.id, titulo: ev.tarea.titulo, estado: ev.tarea.estado };
+      const existe = previas.some((t) => t.id === nueva.id);
+      const tareas = (existe ? previas.map((t) => (t.id === nueva.id ? nueva : t)) : [...previas, nueva]).slice(-MAX_TAREAS_REALES);
+      cambiar(conSenal({ ...estado, tareas: { ...estado.tareas, [ev.id]: tareas } }));
+      return;
+    }
+    if (ev.tipo === 'agente.actividad') {
+      cambiar(conSenal(anotar(estado, ev.id, ev.texto)));
+      return;
+    }
+    if (ev.tipo === 'agente.conexion') {
+      if (!esReal(agente)) return;
+      const previa = estado.conexion[ev.id];
+      cambiar({ ...estado, conexion: { ...estado.conexion, [ev.id]: { conectado: ev.conectado, ultimaSenal: ev.conectado ? reloj() : previa?.ultimaSenal ?? null } } });
+      return;
+    }
     if (ev.tipo === 'agente.estado') {
       let tareas = estado.tareas[ev.id] ?? [];
-      if (ev.estado === 'completada') {
+      if (esReal(agente)) {
+        // las tareas de un agente real las marcan los avisos de Claude Code
+      } else if (ev.estado === 'completada') {
         tareas = tareas.map((t) => (t.estado === 'en_curso' ? { ...t, estado: 'hecha' as const } : t));
         if (tareas.every((t) => t.estado === 'hecha')) {
           const desde = contadorTareas.get(ev.id) ?? 4;
@@ -122,7 +153,7 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
         agentes: { ...estado.agentes, [ev.id]: { ...agente, estado: ev.estado as EstadoAgente } },
         tareas: { ...estado.tareas, [ev.id]: tareas },
       };
-      cambiar(anotar(nuevo, ev.id, `Estado: ${NOMBRE_ESTADO[ev.estado]}`));
+      cambiar(conSenal(anotar(nuevo, ev.id, `Estado: ${NOMBRE_ESTADO[ev.estado]}`)));
       return;
     }
     if (ev.tipo === 'agente.reunion') {

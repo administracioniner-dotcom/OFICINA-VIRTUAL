@@ -4,6 +4,8 @@ import { NOMBRE_ZONA } from './zonas';
 export type EstadoAgente = 'trabajando' | 'pensando' | 'esperando' | 'en_reunion' | 'completada' | 'error';
 export type Genero = 'f' | 'm';
 
+export type Origen = 'simulado' | 'real';
+
 export interface Agente {
   id: string;
   nombre: string;
@@ -14,7 +16,11 @@ export interface Agente {
   variante: number;
   asientoId: string;
   estado: EstadoAgente;
+  /** `real`: lo mueven los avisos de Claude Code. Sin indicar, es simulado. */
+  origen?: Origen;
 }
+
+export const esReal = (a: Pick<Agente, 'origen'>): boolean => a.origen === 'real';
 
 /** Lo mínimo que se necesita de un asiento para asignarlo. */
 export interface PuestoAsignable { id: string; tipo: string; zona?: TipoZona }

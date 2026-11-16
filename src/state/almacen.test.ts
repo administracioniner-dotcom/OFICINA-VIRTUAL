@@ -200,3 +200,64 @@ describe('almacén: cambios y bajas de agentes', () => {
   });
 });
 
+describe('almacén: agentes reales (Claude Code)', () => {
+  const real = (id: string, estado: EstadoAgente = 'esperando'): Agente => ({ ...agente(id, estado), origen: 'real' });
+  it('un agente real no recibe tareas inventadas', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    expect(alm.getState().tareas['r']).toEqual([]);
+  });
+  it('las tareas llegan con los avisos: nueva en curso y luego hecha, sin duplicarse', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    fuente.emitir({ tipo: 'agente.tarea', id: 'r', tarea: { id: 't1', titulo: 'Revisar el informe', estado: 'en_curso' } });
+    expect(alm.getState().tareas['r']!.map((t) => t.estado)).toEqual(['en_curso']);
+    fuente.emitir({ tipo: 'agente.tarea', id: 'r', tarea: { id: 't1', titulo: 'Revisar el informe', estado: 'hecha' } });
+    expect(alm.getState().tareas['r']!).toEqual([expect.objectContaining({ id: 't1', estado: 'hecha', titulo: 'Revisar el informe' })]);
+  });
+  it('solo se guardan las 8 últimas tareas', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    for (let i = 0; i < 20; i++) fuente.emitir({ tipo: 'agente.tarea', id: 'r', tarea: { id: `t${i}`, titulo: `T${i}`, estado: 'hecha' } });
+    const t = alm.getState().tareas['r']!;
+    expect(t).toHaveLength(8);
+    expect(t[t.length - 1]!.id).toBe('t19');
+  });
+  it('la actividad real se anota tal cual', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    fuente.emitir({ tipo: 'agente.actividad', id: 'r', texto: 'Edita informe.md' });
+    expect(alm.getState().actividad[0]).toMatchObject({ agenteId: 'r', texto: 'Edita informe.md' });
+  });
+  it('«completada» en un agente real no toca tareas (las gestiona Claude Code)', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    fuente.emitir({ tipo: 'agente.tarea', id: 'r', tarea: { id: 't1', titulo: 'A', estado: 'en_curso' } });
+    fuente.emitir({ tipo: 'agente.estado', id: 'r', estado: 'completada' });
+    expect(alm.getState().tareas['r']!.map((t) => t.estado)).toEqual(['en_curso']);
+  });
+  it('conexión y última señal: cualquier aviso marca señal; «conexión» puede dejarlo sin señal', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    expect(alm.getState().conexion['r']).toEqual({ conectado: false, ultimaSenal: null });
+    fuente.emitir({ tipo: 'agente.estado', id: 'r', estado: 'trabajando' });
+    expect(alm.getState().conexion['r']!.conectado).toBe(true);
+    expect(alm.getState().conexion['r']!.ultimaSenal).toBeGreaterThan(0);
+    fuente.emitir({ tipo: 'agente.conexion', id: 'r', conectado: false });
+    expect(alm.getState().conexion['r']!.conectado).toBe(false);
+  });
+  it('un agente simulado no tiene estado de conexión', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('s') });
+    expect(alm.getState().conexion['s']).toBeUndefined();
+  });
+  it('los avisos de agentes desconocidos se ignoran', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.tarea', id: 'nadie', tarea: { id: 't', titulo: 'x', estado: 'en_curso' } });
+    fuente.emitir({ tipo: 'agente.actividad', id: 'nadie', texto: 'x' });
+    fuente.emitir({ tipo: 'agente.conexion', id: 'nadie', conectado: true });
+    expect(alm.getState().ordenAgentes).toEqual([]);
+    expect(alm.getState().actividad).toEqual([]);
+  });
+});
+
