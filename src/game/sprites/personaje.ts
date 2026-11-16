@@ -27,7 +27,7 @@ const r = (c: Ctx, x: number, y: number, w: number, h: number, col: string) => {
 /** Oscurece un color #rrggbb un porcentaje (0–1). */
 export function oscurecer(hex: string, f = 0.25): string {
   const n = parseInt(hex.slice(1), 16);
-  const ch = (v: number) => Math.max(0, Math.round(v * (1 - f))).toString(16).padStart(2, '0');
+  const ch = (v: number) => Math.min(255, Math.max(0, Math.round(v * (1 - f)))).toString(16).padStart(2, '0');
   return `#${ch((n >> 16) & 255)}${ch((n >> 8) & 255)}${ch(n & 255)}`;
 }
 
@@ -56,15 +56,14 @@ function cabeza(c: Ctx, a: AspectoPersonaje, dir: Direccion, dy: number): void {
       r(c, 7, y + 8, 2, 1, '#f08a8a'); r(c, 15, y + 8, 2, 1, '#f08a8a');        // mejillas
     }
     // pelo
-    const pelo = a.pelo, luz = '#ffffff';
+    const pelo = a.pelo;
     if (dir === 'norte') r(c, 6, y, 12, 10, pelo);
     else r(c, 6, y, 12, 5, pelo);
     if (a.estilo === 3) { if (dir === 'sur') { r(c, 6, y, 12, 3, pelo); } }
     if (dir === 'sur') { r(c, 6, y + 4, 2, 3, pelo); r(c, 16, y + 4, 2, 3, pelo); r(c, 8, y + 4, 4, 1, pelo); }
     if (a.estilo === 1) { r(c, 5, y + 2, 2, 11, pelo); r(c, 17, y + 2, 2, 11, pelo); }
-    if (a.estilo === 2) { r(c, 9, y - 3, 6, 4, pelo); r(c, 10, y - 4, 4, 1, pelo); }
-    r(c, 8, y + 1, 4, 1, luz); c.globalAlpha = 0.35; r(c, 8, y + 1, 4, 1, luz); c.globalAlpha = 1;
-    r(c, 8, y + 1, 4, 1, pelo); r(c, 8, y + 1, 3, 1, oscurecer(pelo, -0.2 > 0 ? 0 : 0));
+    if (a.estilo === 2) r(c, 9, y - 1, 6, 3, pelo);                       // moño (dentro del fotograma)
+    r(c, 8, y + 1, 4, 1, oscurecer(pelo, -0.3));                              // brillo del pelo
   } else {
     // perfil mirando al este
     r(c, 7, y, 11, 11, a.piel);
@@ -75,7 +74,7 @@ function cabeza(c: Ctx, a: AspectoPersonaje, dir: Direccion, dy: number): void {
     if (a.estilo === 1) r(c, 6, y + 2, 4, 11, a.pelo);
     if (a.estilo === 2) { r(c, 5, y + 1, 4, 5, a.pelo); r(c, 5, y, 3, 1, a.pelo); }
     if (a.estilo === 3) r(c, 7, y, 11, 3, a.pelo);
-    r(c, 13, y, 4, 1, '#ffffff'); c.globalAlpha = 0.3; r(c, 13, y, 4, 1, '#ffffff'); c.globalAlpha = 1; r(c, 13, y, 4, 1, a.pelo);
+    r(c, 13, y, 4, 1, oscurecer(a.pelo, -0.3));
   }
 }
 

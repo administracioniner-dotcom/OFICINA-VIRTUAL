@@ -16,13 +16,15 @@ try {
   p.on('console', (m) => { if (m.type() === 'error') errores.push(m.text()); });
   await p.goto(`http://localhost:4175/?velocidad=${velocidad}&depurar`);
   await esperar(1500);
+  await p.getByRole('button', { name: 'Sala de reuniones' }).click();
+  await esperar(800);
   let maxEnReunion = 0, muestras = 0, enBloqueada = 0, caminando = 0, silletasRepetidas = 0;
   const vistos = new Set();
   for (let t = 0; t < segundos; t++) {
     const s = await p.evaluate(() => window.__oficina());
     muestras++;
     const sentadosReunion = s.actores.filter((a) => a.sentado && a.tipo === 'reuniones');
-    maxEnReunion = Math.max(maxEnReunion, sentadosReunion.length);
+    if (sentadosReunion.length > maxEnReunion) { maxEnReunion = sentadosReunion.length; await p.screenshot({ path: 'capturas/reunion.png' }); }
     if (new Set(sentadosReunion.map((a) => a.asiento)).size !== sentadosReunion.length) silletasRepetidas++;
     for (const a of s.actores) {
       vistos.add(a.id);

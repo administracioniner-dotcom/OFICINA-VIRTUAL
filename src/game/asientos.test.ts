@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import datos from '../../data/plano-v1.json';
 import { cargarPlano, celdasAlcanzables, rejillaBloqueada } from '../domain/plano';
-import { asientosDelPlano } from './asientos';
+import { asientosDelPlano, profundidadSentado } from './asientos';
 
 const p = cargarPlano(datos);
 const asientos = asientosDelPlano(p);
@@ -51,5 +51,8 @@ describe('asientosDelPlano', () => {
       const o = p.objetos.find((x) => x.x === a.objeto.x && x.y === a.objeto.y && ['escritorio', 'mesa', 'mesa4'].includes(x.tipo))!;
       expect(a.fondo).toBe((o.y + o.alto) * 32);
     }
+  });
+  it('profundidadSentado: detrás de la mesa si la silla está al norte; delante si está al sur o a un lado', () => {
+    for (const a of asientos) expect(profundidadSentado(a)).toBe(a.lado === 'norte' ? a.fondo - 0.5 : a.fondo + 0.5);
   });
 });

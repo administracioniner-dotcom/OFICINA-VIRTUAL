@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 import type { Agente, EstadoAgente } from '../domain/agentes';
 import type { Celda } from '../domain/plano';
 import { avanzarPuntos, buscarRuta, type EstadoMovimiento, type Punto } from '../domain/rutas';
-import type { Asiento } from './asientos';
+import { profundidadSentado, type Asiento } from './asientos';
+import { debeCederPaso, decidirEspera } from './convivencia';
 import { TILE } from './paleta';
 import { claveGlobo, claveHoja } from './sprites/hojas';
 import type { Direccion } from './sprites/personaje';
@@ -27,6 +28,9 @@ export class Actor {
   private puntos: Punto[] = [];
   private mov: EstadoMovimiento = { x: 0, y: 0, indice: 0 };
   private destino: Asiento | null = null;
+  /** Silla de la que acaba de levantarse (solo durante el primer tramo). */
+  private origen: Asiento | null = null;
+  private espera = 0;
   private t = 0;
 
   constructor(
@@ -67,19 +71,27 @@ export class Actor {
     this.puntos = [inicio, ...ruta.map(centro), { x: dest.x, y: dest.y + SENTADO_DY }];
     this.mov = { x: inicio.x, y: inicio.y, indice: 1 };
     this.destino = dest;
+    this.origen = this.modo === 'sentado' ? this.asiento : null;
+    this.espera = 0;
     this.modo = 'caminando';
   }
 
-  actualizar(dt: number): void {
+  actualizar(dt: number, otros: readonly Actor[] = []): void {
     this.t += dt;
-    if (this.modo === 'caminando') this.caminar(dt);
+    if (this.modo === 'caminando') this.caminar(dt, otros);
     else this.teclear();
     // el globo siempre encima de la cabeza, con un pequeño vaivén
     const bob = Math.round(Math.sin(this.t * 3) * 1);
     this.globo.setPosition(this.sprite.x, this.sprite.y - PIES - 2 + bob).setDepth(100000 + this.sprite.y);
   }
 
-  private caminar(dt: number): void {
+  private caminar(dt: number, otros: readonly Actor[]): void {
+    // cede el paso a quien camina justo delante (como mucho 1,2 s, para no bloquearse)
+    const delante = otros.filter((o) => o !== this && !o.estaSentado).map((o) => ({ id: o.agente.id, x: o.posicion.x, y: o.posicion.y }));
+    const decision = decidirEspera(debeCederPaso({ id: this.agente.id, x: this.mov.x, y: this.mov.y, dir: this.dir }, delante), this.espera, dt);
+    this.espera = decision.acum;
+    if (decision.espera) { this.sprite.setFrame(`${this.dir}-c0`); return; }
+
     const paso = avanzarPuntos(this.mov, this.puntos, dt, VELOCIDAD);
     this.mov = paso.estado;
     if (paso.dir) this.dir = paso.dir;
@@ -87,18 +99,21 @@ export class Actor {
     this.sprite.setPosition(this.mov.x, this.mov.y);
     const f = Math.floor(this.t / 0.14) % 4;
     this.sprite.setFrame(`${this.dir}-c${f}`);
-    this.sprite.setDepth(this.mov.y);
+    // al levantarse y al sentarse usa la profundidad de la silla, para no meterse bajo ella ni saltar encima
+    const primerTramo = this.mov.indice <= 1 && this.origen;
+    const ultimoTramo = this.destino && this.mov.indice >= this.puntos.length - 1;
+    this.sprite.setDepth(primerTramo ? profundidadSentado(this.origen!) : ultimoTramo ? profundidadSentado(this.destino!) : this.mov.y);
   }
 
   private sentarEn(a: Asiento): void {
     this.asiento = a;
     this.destino = null;
+    this.origen = null;
     this.modo = 'sentado';
     this.dir = a.mira;
     this.sprite.setPosition(a.x, a.y + SENTADO_DY);
     this.sprite.setFrame(`${a.mira}-s0`);
-    // detrás de la mesa si está al norte; delante si está al sur o a un lado
-    this.sprite.setDepth(a.lado === 'norte' ? a.fondo - 0.5 : a.fondo + 0.5);
+    this.sprite.setDepth(profundidadSentado(a));
   }
 
   private teclear(): void {

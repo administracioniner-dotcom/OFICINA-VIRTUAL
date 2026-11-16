@@ -23,3 +23,7 @@
 5. **Sillas separadas** (`registro.ts`, `claves.ts`): cada escritorio/mesa se dibuja en dos capas (`-mesa` y `-sillas`) para poder poner a la persona entre la silla y la mesa.
 6. **Sprites y actores** (`src/game/Actor.ts`): hoja de sprites por agente, caminar y sentarse, globo de estado, profundidad correcta. 
 7. **Escena**: crea los actores, aplica los eventos del simulador, rótulo «simulación» ya existente. Verificación: capturas en varios instantes, medición de fotogramas con 10 y 14 agentes, `npm test` y `npm run build`.
+
+## Resultado de la revisión final y pendientes
+- **Corregido:** el personaje se metía bajo la silla al sentarse y levantarse (ahora usa la profundidad de la silla en el primer y último tramo); los personajes se atravesaban (ahora el que tiene menos prioridad cede el paso, como mucho 1,2 s para no bloquearse); el moño salía cortado.
+- **Pendiente (menores):** si se interrumpe el tramo silla→acceso, el personaje se mete unos píxeles en el mueble; el temporizador del simulador usa `Date.now()` (mejor `performance.now()`); `?velocidad` negativo congela la simulación; `iniciar()` dos veces duplicaría los actores; recortes de 1 px en el respaldo de las sillas con giro 90/180/270; sin silla libre en la sala el agente no va de pie junto a la mesa (ver diseño §6).

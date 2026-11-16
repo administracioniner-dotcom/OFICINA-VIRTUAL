@@ -135,7 +135,7 @@ data/          plano-v1.json
 - Cada agente: nombre, departamento, puesto, estado, escritorio asignado, tarea actual.
 - **Departamentos de la fase 1:** los de las zonas con puestos: Dirección (2 agentes), Ingeniería (2), Compras (1), Recepción (1), Desarrollo (1), Marketing (1), CAE (1) y Administración (1). Son **10 agentes**, uno por puesto (6 escritorios + 4 de la isla). *(Decisión mía, a confirmar por José.)* La barra de zonas tiene una entrada por departamento, más Descanso y Sala de reuniones.
 - **Nombres:** en fase 1 son identificadores neutros («Agente CAE 1», «Agente Dirección 2»…), marcados como simulados. No se inventan personas ni datos de negocio.
-- **Reuniones:** el estado «en reunión» envía al agente a una de las 8 sillas de la Sala de reuniones. Si faltan sillas, el resto se queda de pie junto a la mesa.
+- **Reuniones:** el estado «en reunión» envía al agente a una de las 8 sillas de la Sala de reuniones. Con 10 agentes y 8 sillas, si no hay silla libre el agente sigue en su puesto (como «pensando»); quedarse de pie junto a la mesa queda para cuando haya más agentes.
 - **Estados:** trabajando, pensando, esperando instrucciones, en reunión, tarea completada, error. Cada uno tiene indicador visual encima del personaje (globo o icono pixel) y color propio.
 - **Simulación:** `SimulatedSource` cambia estados al azar con reglas simples (p. ej. «en reunión» envía al agente a la sala; «error» lo marca en rojo). Ninguna cifra ni tarea simulada se presenta como real.
 - **Fichas:** de agente (departamento, estado, puesto, escritorio, historial corto) y de puesto (quién lo ocupa, zona, equipo). **Ventana de tareas:** lista de tareas simuladas del agente seleccionado, con estado.

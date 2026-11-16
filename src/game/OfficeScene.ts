@@ -172,7 +172,8 @@ export class OfficeScene extends Phaser.Scene {
 
   update(_tiempo: number, delta: number): void {
     const dt = Math.min(delta / 1000, 0.1);
-    for (const a of this.actores.values()) a.actualizar(dt);
+    const todos = [...this.actores.values()];
+    for (const a of todos) a.actualizar(dt, todos);
   }
 
   /** Lleva la cámara a todas las zonas de ese tipo y resalta su rectángulo. */

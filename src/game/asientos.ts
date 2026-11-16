@@ -58,3 +58,8 @@ export function asientosDelPlano(p: Plano): Asiento[] {
   }
   return res;
 }
+
+/** Profundidad de dibujo de quien está sentado: detrás de la mesa si la silla está al norte; delante en los demás casos. */
+export function profundidadSentado(a: Asiento): number {
+  return a.lado === 'norte' ? a.fondo - 0.5 : a.fondo + 0.5;
+}
