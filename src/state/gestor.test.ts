@@ -74,4 +74,40 @@ describe('gestor de agentes', () => {
     gestor.crear({ nombre: 'Sin guardar', asientoId: libre().id, genero: 'f', variante: 0 });
     expect(gestor.guardadoCorrecto()).toBe(false);
   });
+  it('si el navegador bloquea el guardado desde el principio, lo dice enseguida', () => {
+    const memoria: Almacenamiento = { getItem: () => null, setItem: () => {} };
+    const g = crearGestor({ almacenamiento: memoria, fuente: { agregar() {}, actualizar() {}, quitar() {} }, asientos, inicial: base, guardadoInicial: false });
+    expect(g.guardadoCorrecto()).toBe(false);
+  });
 });
+
+describe('gestor: sincronizar con otra pestaña', () => {
+  it('añade, cambia y quita lo que difiere de la lista nueva, avisando al simulador y sin volver a guardar', () => {
+    const { gestor, llamadas, d } = entorno();
+    const sinCae = base.filter((a) => a.departamento !== 'cae');
+    const cambiado = { ...sinCae[0]!, nombre: 'Renombrado' };
+    const nuevoAgente: Agente = { ...base[0]!, id: 'extra-1', nombre: 'De otra pestaña', asientoId: libre().id };
+    gestor.sincronizar([cambiado, ...sinCae.slice(1), nuevoAgente]);
+    expect(llamadas).toContain('quitar:cae-1');
+    expect(llamadas).toContain(`actualizar:${cambiado.id}`);
+    expect(llamadas).toContain('agregar:extra-1');
+    expect(gestor.agentes().map((a) => a.id)).toContain('extra-1');
+    expect(gestor.agentes().some((a) => a.id === 'cae-1')).toBe(false);
+    expect(d[CLAVE_AGENTES]).toBeUndefined();
+  });
+  it('si la lista nueva es igual, no hace nada', () => {
+    const { gestor, llamadas } = entorno();
+    gestor.sincronizar(base);
+    expect(llamadas).toEqual([]);
+  });
+  it('lo siguiente que se crea en esta pestaña parte de la lista sincronizada (no pisa lo de la otra)', () => {
+    const { gestor, alm } = entorno();
+    const deOtra: Agente = { ...base[0]!, id: 'extra-1', nombre: 'De otra pestaña', asientoId: libre().id };
+    gestor.sincronizar([...base, deOtra]);
+    gestor.crear({ nombre: 'Mía', asientoId: puestosLibres(asientos, [...base, deOtra])[0]!.id, genero: 'f', variante: 0 });
+    const guardados = cargarAgentes(alm, [], asientos).map((a) => a.nombre);
+    expect(guardados).toContain('De otra pestaña');
+    expect(guardados).toContain('Mía');
+  });
+});
+

@@ -52,4 +52,28 @@ describe('persistencia de agentes', () => {
     expect(guardarAgentes(roto, porDefecto)).toBe(false);
     expect(cargarAgentes(roto, porDefecto, asientos)).toEqual(porDefecto);
   });
+  it('descarta un aspecto fuera de rango (negativo, de 12 en adelante o decimal)', () => {
+    const buenos = porDefecto.slice(0, 1);
+    const malos = [
+      { ...porDefecto[1]!, variante: -1 },
+      { ...porDefecto[2]!, variante: 12 },
+      { ...porDefecto[3]!, variante: 1.5 },
+    ];
+    const alm = memoria({ [CLAVE_AGENTES]: JSON.stringify({ version: 1, agentes: [...buenos, ...malos] }) });
+    expect(cargarAgentes(alm, porDefecto, asientos).map((a) => a.id)).toEqual(buenos.map((a) => a.id));
+  });
+  it('corrige el departamento para que sea el de la zona de su puesto, y descarta puestos sin zona', () => {
+    const a = { ...porDefecto[0]!, departamento: 'marketing' };
+    const alm = memoria({ [CLAVE_AGENTES]: JSON.stringify({ version: 1, agentes: [a] }) });
+    expect(cargarAgentes(alm, porDefecto, asientos)[0]!.departamento).toBe(porDefecto[0]!.departamento);
+    const sinZona = [{ id: 's1', tipo: 'escritorio' }];
+    const alm2 = memoria({ [CLAVE_AGENTES]: JSON.stringify({ version: 1, agentes: [{ ...porDefecto[0]!, asientoId: 's1' }] }) });
+    expect(cargarAgentes(alm2, porDefecto, sinZona)).toEqual([]);
+  });
+  it('los agentes por defecto se guardan y se recuperan todos (ninguno cae por la validación)', () => {
+    const alm = memoria();
+    guardarAgentes(alm, porDefecto);
+    expect(cargarAgentes(alm, [], asientos).map((a) => a.id)).toEqual(porDefecto.map((a) => a.id));
+  });
 });
+

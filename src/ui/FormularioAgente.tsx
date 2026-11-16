@@ -22,6 +22,7 @@ export function FormularioAgente({ almacen, gestor, editar, alCerrar }: Props) {
   const [variante, setVariante] = useState(editar?.variante ?? 0);
   const [errores, setErrores] = useState<string[]>([]);
   const entrada = useRef<HTMLInputElement>(null);
+  const pulsoEnFondo = useRef(false);
   useEffect(() => { entrada.current?.focus(); }, []);
   useEffect(() => {
     const alTeclear = (ev: KeyboardEvent) => { if (ev.key === 'Escape') alCerrar(); };
@@ -57,8 +58,10 @@ export function FormularioAgente({ almacen, gestor, editar, alCerrar }: Props) {
   };
 
   return (
-    <div className="modal-fondo" role="presentation" onClick={alCerrar}>
-      <form className="panel formulario" role="dialog" aria-modal="true" aria-labelledby="titulo-form" onSubmit={guardar} onClick={(ev) => ev.stopPropagation()}>
+    <div className="modal-fondo" role="presentation"
+      onMouseDown={(ev) => { pulsoEnFondo.current = ev.target === ev.currentTarget; }}
+      onClick={(ev) => { if (ev.target === ev.currentTarget && pulsoEnFondo.current) alCerrar(); }}>
+      <form className="panel formulario" role="dialog" aria-modal="true" aria-labelledby="titulo-form" onSubmit={guardar}>
         <h2 id="titulo-form">{editar ? `Editar a ${editar.nombre}` : 'Nuevo agente'}</h2>
 
         <label htmlFor="f-nombre">Nombre</label>

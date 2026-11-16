@@ -24,3 +24,7 @@
 6. **Gestor** (`src/state/gestor.ts`): `crear`, `editar`, `quitar` que validan, guardan y avisan al simulador; tests.
 7. **Interfaz**: botón «Nuevo agente», formulario (con vista previa del personaje), «Editar» y «Quitar» en la ficha.
 8. **Arranque en Windows** (`iniciar.bat`) y README; verificación en navegador (crear, recargar, editar, quitar).
+
+## Resultado de la revisión final y pendientes
+- **Corregido:** con dos pestañas abiertas una pisaba la lista de la otra (ahora se sincronizan por el evento `storage`); no avisaba si el navegador bloquea el guardado; arrastrar el ratón fuera del formulario lo cerraba y perdía lo escrito; datos guardados con un aspecto fuera de rango podían romper el dibujo. Además: el aspecto pasa de 8 a 12 opciones (los agentes de ejemplo ya usaban el 9.º), el departamento se corrige al de la zona del puesto y se evitan avisos de Phaser al crear personajes.
+- **Pendiente (menores):** al editar a un agente que está en una reunión, vuelve a su puesto pero el simulador sigue dándolo por «en reunión» unos segundos; la tecla Esc en el formulario ya no deselecciona (hecho), pero el foco del teclado no queda atrapado dentro del formulario ni vuelve al botón al cerrar; la confirmación de «Quitar» no recibe el foco; `iniciar.bat` solo reinstala si falta `node_modules` (tras un `git pull` con dependencias nuevas hay que ejecutar `npm install`); el nombre cuenta los emojis como dos caracteres.

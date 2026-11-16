@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import datos from '../../data/plano-v1.json';
 import { asientosDelPlano } from '../game/asientos';
 import { crearAgentes, crearAgentesExtra } from './agentes';
+import { VARIANTES } from './gestionAgentes';
 import { cargarPlano } from './plano';
 
 const p = cargarPlano(datos);
@@ -36,6 +37,9 @@ describe('crearAgentes', () => {
   it('los nombres son neutros y marcan la numeración («Agente CAE 1»)', () => {
     expect(agentes.find((a) => a.departamento === 'cae')!.nombre).toBe('Agente CAE 1');
     expect(agentes.filter((a) => a.departamento === 'direccion').map((a) => a.nombre)).toEqual(['Agente Dirección 1']);
+  });
+  it('el aspecto de cada agente está dentro de los que ofrece el formulario', () => {
+    for (const a of agentes) { expect(a.variante).toBeGreaterThanOrEqual(0); expect(a.variante).toBeLessThan(VARIANTES); }
   });
   it('cada agente trae un color de camisa y una variante de aspecto', () => {
     for (const a of agentes) { expect(a.camisa).toMatch(/^#[0-9a-f]{6}$/); expect(Number.isInteger(a.variante)).toBe(true); }

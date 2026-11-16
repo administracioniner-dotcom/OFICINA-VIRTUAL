@@ -1,13 +1,13 @@
 import { camisaDeDepartamento, type Agente, type Genero, type PuestoAsignable } from './agentes';
 
 export const MAX_NOMBRE = 40;
-export const VARIANTES = 8;
+export const VARIANTES = 12;
 
 export interface DatosAgente {
   nombre: string;
   asientoId: string;
   genero: Genero;
-  /** Aspecto (piel y pelo), de 0 a 7. */
+  /** Aspecto (piel, pelo y peinado), de 0 a 11. */
   variante: number;
 }
 

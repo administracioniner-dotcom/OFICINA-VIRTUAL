@@ -14,6 +14,8 @@ export interface Gestor {
   crear(d: DatosAgente): Agente;
   editar(id: string, d: DatosAgente): Agente;
   quitar(id: string): void;
+  /** Aplica una lista nueva (cambios hechos en otra pestaña) avisando a la fuente, sin volver a guardarla. */
+  sincronizar(nueva: readonly Agente[]): void;
   /** ¿Se pudo guardar la última vez? Falso en modo privado o con el almacenamiento lleno. */
   guardadoCorrecto(): boolean;
 }
@@ -23,12 +25,14 @@ interface Opciones {
   fuente: FuenteEditable;
   asientos: readonly PuestoAsignable[];
   inicial: readonly Agente[];
+  /** Falso si ya se sabe que el navegador no deja guardar (por ejemplo, almacenamiento bloqueado). */
+  guardadoInicial?: boolean;
 }
 
 /** Lista de agentes del usuario: valida los cambios, los guarda en el navegador y avisa a la fuente. */
-export function crearGestor({ almacenamiento, fuente, asientos, inicial }: Opciones): Gestor {
+export function crearGestor({ almacenamiento, fuente, asientos, inicial, guardadoInicial = true }: Opciones): Gestor {
   let lista: Agente[] = [...inicial];
-  let guardado = true;
+  let guardado = guardadoInicial;
   const guardar = () => { guardado = guardarAgentes(almacenamiento, lista); };
 
   return {
@@ -54,6 +58,17 @@ export function crearGestor({ almacenamiento, fuente, asientos, inicial }: Opcio
       lista = lista.filter((x) => x.id !== id);
       guardar();
       fuente.quitar(id);
+    },
+    sincronizar(nueva) {
+      const previas = new Map(lista.map((a) => [a.id, a]));
+      const ids = new Set(nueva.map((a) => a.id));
+      for (const a of lista) if (!ids.has(a.id)) fuente.quitar(a.id);      // primero quitar, para liberar puestos
+      for (const a of nueva) {
+        const p = previas.get(a.id);
+        if (!p) fuente.agregar(a);
+        else if (JSON.stringify({ ...p, estado: '' }) !== JSON.stringify({ ...a, estado: '' })) fuente.actualizar(a);
+      }
+      lista = [...nueva];
     },
     guardadoCorrecto: () => guardado,
   };

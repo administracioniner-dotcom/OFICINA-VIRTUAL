@@ -7,7 +7,7 @@ import { crearJuego } from '../game/crearJuego';
 import { SimuladorAgentes } from '../source/simulado';
 import { crearAlmacen } from '../state/almacen';
 import { crearGestor } from '../state/gestor';
-import { cargarAgentes, type Almacenamiento } from '../state/persistencia';
+import { CLAVE_AGENTES, cargarAgentes, type Almacenamiento } from '../state/persistencia';
 import { useAlmacen } from '../state/useAlmacen';
 import { BarraZonas } from './BarraZonas';
 import { ErrorPlano } from './ErrorPlano';
@@ -22,9 +22,9 @@ function memoria(): Almacenamiento {
   return { getItem: (k) => d.get(k) ?? null, setItem: (k, v) => { d.set(k, v); } };
 }
 
-/** `localStorage` si el navegador lo permite; si no, memoria (los cambios no se guardan). */
-function almacenamientoDelNavegador(): Almacenamiento {
-  try { const a = window.localStorage; a.getItem('x'); return a; } catch { return memoria(); }
+/** `localStorage` si el navegador lo permite; si no, memoria (los cambios no se guardan) y `bloqueado`. */
+function almacenamientoDelNavegador(): { almacenamiento: Almacenamiento; bloqueado: boolean } {
+  try { const a = window.localStorage; a.getItem('x'); return { almacenamiento: a, bloqueado: false }; } catch { return { almacenamiento: memoria(), bloqueado: true }; }
 }
 
 function preparar() {
@@ -34,15 +34,18 @@ function preparar() {
     const base = crearAgentes(asientos);
     // ?agentes=14 añade agentes en los puestos libres (solo para probar el rendimiento; no se guarda)
     const estres = new URLSearchParams(window.location.search).get('agentes') === '14';
-    const almacenamiento = estres ? memoria() : almacenamientoDelNavegador();
+    const nav = estres ? { almacenamiento: memoria(), bloqueado: false } : almacenamientoDelNavegador();
+    const almacenamiento = nav.almacenamiento;
     const inicial = estres ? [...base, ...crearAgentesExtra(asientos, base)] : cargarAgentes(almacenamiento, base, asientos);
     // ?velocidad=3 acelera la simulación (para pruebas)
     const escala = Number(new URLSearchParams(window.location.search).get('velocidad'));
     const sillas = asientos.filter((a) => a.tipo === 'reuniones').map((a) => a.id);
     const fuente = new SimuladorAgentes(inicial, sillas, Math.random, escala > 0 ? escala : 1);
     const almacen = crearAlmacen(fuente, asientos);
-    const gestor = crearGestor({ almacenamiento, fuente, asientos, inicial });
-    return { plano, fuente, almacen, gestor };
+    const gestor = crearGestor({ almacenamiento, fuente, asientos, inicial, guardadoInicial: !nav.bloqueado });
+    // si otra pestaña cambia la lista, esta la recoge en vez de pisarla al guardar
+    const releer = () => cargarAgentes(almacenamiento, base, asientos);
+    return { plano, fuente, almacen, gestor, releer, escuchaOtrasPestanas: !estres && !nav.bloqueado };
   } catch (e) {
     return { error: e instanceof PlanoInvalido ? e.message : `Error inesperado: ${String(e)}` };
   }
@@ -60,9 +63,12 @@ export function App() {
     document.fonts.load('16px "Press Start 2P"').finally(() => {
       if (!cancelado && contenedor.current) juego = crearJuego(contenedor.current, plano, fuente, almacen);
     });
-    const alTeclear = (e: KeyboardEvent) => { if (e.key === 'Escape') almacen.seleccionar(null); };
+    // Esc deselecciona, salvo que haya un formulario abierto (ese lo cierra él)
+    const alTeclear = (e: KeyboardEvent) => { if (e.key === 'Escape' && !document.querySelector('[role="dialog"]')) almacen.seleccionar(null); };
     window.addEventListener('keydown', alTeclear);
-    return () => { cancelado = true; window.removeEventListener('keydown', alTeclear); juego?.destroy(true); fuente.detener(); almacen.dispose(); };
+    const alCambiarOtraPestana = (e: StorageEvent) => { if (e.key === CLAVE_AGENTES && r.gestor && r.releer) r.gestor.sincronizar(r.releer()); };
+    if (r.escuchaOtrasPestanas) window.addEventListener('storage', alCambiarOtraPestana);
+    return () => { cancelado = true; window.removeEventListener('keydown', alTeclear); window.removeEventListener('storage', alCambiarOtraPestana); juego?.destroy(true); fuente.detener(); almacen.dispose(); };
   }, [r]);
 
   const [formulario, setFormulario] = useState<null | { editar?: Agente }>(null);

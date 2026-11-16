@@ -139,7 +139,7 @@ export class OfficeScene extends Phaser.Scene {
     const bloqueada = rejillaBloqueada(p);
     generarGlobos(this);
     const crearActor = (agente: Agente) => {
-      this.textures.remove(claveHoja(agente.id));
+      if (this.textures.exists(claveHoja(agente.id))) this.textures.remove(claveHoja(agente.id));
       generarHoja(this, agente);
       const actor = new Actor(this, agente, porId, bloqueada);
       actor.setEstado(agente.estado);
@@ -149,7 +149,7 @@ export class OfficeScene extends Phaser.Scene {
     const quitarActor = (id: string) => {
       this.actores.get(id)?.destruir();
       this.actores.delete(id);
-      this.textures.remove(claveHoja(id));
+      if (this.textures.exists(claveHoja(id))) this.textures.remove(claveHoja(id));
     };
     const alRecibir = (e: EventoOficina) => {
       if (e.tipo === 'agente.alta') {
