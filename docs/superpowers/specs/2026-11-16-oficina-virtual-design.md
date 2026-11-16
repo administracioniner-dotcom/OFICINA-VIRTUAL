@@ -52,11 +52,13 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
 - **Suelo (decisión de José):** todo el edificio tiene **suelo verde**, pasillos incluidos, **excepto Dirección**, que lleva una **alfombra gris** (la zona completa: columnas 16–25, filas 11–19). El verde es **verde limón** (dicho por José); el tono exacto y el del gris los elige el constructor, y se enseñan en la primera captura. Para el pixel art conviene suavizar un poco la saturación y variar ligeramente las baldosas para que no cansen a la vista.
 - **Mobiliario y colores (decisión de José):**
   - **Escritorios y todas las mesas: blancos.**
-  - **Sillas ergonómicas rojas:** CAE y Desarrollo.
-  - **Sillas ergonómicas grises:** Administración, Compras y Recepción.
-  - **Sin definir todavía:** sillas de Dirección, Ingeniería, Marketing, Sala de reuniones y las 2 sueltas de Descanso. Hasta que José diga otra cosa se dibujan **grises** (los de reuniones y Descanso, sencillas).
+  - **Sillas ergonómicas de los puestos de trabajo, según el departamento:**
+    - **Rojas:** CAE y Desarrollo.
+    - **Grises:** Administración, Compras, Recepción, Dirección y Marketing.
+    - **Naranjas:** Ingeniería (escritorios y mesa de 4 personas).
+  - **Sillas por tipo de mesa** (mandan sobre el departamento): las de las **mesas pequeñas** son **blancas**; las **sillas sueltas** son **blancas**; las de la **mesa de la Sala de reuniones** son **verdes**.
+  - **Estanterías blancas**, con **archivadores rojos** en sus baldas.
   - **Microondas** encima de la mesa sin sillas del Descanso, en la baldosa (2,1). Es un objeto «sobre» otro: no ocupa una baldosa propia ni bloquea el paso. Ya consta en `data/plano-v1.json`.
-  - El color de una silla lo da el departamento de la zona donde está su asiento (sección «Reglas de puestos»).
 - Como el suelo ya es verde, **las zonas no se distinguen pintando el suelo**: se marcan con rótulo en pixel art, una línea tenue en el borde y la barra de zonas. Al seleccionar una zona se resalta su rectángulo.
 - Total de sitios de trabajo en el plano: 6 escritorios + 4 puestos de la isla + 4 sillas de la mesa de Ingeniería.
 
