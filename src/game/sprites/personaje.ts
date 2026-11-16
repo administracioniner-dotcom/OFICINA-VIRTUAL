@@ -19,7 +19,8 @@ export const ALTO_FOTOGRAMA = 32;
 
 /** Tonos de piel clara (decisión de José: todos los personajes de tez blanca). */
 export const PIELES = ['#f1c9a5', '#f6d6bb', '#efc3a0', '#f3cfb0'] as const;
-const PELOS = ['#2b2118', '#5a3b22', '#b5651d', '#e6c15a', '#8a8f98', '#c0392b'] as const;
+/** Pelo marrón o negro (decisión de José: nada de gris, rubio ni rojo). */
+export const PELOS = ['#1c1714', '#2b2118', '#3b2a1c', '#4a3322', '#5a3b22', '#241b17'] as const;
 const CONTORNO = '#232733';
 
 type Ctx = CanvasRenderingContext2D;
@@ -38,7 +39,7 @@ export type { Genero };
 export function aspecto(camisa: string, variante: number, genero: Genero): AspectoPersonaje {
   return {
     piel: PIELES[variante % PIELES.length]!,
-    pelo: PELOS[(variante * 3 + 1) % PELOS.length]!,
+    pelo: PELOS[(variante * 5 + 2) % PELOS.length]!,
     estilo: genero === 'f' ? ((variante % 2 ? 2 : 1) as 1 | 2) : ((variante % 2 ? 3 : 0) as 0 | 3),
     camisa,
     camisaOscura: oscurecer(camisa, 0.25),

@@ -133,7 +133,7 @@ data/          plano-v1.json
 ## 6. Personajes, estados e interacción
 
 - Cada agente: nombre, departamento, puesto, estado, escritorio asignado, tarea actual.
-- **Departamentos de la fase 1:** los de las zonas con puestos: Dirección (1 agente, chico), Ingeniería (2), Compras (1), Recepción (1), Desarrollo (1), Marketing (1), CAE (1) y Administración (1). Son **9 agentes** (el segundo escritorio de Dirección queda libre); todos de piel clara. *(Decisión mía, a confirmar por José.)* La barra de zonas tiene una entrada por departamento, más Descanso y Sala de reuniones.
+- **Departamentos de la fase 1:** los de las zonas con puestos: Dirección (1 agente, chico), Ingeniería (2), Compras (1), Recepción (1), Desarrollo (1), Marketing (1), CAE (1) y Administración (1). Son **9 agentes** (el segundo escritorio de Dirección queda libre); todos de piel clara y con el pelo marrón o negro. *(Decisión mía, a confirmar por José.)* La barra de zonas tiene una entrada por departamento, más Descanso y Sala de reuniones.
 - **Nombres:** en fase 1 son identificadores neutros («Agente CAE 1», «Agente Dirección 2»…), marcados como simulados. No se inventan personas ni datos de negocio.
 - **Reuniones:** el estado «en reunión» envía al agente a una de las 8 sillas de la Sala de reuniones. Con 9 agentes y 8 sillas, si no hay silla libre el agente sigue en su puesto (como «pensando»); quedarse de pie junto a la mesa queda para cuando haya más agentes.
 - **Estados:** trabajando, pensando, esperando instrucciones, en reunión, tarea completada, error. Cada uno tiene indicador visual encima del personaje (globo o icono pixel) y color propio.
