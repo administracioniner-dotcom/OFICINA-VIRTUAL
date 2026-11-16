@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { zonaEn, type Plano, type TipoZona, type Zona } from '../domain/plano';
+import { mamparasVisibles, zonaEn, type Plano, type TipoZona, type Zona } from '../domain/plano';
 import { ETIQUETA_ZONA } from '../domain/zonas';
 import { bus } from '../state/bus';
 import { instalarControles, type ControlCamara } from './camara/controles';
@@ -40,7 +40,7 @@ export class OfficeScene extends Phaser.Scene {
       this.add.image(x * TILE, y * TILE, k).setOrigin(0).setDepth((y + 1) * TILE);
     }
     for (const [x, y] of p.ventanas) this.add.image(x * TILE, y * TILE, 'ventana').setOrigin(0).setDepth((y + 1) * TILE);
-    for (const [x, y] of p.mamparas) this.add.image(x * TILE, y * TILE, 'mampara').setOrigin(0).setDepth((y + 1) * TILE);
+    for (const [x, y] of mamparasVisibles(p)) this.add.image(x * TILE, y * TILE, 'mampara').setOrigin(0).setDepth((y + 1) * TILE);
     for (const [x, y] of p.estanterias) {
       this.add.image(x * TILE + TILE / 2, y * TILE + TILE / 2, 'estanteria').setAngle(90).setDepth((y + 1) * TILE);
     }
@@ -63,7 +63,8 @@ export class OfficeScene extends Phaser.Scene {
     this.camara = instalarControles(this, { ancho: p.ancho * TILE, alto: p.alto * TILE });
     this.camara.ajustar();
     const quitar = bus.on('zona:ir', (tipo) => this.irAZona(tipo));
-    this.events.once('shutdown', () => quitar());
+    this.events.once('shutdown', quitar);
+    this.events.once('destroy', quitar);
   }
 
   /** Lleva la cámara a todas las zonas de ese tipo y resalta su rectángulo. */

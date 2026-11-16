@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { esArrastre, limitarCamara, zoomAjustar, zoomSiguiente } from './zoom';
+import { esArrastre, limitarCamara, nivelesZoom, zoomAjustar, zoomSiguiente, zoomTrasRedimensionar } from './zoom';
 
 const mapa = { ancho: 592, alto: 320 };
 
@@ -16,18 +16,24 @@ describe('zoomAjustar', () => {
 });
 
 describe('zoomSiguiente', () => {
-  it('sube del mínimo a 3 y a 4, y se queda en 4', () => {
+  it('sube del mínimo a 3, 4 y 5, y se queda en 5', () => {
     expect(zoomSiguiente(2.5, 1, 2.5)).toBe(3);
     expect(zoomSiguiente(3, 1, 2.5)).toBe(4);
-    expect(zoomSiguiente(4, 1, 2.5)).toBe(4);
+    expect(zoomSiguiente(4, 1, 2.5)).toBe(5);
+    expect(zoomSiguiente(5, 1, 2.5)).toBe(5);
   });
   it('baja hasta el mínimo y no pasa de ahí', () => {
     expect(zoomSiguiente(3, -1, 2.5)).toBe(2.5);
     expect(zoomSiguiente(2.5, -1, 2.5)).toBe(2.5);
   });
-  it('si el mínimo ya supera 4 no hay más niveles', () => {
-    expect(zoomSiguiente(5, 1, 5)).toBe(5);
-    expect(zoomSiguiente(5, -1, 5)).toBe(5);
+  it('en monitores grandes (mínimo > 4) sigue habiendo pasos enteros por encima', () => {
+    expect(nivelesZoom(4.06)).toEqual([4.06, 5, 6, 7]);
+    expect(zoomSiguiente(4.06, 1, 4.06)).toBe(5);
+    expect(zoomSiguiente(7, 1, 4.06)).toBe(7);
+    expect(zoomSiguiente(5, -1, 4.06)).toBe(4.06);
+  });
+  it('con mínimo 3 hay 3, 4 y 5', () => {
+    expect(nivelesZoom(3)).toEqual([3, 4, 5]);
   });
   it('con un mínimo pequeño incluye el nivel 2', () => {
     expect(zoomSiguiente(1, 1, 1)).toBe(2);
@@ -56,5 +62,16 @@ describe('limitarCamara', () => {
   });
   it('un centro válido no se toca', () => {
     expect(limitarCamara({ x: 300, y: 150 }, 4, vista, mapa)).toEqual({ x: 300, y: 150 });
+  });
+});
+
+describe('zoomTrasRedimensionar', () => {
+  it('si estaba en «ver todo», sigue en «ver todo» con el nuevo mínimo', () => {
+    expect(zoomTrasRedimensionar(2.5, 2.5, 2)).toBe(2);
+    expect(zoomTrasRedimensionar(2.5, 2.5, 3)).toBe(3);
+  });
+  it('si estaba con más zoom, lo conserva salvo que quede por debajo del nuevo mínimo', () => {
+    expect(zoomTrasRedimensionar(4, 2.5, 2)).toBe(4);
+    expect(zoomTrasRedimensionar(3, 2.5, 3.4)).toBe(3.4);
   });
 });

@@ -149,3 +149,9 @@ export function zonaEn(p: Plano, x: number, y: number): Zona | undefined {
   }
   return res;
 }
+
+/** Mamparas que se ven: las que también son ventana se dibujan solo como ventana. */
+export function mamparasVisibles(p: Plano): Celda[] {
+  const ventanas = new Set(p.ventanas.map(([x, y]) => `${x},${y}`));
+  return p.mamparas.filter(([x, y]) => !ventanas.has(`${x},${y}`));
+}

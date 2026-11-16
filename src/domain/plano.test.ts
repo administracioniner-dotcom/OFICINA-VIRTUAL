@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import datos from '../../data/plano-v1.json';
-import { PlanoInvalido, cargarPlano, celdasAlcanzables, rejillaBloqueada, zonaEn } from './plano';
+import { PlanoInvalido, cargarPlano, celdasAlcanzables, mamparasVisibles, rejillaBloqueada, zonaEn } from './plano';
 
 const base = () => JSON.parse(JSON.stringify(datos));
 
@@ -90,5 +90,14 @@ describe('zonaEn', () => {
   });
   it('devuelve undefined en un pasillo', () => {
     expect(zonaEn(p, 20, 8)).toBeUndefined();
+  });
+});
+
+describe('mamparasVisibles', () => {
+  it('no incluye las baldosas que también son ventana, como (6,19)', () => {
+    const p = cargarPlano(datos);
+    const v = mamparasVisibles(p);
+    expect(v.some(([x, y]) => x === 6 && y === 19)).toBe(false);
+    expect(v).toHaveLength(p.mamparas.length - 1);
   });
 });

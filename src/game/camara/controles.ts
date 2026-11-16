@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { bus } from '../../state/bus';
-import { esArrastre, limitarCamara, zoomAjustar, zoomParaRect, zoomSiguiente, type Punto, type Tam } from './zoom';
+import { esArrastre, limitarCamara, zoomAjustar, zoomParaRect, zoomSiguiente, zoomTrasRedimensionar, type Punto, type Tam } from './zoom';
 
 export interface RectMundo { x: number; y: number; ancho: number; alto: number }
 export interface ControlCamara {
@@ -90,9 +90,16 @@ export function instalarControles(escena: Phaser.Scene, mapa: Tam): ControlCamar
     aplicar();
   });
 
-  escena.scale.on('resize', () => { recalcularMinimo(); aplicar(); });
+  escena.scale.on('resize', () => {
+    const anterior = minimo;
+    minimo = zoomAjustar(vista(), mapa);
+    zoom = zoomTrasRedimensionar(zoom, anterior, minimo);
+    aplicar();
+    bus.emit('camara:zoom', zoom);
+  });
   const quitarZoom = bus.on('zoom:cambiar', (d) => cambiarZoom(d));
-  escena.events.once('shutdown', () => quitarZoom());
+  escena.events.once('shutdown', quitarZoom);
+  escena.events.once('destroy', quitarZoom);
 
   recalcularMinimo();
   return {

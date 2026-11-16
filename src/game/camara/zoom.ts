@@ -1,7 +1,6 @@
 export interface Tam { ancho: number; alto: number }
 export interface Punto { x: number; y: number }
 
-const ZOOM_ENTEROS = [2, 3, 4] as const;
 const ZOOM_MINIMO_ABSOLUTO = 0.1;
 
 /** Mayor zoom con el que el mapa cabe entero en la vista (nunca 0, NaN ni Infinity). */
@@ -10,9 +9,15 @@ export function zoomAjustar(vista: Tam, mapa: Tam): number {
   return Number.isFinite(z) && z > ZOOM_MINIMO_ABSOLUTO ? z : ZOOM_MINIMO_ABSOLUTO;
 }
 
-/** Niveles disponibles: el mínimo («ver todo») y luego 2×, 3×, 4× si son mayores. */
+/**
+ * Niveles disponibles: el mínimo («ver todo») y después pasos enteros (2×, 3×, 4×…) por encima.
+ * En pantallas grandes, donde el mínimo ya pasa de 2, siguen existiendo dos pasos enteros más.
+ */
 export function nivelesZoom(minimo: number): number[] {
-  return [minimo, ...ZOOM_ENTEROS.filter((n) => n > minimo)];
+  const tope = Math.max(4, Math.ceil(minimo) + 2);
+  const niveles = [minimo];
+  for (let n = 2; n <= tope; n++) if (n > minimo + 1e-6) niveles.push(n);
+  return niveles;
 }
 
 export function zoomSiguiente(actual: number, direccion: 1 | -1, minimo: number): number {
@@ -21,6 +26,12 @@ export function zoomSiguiente(actual: number, direccion: 1 | -1, minimo: number)
   if (direccion === 1) return niveles.find((n) => n > actual + eps) ?? niveles[niveles.length - 1]!;
   const menores = niveles.filter((n) => n < actual - eps);
   return menores.length ? menores[menores.length - 1]! : niveles[0]!;
+}
+
+/** Zoom tras cambiar el tamaño de la ventana: si estaba en «ver todo», sigue en «ver todo». */
+export function zoomTrasRedimensionar(actual: number, minimoAnterior: number, minimoNuevo: number): number {
+  if (Math.abs(actual - minimoAnterior) < 1e-6) return minimoNuevo;
+  return Math.max(actual, minimoNuevo);
 }
 
 /** Nivel más grande que cabe para ver un rectángulo entero con margen. */
