@@ -24,6 +24,15 @@ export interface Almacen {
 }
 
 const MAX_ACTIVIDAD = 60;
+const MAX_HECHAS = 3;
+
+/** Deja solo las últimas tareas hechas, para que la lista no crezca sin límite. */
+const recortarHechas = (tareas: Tarea[]): Tarea[] => {
+  const hechas = tareas.filter((t) => t.estado === 'hecha');
+  if (hechas.length <= MAX_HECHAS) return tareas;
+  const quitar = new Set(hechas.slice(0, hechas.length - MAX_HECHAS).map((t) => t.id));
+  return tareas.filter((t) => !quitar.has(t.id));
+};
 
 /**
  * Almacén en memoria: escucha los eventos de la fuente de agentes y es la única fuente de verdad
@@ -77,6 +86,7 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
           contadorTareas.set(ev.id, desde + 3);
           tareas = [...tareas, ...generarTareas(agente, desde)];
         }
+        tareas = recortarHechas(tareas);
       } else if (ev.estado === 'trabajando') {
         tareas = trabajar(tareas);
       }

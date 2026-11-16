@@ -6,6 +6,7 @@ import { PALETA, TILE } from './paleta';
 import type { AgentSource, EventoOficina } from '../source/tipos';
 import type { Almacen } from '../state/almacen';
 import { Actor } from './Actor';
+import { esClicEnLienzo } from './clic';
 import { asientosDelPlano, type Asiento } from './asientos';
 import { generarGlobos, generarHoja } from './sprites/hojas';
 import { mascaraMuro } from './muros';
@@ -166,7 +167,7 @@ export class OfficeScene extends Phaser.Scene {
     this.crearZonasDePuesto(asientos);
     this.seleccionGfx = this.add.graphics().setDepth(99999);
     this.input.on('pointerup', (p: Phaser.Input.Pointer, sobre: unknown[]) => {
-      if (p.button === 0 && sobre.length === 0 && p.getDistance() < 5) this.almacen.seleccionar(null);
+      if (sobre.length === 0 && esClicEnLienzo({ button: p.button, distancia: p.getDistance(), upElement: p.upElement }, this.game.canvas)) this.almacen.seleccionar(null);
     });
     const quitar = this.fuente.suscribir(alRecibir);
     this.fuente.iniciar();
@@ -191,7 +192,7 @@ export class OfficeScene extends Phaser.Scene {
         : { x: a.x - TILE / 2 + 1, y: a.y - TILE / 2 + 1, w: TILE - 2, h: TILE - 2 };
       const zona = this.add.zone(r.x + r.w / 2, r.y + r.h / 2, r.w, r.h).setInteractive({ useHandCursor: true }).setDepth(a.fondo - 3);
       zona.on('pointerup', (p: Phaser.Input.Pointer) => {
-        if (p.button === 0 && p.getDistance() < 5) this.almacen.seleccionar({ tipo: 'puesto', id: a.id });
+        if (esClicEnLienzo({ button: p.button, distancia: p.getDistance(), upElement: p.upElement }, this.game.canvas)) this.almacen.seleccionar({ tipo: 'puesto', id: a.id });
       });
       this.zonasPuesto.set(a.id, r);
     }

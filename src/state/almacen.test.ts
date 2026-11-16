@@ -68,6 +68,18 @@ describe('almacén: agentes y tareas', () => {
     expect(t.filter((x) => x.estado === 'pendiente')).toHaveLength(3);
     expect(new Set(t.map((x) => x.id)).size).toBe(6);
   });
+  it('solo se guardan las 3 últimas tareas hechas: la lista no crece sin límite', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('a') });
+    for (let i = 0; i < 30; i++) {
+      fuente.emitir({ tipo: 'agente.estado', id: 'a', estado: 'trabajando' });
+      fuente.emitir({ tipo: 'agente.estado', id: 'a', estado: 'completada' });
+    }
+    const t = alm.getState().tareas['a']!;
+    expect(t.filter((x) => x.estado === 'hecha').length).toBeLessThanOrEqual(3);
+    expect(t.length).toBeLessThanOrEqual(6);
+    expect(new Set(t.map((x) => x.id)).size).toBe(t.length);
+  });
   it('las reuniones quedan anotadas en la actividad', () => {
     const { fuente, alm } = nuevo();
     fuente.emitir({ tipo: 'agente.alta', agente: agente('a') });

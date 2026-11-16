@@ -5,6 +5,7 @@ import { avanzarPuntos, buscarRuta, type EstadoMovimiento, type Punto } from '..
 import { profundidadSentado, type Asiento } from './asientos';
 import { debeCederPaso, decidirEspera } from './convivencia';
 import { TILE } from './paleta';
+import { esClicEnLienzo } from './clic';
 import { claveGlobo, claveHoja } from './sprites/hojas';
 import type { Direccion } from './sprites/personaje';
 
@@ -50,7 +51,9 @@ export class Actor {
   /** Llama a `fn` cuando se pulsa al personaje (un clic, no un arrastre). */
   alPulsar(fn: () => void): void {
     this.sprite.setInteractive({ useHandCursor: true });
-    this.sprite.on('pointerup', (p: Phaser.Input.Pointer) => { if (p.button === 0 && p.getDistance() < 5) fn(); });
+    this.sprite.on('pointerup', (p: Phaser.Input.Pointer) => {
+      if (esClicEnLienzo({ button: p.button, distancia: p.getDistance(), upElement: p.upElement }, this.sprite.scene.game.canvas)) fn();
+    });
   }
 
   get posicion(): Punto { return { x: this.sprite.x, y: this.sprite.y }; }
