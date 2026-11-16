@@ -20,7 +20,7 @@ export const DIMENSIONES: Record<TipoObjeto, readonly [number, number]> = {
 export const TEXTURAS_REQUERIDAS: readonly string[] = [
   'suelo-0', 'suelo-1', 'suelo-2', 'suelo-3', 'alfombra',
   ...Array.from({ length: 16 }, (_, i) => `muro-${i}`),
-  'mampara', 'ventana', 'estanteria',
+  'mampara', 'ventana', 'estanteria', 'sombra-muro',
   'obj-escritorio-rojo', 'obj-escritorio-gris', 'obj-escritorio-naranja',
   'obj-mesa4-naranja', 'obj-mesa4-isla',
   'obj-puerta', 'obj-sofa', 'obj-mesa', 'obj-planta', 'obj-entrada', 'obj-nevera',

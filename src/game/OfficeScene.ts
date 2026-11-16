@@ -27,8 +27,10 @@ export class OfficeScene extends Phaser.Scene {
     const suelo = this.add.renderTexture(0, 0, p.ancho * TILE, p.alto * TILE).setOrigin(0).setDepth(0);
     for (let y = 0; y < p.alto; y++) {
       for (let x = 0; x < p.ancho; x++) {
-        const variante = ((x * 73856093) ^ (y * 19349663)) >>> 0;
-        suelo.draw(enDireccion(x, y) ? 'alfombra' : `suelo-${variante % 4}`, x * TILE, y * TILE);
+        // damero suave (0/1) con alguna baldosa distinta (2/3) para que no se vea plano
+        const azar = ((x * 73856093) ^ (y * 19349663)) >>> 0;
+        const variante = azar % 9 === 0 ? 2 + (azar % 2) : (x + y) % 2;
+        suelo.draw(enDireccion(x, y) ? 'alfombra' : `suelo-${variante}`, x * TILE, y * TILE);
       }
     }
 
@@ -39,11 +41,16 @@ export class OfficeScene extends Phaser.Scene {
       const x = alfombra.x * TILE, y = alfombra.y * TILE, w = alfombra.ancho * TILE, h = alfombra.alto * TILE;
       ga.lineStyle(4, 0x7f8691, 1); ga.strokeRect(x + 6, y + 6, w - 12, h - 12);
       ga.lineStyle(2, 0xc3c8d0, 1); ga.strokeRect(x + 12, y + 12, w - 24, h - 24);
+      ga.fillStyle(0x8c94a0, 1);
+      for (let d = 36; d < w - 36; d += 24) for (const yy of [y + 9, y + h - 9]) ga.fillRect(x + d - 2, yy - 2, 4, 4);
+      for (let d = 36; d < h - 36; d += 24) for (const xx of [x + 9, x + w - 9]) ga.fillRect(xx - 2, y + d - 2, 4, 4);
     }
 
     // Muros, ventanas y mamparas (3/4: borde y cara frontal según las baldosas vecinas)
     for (const [x, y] of p.muros) {
-      this.add.image(x * TILE, y * TILE, claveMuro(mascaraMuro(p, x, y))).setOrigin(0).setDepth((y + 1) * TILE);
+      const mascara = mascaraMuro(p, x, y);
+      this.add.image(x * TILE, y * TILE, claveMuro(mascara)).setOrigin(0).setDepth((y + 1) * TILE);
+      if (mascara & 4 && y + 1 < p.alto) this.add.image(x * TILE, (y + 1) * TILE, 'sombra-muro').setOrigin(0).setDepth(0.6);
     }
     for (const [x, y] of p.ventanas) this.add.image(x * TILE, y * TILE, 'ventana').setOrigin(0).setDepth((y + 1) * TILE);
     for (const [x, y] of mamparasVisibles(p)) this.add.image(x * TILE, y * TILE, 'mampara').setOrigin(0).setDepth((y + 1) * TILE);

@@ -187,6 +187,10 @@ function dibujarMuros(escena: Phaser.Scene): void {
     r(2, 20, 28, 1, C.blancoLuz);
   });
 
+  lienzo(escena, 'sombra-muro', TILE, 8, (c) => {
+    for (let y = 0; y < 8; y++) { c.fillStyle = `rgba(20, 24, 12, ${(0.3 * (8 - y)) / 8})`; c.fillRect(0, y, TILE, 1); }
+  });
+
   lienzo(escena, 'mampara', TILE, TILE, (c) => {
     const r = rectCtx(c);
     c.globalAlpha = 0.55;
@@ -218,6 +222,72 @@ function dibujarMuros(escena: Phaser.Scene): void {
   });
 }
 
+
+/* ---------- Puestos de trabajo en mesas compartidas ---------- */
+type Puesto = 'ing' | 'dev' | 'cae' | 'mkt' | 'adm';
+
+/** Pantalla compacta (w × 9 con pie) que mira hacia la silla: el pie queda en el lado contrario. */
+function pantallaPuesto(r: Rect, x: number, y: number, w: number, tipo: Puesto, lado: 'norte' | 'sur', mitad: 'izq' | 'der' | 'unica' = 'unica'): void {
+  const sy = lado === 'sur' ? y + 1 : y;               // arriba de la pantalla
+  const pie = lado === 'sur' ? y : y + 7;              // arriba del pie
+  r(x + Math.floor(w / 2) - 3, pie, 6, 2, C.metalOscuro);
+  r(x + Math.floor(w / 2) - 4, lado === 'sur' ? y : y + 8, 8, 1, C.contorno);
+  caja(r, x, sy, w, 8, '#11151c', undefined, undefined);
+  const fondo: Record<Puesto, string> = { ing: '#162a44', dev: '#12151c', cae: '#1b2a33', mkt: '#2a1b33', adm: '#1b2a1f' };
+  r(x + 1, sy + 1, w - 2, 6, fondo[tipo]);
+  r(x + 1, lado === 'sur' ? sy + 6 : sy + 1, w - 2, 1, '#34507a');   // brillo en el borde que mira a la persona
+  const i = x + 2, t = sy;
+  if (tipo === 'ing') { r(i, t + 2, w - 5, 1, '#4f86c6'); r(i, t + 4, 6, 1, '#7fb3e8'); r(x + w - 5, t + 3, 2, 3, '#e8f2ff'); r(i + 3, t + 3, 1, 3, '#4f86c6'); }
+  if (tipo === 'dev') {
+    r(i, t + 2, 4, 1, '#58c68a'); r(i + 2, t + 3, 5, 1, '#f5a23b'); r(i, t + 4, 3, 1, '#6aa0d6'); r(i + 2, t + 5, 4, 1, '#d56ad6');
+    if (mitad === 'der') { r(i, t + 2, 2, 1, '#58c68a'); r(i + 3, t + 2, 4, 1, '#58c68a'); }
+  }
+  if (tipo === 'cae') { r(i, t + 2, 2, 1, '#58c68a'); r(i + 3, t + 2, 6, 1, '#9fb4c4'); r(i, t + 4, 2, 1, '#58c68a'); r(i + 3, t + 4, 5, 1, '#9fb4c4'); }
+  if (tipo === 'mkt') { r(i, t + 2, 4, 3, C.naranja); r(i + 5, t + 2, 4, 2, '#e84a9a'); r(i + 5, t + 4, 5, 2, '#4fc3f7'); }
+  if (tipo === 'adm') { r(i, t + 2, w - 4, 1, '#7ccf85'); r(i, t + 3, w - 4, 1, '#2f6e3d'); r(i, t + 4, w - 4, 1, '#7ccf85'); r(i, t + 5, w - 4, 1, '#2f6e3d'); }
+}
+
+/** Ordenador completo (pantalla, teclado, ratón y utensilios del puesto) de una persona sentada en `lado`. */
+function puesto(r: Rect, x: number, lado: 'norte' | 'sur', tipo: Puesto): void {
+  const yTeclado = lado === 'norte' ? 18 : 42;
+  const yPantalla = lado === 'norte' ? 23 : 33;
+  teclado(r, x - 8, yTeclado);
+  r(x + 9, yTeclado, 4, 5, C.contorno); r(x + 10, yTeclado + 1, 2, 3, C.metalLuz);
+  if (tipo === 'dev') {
+    pantallaPuesto(r, x - 14, yPantalla, 13, 'dev', lado, 'izq');
+    pantallaPuesto(r, x + 1, yPantalla, 13, 'dev', lado, 'der');
+    return;
+  }
+  pantallaPuesto(r, x - 7, yPantalla, 14, tipo, lado);
+  const yx = lado === 'norte' ? 23 : 33;
+  if (tipo === 'ing') {            // plano enrollado y regla
+    r(x - 15, yx, 6, 9, C.contorno); r(x - 14, yx + 1, 4, 7, '#dff0ff'); r(x - 13, yx + 3, 2, 1, '#4f86c6'); r(x - 13, yx + 5, 2, 1, '#4f86c6');
+  }
+  if (tipo === 'cae') {            // carpeta roja con documentos
+    r(x + 9, yx, 7, 9, C.contorno); r(x + 10, yx + 1, 5, 7, C.rojo); r(x + 10, yx + 1, 5, 1, C.rojoLuz); r(x + 11, yx + 4, 3, 1, C.blancoLuz);
+  }
+  if (tipo === 'mkt') {            // notas adhesivas
+    r(x + 9, yx, 4, 4, C.contorno); r(x + 10, yx + 1, 2, 2, '#ffe08a');
+    r(x + 13, yx + 3, 4, 4, C.contorno); r(x + 14, yx + 4, 2, 2, '#ff9ac2');
+  }
+  if (tipo === 'adm') {            // calculadora
+    r(x + 9, yx, 7, 9, C.contorno); r(x + 10, yx + 1, 5, 2, '#8fd3a0');
+    for (const [dx, dy] of [[10, 4], [12, 4], [14, 4], [10, 6], [12, 6], [14, 6]] as const) r(x + dx, yx + dy, 1, 1, C.blancoLuz);
+  }
+}
+
+/** Mesa de 4 personas con un ordenador por asiento. */
+function mesaCuatro(c: Ctx, r: Rect, w: number, h: number, norte: readonly [Puesto, Puesto], sur: readonly [Puesto, Puesto], colN: keyof typeof SILLA, colS: keyof typeof SILLA): void {
+  for (const x of [48, 80]) { silla(c, x, 9, colN, 'norte'); silla(c, x, h - 10, colS, 'sur'); }
+  sombraSuelo(c, 9, 18, w - 14, h - 34);
+  tablero(r, 8, 16, w - 16, h - 32);
+  puesto(r, 48, 'norte', norte[0]); puesto(r, 80, 'norte', norte[1]);
+  puesto(r, 48, 'sur', sur[0]); puesto(r, 80, 'sur', sur[1]);
+  // utensilios en los extremos de la mesa
+  r(14, 25, 9, 11, C.contorno); r(15, 26, 7, 9, C.blancoLuz); for (const dy of [28, 30, 32]) r(16, dy, 5, 1, C.blancoOscuro);
+  disco(c, 110, 32, 4, C.contorno); disco(c, 110, 32, 3, C.naranja); disco(c, 109, 31, 1, '#ffc07a');
+}
+
 /* ---------- Mobiliario ---------- */
 function dibujarMobiliario(escena: Phaser.Scene): void {
   const obj = (clave: string, tipo: keyof typeof DIMENSIONES, f: (c: Ctx, r: Rect, w: number, h: number) => void) => {
@@ -243,6 +313,8 @@ function dibujarMobiliario(escena: Phaser.Scene): void {
       papeles(r, 6, 7);
       taza(c, 52, 12);
       r(43, 17, 3, 5, C.contorno); r(44, 18, 1, 3, C.metalLuz); // ratón
+      r(14, 16, 6, 5, C.contorno); r(15, 17, 4, 3, '#ffe08a');   // notas adhesivas
+      disco(c, 56, 20, 3, C.contorno); disco(c, 56, 19, 2, C.verdeHoja); r(54, 20, 5, 3, C.terracota); // cactus
     });
   });
 
@@ -263,19 +335,10 @@ function dibujarMobiliario(escena: Phaser.Scene): void {
     tablero(r, 8, 16, w - 16, h - 32);
     objetosMesa(c, r, w, h);
   });
-  obj('obj-mesa4-naranja', 'mesa4', (c, r, w, h) => {
-    sillasMesa(c, w, h, [48, 80], 'naranja');
-    sombraSuelo(c, 9, 18, w - 14, h - 34);
-    tablero(r, 8, 16, w - 16, h - 32);
-    objetosMesa(c, r, w, h);
-  });
-  obj('obj-mesa4-isla', 'mesa4', (c, r, w, h) => {
-    // al girar 90° en horario, la fila de arriba queda al este (gris) y la de abajo al oeste (roja)
-    for (const x of [48, 80]) { silla(c, x, 9, 'gris', 'norte'); silla(c, x, h - 10, 'rojo', 'sur'); }
-    sombraSuelo(c, 9, 18, w - 14, h - 34);
-    tablero(r, 8, 16, w - 16, h - 32);
-    objetosMesa(c, r, w, h);
-  });
+  obj('obj-mesa4-naranja', 'mesa4', (c, r, w, h) => mesaCuatro(c, r, w, h, ['ing', 'ing'], ['ing', 'ing'], 'naranja', 'naranja'));
+  // Isla: al girar 90° en horario, la fila de arriba queda al este y la de abajo al oeste.
+  // Oeste (roja): Desarrollo y CAE. Este (gris): Marketing y Administración.
+  obj('obj-mesa4-isla', 'mesa4', (c, r, w, h) => mesaCuatro(c, r, w, h, ['mkt', 'adm'], ['dev', 'cae'], 'gris', 'rojo'));
   obj('obj-mesapeq', 'mesapeq', (c, r) => {
     silla(c, 32, 9, 'blanca', 'norte'); silla(c, 32, 55, 'blanca', 'sur');
     silla(c, 9, 32, 'blanca', 'oeste'); silla(c, 55, 32, 'blanca', 'este');
@@ -300,6 +363,8 @@ function dibujarMobiliario(escena: Phaser.Scene): void {
     caja(r, 2, 9, 7, 20, '#c26308', '#e68527', '#8a4504');         // brazo izquierdo
     caja(r, 55, 9, 7, 20, '#c26308', '#e68527', '#8a4504');        // brazo derecho
     r(12, 7, 16, 1, '#e68527'); r(36, 7, 16, 1, '#e68527');
+    caja(r, 11, 14, 9, 9, '#fff2dc', '#ffffff', '#e3c9a0');       // cojín decorativo
+    r(13, 16, 5, 1, '#f57c00'); r(13, 18, 5, 1, '#f57c00');
   });
 
   obj('obj-planta', 'planta', (c, r) => {
