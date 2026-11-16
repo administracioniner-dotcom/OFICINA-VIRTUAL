@@ -54,7 +54,17 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
 ### Comprobaciones hechas sobre el plano
 Se calculó con un recorrido (BFS) sobre la cuadrícula, con muros, mamparas, ventanas, estanterías y mobiliario como obstáculos y las dos entradas como origen:
 - **Todas las zonas, escritorios y mesas son alcanzables** desde las entradas. No hay habitaciones aisladas.
-- En el plano original había **ventanas solapadas** (se unifican en una sola fila de baldosas) y **dos estanterías solapadas** en la columna 26 (se tratan como una columna de 4 baldosas, filas 0–3).
+- En el plano original había **ventanas solapadas** (se unifican en una sola fila de baldosas) y **dos estanterías solapadas** en la columna 26 (se tratan como una columna de 4 baldosas, filas 0–3). Hay otra columna de estanterías en la columna 26, filas 14–19.
+- La baldosa (6, 19) tiene a la vez mampara y ventana: bloquea el paso y se dibuja como ventana.
+
+### Reglas de puestos y orientación (decisión de diseño)
+Los datos del plano no traen sillas ni asientos; se **derivan por reglas**:
+- `ancho` y `alto` de cada objeto son el **tamaño ya girado** (lo que ocupa en la rejilla). `giro` (0, 90, 180, 270) es el giro en sentido horario del objeto.
+- **Escritorio:** un puesto. El asiento es la baldosa pegada al escritorio por el **lado de la silla**, que con `giro` 0 es el sur y, girando en horario, 90 = oeste, 180 = norte y 270 = este. Si el escritorio mide 2 de ancho, la baldosa es la de la izquierda (o la de arriba). El ocupante mira hacia el escritorio.
+- **Mesa de reuniones** (`mesa`): una silla por cada baldosa de sus dos lados largos. La de la Sala de reuniones, en (3,13) con tamaño 2×4, tiene **8 asientos**: columnas 2 y 5, filas 13–16.
+- **Mesa de 4 personas** (`mesa4`): 2 asientos por lado largo, en las dos filas centrales. La mesa de Ingeniería, en (12,13), usa las columnas 11 y 14, filas 14 y 15. La **isla**, en (31,14), usa las columnas 30 y 33, filas 15 y 16.
+- **Isla, un puesto por departamento:** Desarrollo (30,15), Marketing (33,15), CAE (30,16) y Administración (33,16). Los de la columna 30 miran al este y los de la 33 al oeste. Cada asiento queda dentro de la zona 2×2 de su departamento.
+- El **departamento** de cada asiento es la zona que lo contiene.
 
 ## 4. Tecnología recomendada
 
@@ -85,9 +95,12 @@ data/          plano-v1.json
 
 ## 5. Movimiento de personajes y cámara
 
-### Rejilla y escala
+### Vista, rejilla y escala
+- **Vista:** desde arriba en estilo 3/4 (como los RPG clásicos): los personajes se ven de frente, de espaldas y de lado; los muros son bloques planos con una cara frontal visible para dar volumen; los objetos se ordenan por la fila `y` para que un personaje quede delante o detrás. *(Decisión mía, a confirmar con la primera captura de la fase 1.)*
 - Baldosa nativa de **16 px**; el mapa completo mide 592 × 320 px nativos, escalado por la cámara con zoom.
 - Phaser con `pixelArt: true` y `roundPixels`, para que no se vea borroso.
+- **Pantalla:** el lienzo ocupa toda la ventana y los paneles (fichas, tareas, barra de zonas) **flotan encima**, con botón para cerrarlos o plegarlos, para no tapar el mapa de forma permanente.
+- **Zoom:** el nivel mínimo es «ver todo el mapa» ajustado a la ventana (puede ser fraccionario); por encima, pasos enteros (2×, 3×, 4× de píxel) para que el pixel art se vea nítido. El fondo alrededor del mapa es gris oscuro corporativo.
 
 ### Movimiento
 - Rejilla de paso: bloquean muros, mamparas, ventanas, estanterías y mobiliario sólido; las entradas son transitables.
@@ -106,7 +119,9 @@ data/          plano-v1.json
 ## 6. Personajes, estados e interacción
 
 - Cada agente: nombre, departamento, puesto, estado, escritorio asignado, tarea actual.
-- **Nombres:** en fase 1 son identificadores neutros («Agente CAE 1»…), marcados como simulados. No se inventan personas ni datos de negocio.
+- **Departamentos de la fase 1:** los de las zonas con puestos: Dirección (2 agentes), Ingeniería (2), Compras (1), Recepción (1), Desarrollo (1), Marketing (1), CAE (1) y Administración (1). Son **10 agentes**, uno por puesto (6 escritorios + 4 de la isla). *(Decisión mía, a confirmar por José.)* La barra de zonas tiene una entrada por departamento, más Descanso y Sala de reuniones.
+- **Nombres:** en fase 1 son identificadores neutros («Agente CAE 1», «Agente Dirección 2»…), marcados como simulados. No se inventan personas ni datos de negocio.
+- **Reuniones:** el estado «en reunión» envía al agente a una de las 8 sillas de la Sala de reuniones. Si faltan sillas, el resto se queda de pie junto a la mesa.
 - **Estados:** trabajando, pensando, esperando instrucciones, en reunión, tarea completada, error. Cada uno tiene indicador visual encima del personaje (globo o icono pixel) y color propio.
 - **Simulación:** `SimulatedSource` cambia estados al azar con reglas simples (p. ej. «en reunión» envía al agente a la sala; «error» lo marca en rojo). Ninguna cifra ni tarea simulada se presenta como real.
 - **Fichas:** de agente (departamento, estado, puesto, escritorio, historial corto) y de puesto (quién lo ocupa, zona, equipo). **Ventana de tareas:** lista de tareas simuladas del agente seleccionado, con estado.
@@ -158,14 +173,16 @@ Las fases 1–4 forman la **primera versión visual funcional**. Se pregunta a J
 
 - `npm run build` debe compilar antes de dar nada por hecho.
 - Navegador real (Playwright sobre `vite preview`): capturas y comprobación de que cámara, selección y paneles responden.
-- Medición de fotogramas por segundo con 10–14 agentes.
+- Medición de fotogramas por segundo con 10 agentes (versión normal) y con 14 (prueba de carga: los 10 más las 4 sillas de la mesa de Ingeniería). El tope de la fase 1 es 10; los 14 solo sirven para comprobar el rendimiento.
 - **Lo que no se puede probar aquí:** Windows real con Edge/Firefox; solo se prueba un Chromium de pruebas. Se dirá claramente en cada informe y lo comprueba José con una lista de «qué mirar».
 
 ## 10. Decisiones abiertas
 
 1. **Entrada principal:** se propone la central (columnas 20–23). Confirmar.
 2. **Número de agentes en la fase 1:** se propone **10** (los 6 escritorios y los 4 puestos de la isla). Las 4 sillas de la mesa de Ingeniería quedan como ampliación.
-3. **Hospedaje:** primero local; el despliegue estático (p. ej. Vercel) lo decide José más adelante. No hay secretos ni variables de entorno.
+3. **Departamentos con agente:** se propone que los tengan Dirección, Ingeniería, Compras, Recepción y los 4 de la isla (sección 6). Confirmar.
+4. **Estilo de vista:** 3/4 con muros con volumen (sección 5). Se enseña en la primera captura y se ajusta si no gusta.
+5. **Hospedaje:** primero local; el despliegue estático (p. ej. Vercel) lo decide José más adelante. No hay secretos ni variables de entorno.
 
 ## 11. Qué se deja al constructor
 
