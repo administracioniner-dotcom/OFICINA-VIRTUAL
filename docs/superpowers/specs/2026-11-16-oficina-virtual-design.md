@@ -1,6 +1,6 @@
 # INER SMART Virtual Office — diseño de la primera versión
 
-Fecha: 16/11/2026 · Estado: **pendiente de aprobación de José** · Idioma del proyecto: español
+Fecha: 16/11/2026 · Estado: **entrada principal y 10 agentes confirmados; el resto pendiente de visto bueno de José** · Idioma del proyecto: español
 
 ## 1. Intención
 
@@ -46,7 +46,7 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
 | CAE | 30 | 16 | 2 | 2 | 1 puesto en la isla |
 | Administración | 32 | 16 | 2 | 2 | 1 puesto en la isla |
 
-- **Entradas** (norte, fila 0): columnas 10–13 y 20–23. **Mi decisión (a confirmar):** la principal es la central (20–23); la de 10–13 es secundaria.
+- **Entradas** (norte, fila 0): columnas 10–13 y 20–23. **Confirmado por José:** la principal es la que está cerca de Compras, la central (20–23); la de 10–13 es secundaria.
 - **Muros:** perímetro del edificio y tramos interiores. **Mamparas de cristal:** columna 6, que separa Descanso/Sala de reuniones de Ingeniería, con un hueco de 2 baldosas (filas 8–9). **Ventanas:** toda la fachada sur (fila 19, columnas 1–14, 16–25 y 28–35).
 - Las zonas sin nombre (centro y derecha) son **pasillos y vestíbulo**.
 - Total de sitios de trabajo en el plano: 6 escritorios + 4 puestos de la isla + 4 sillas de la mesa de Ingeniería.
@@ -178,8 +178,8 @@ Las fases 1–4 forman la **primera versión visual funcional**. Se pregunta a J
 
 ## 10. Decisiones abiertas
 
-1. **Entrada principal:** se propone la central (columnas 20–23). Confirmar.
-2. **Número de agentes en la fase 1:** se propone **10** (los 6 escritorios y los 4 puestos de la isla). Las 4 sillas de la mesa de Ingeniería quedan como ampliación.
+1. **Entrada principal:** la central (columnas 20–23). **Confirmado por José.**
+2. **Número de agentes en la fase 1:** **10** (los 6 escritorios y los 4 puestos de la isla). **Confirmado por José.** Las 4 sillas de la mesa de Ingeniería quedan como ampliación.
 3. **Departamentos con agente:** se propone que los tengan Dirección, Ingeniería, Compras, Recepción y los 4 de la isla (sección 6). Confirmar.
 4. **Estilo de vista:** 3/4 con muros con volumen (sección 5). Se enseña en la primera captura y se ajusta si no gusta.
 5. **Hospedaje:** primero local; el despliegue estático (p. ej. Vercel) lo decide José más adelante. No hay secretos ni variables de entorno.
