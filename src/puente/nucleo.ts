@@ -48,6 +48,7 @@ export function crearNucleo(op: OpcionesNucleo = {}): PuenteLike {
       contextos.set(agente, r.contexto);
       r.avisos.forEach(emitir);
 
+      if ((crudo as Record<string, unknown>).hook_event_name === 'SessionEnd') { contextos.delete(agente); ultimos.delete(agente); }
       if ((crudo as Record<string, unknown>).hook_event_name === 'Stop') {
         esperas.set(agente, temporizador(() => {
           esperas.delete(agente);

@@ -62,6 +62,8 @@ export function crearManejador(o: OpcionesManejador) {
 
     if (url.pathname === '/api/oficina/aviso') {
       if (req.method !== 'POST') return responder(res, 405);
+      // El hook no es un navegador: si la petición trae Origin o Sec-Fetch-Site viene de una web, aunque tenga la clave.
+      if (req.headers.origin !== undefined || req.headers['sec-fetch-site'] !== undefined) { req.resume(); return responder(res, 403); }
       if (!claveValida(req)) { req.resume(); return responder(res, 401); }
       const trozos: Buffer[] = [];
       let total = 0, demasiado = false;
@@ -100,7 +102,8 @@ export function crearManejador(o: OpcionesManejador) {
       if (!agente || agente.length > 60) return responder(res, 400, { error: 'Falta el nombre del agente.' });
       const hooks: Record<string, unknown[]> = {};
       for (const ev of EVENTOS) {
-        const gancho = { type: 'command', command: 'node', args: [o.rutaHook, '--agente', agente, '--puerto', String(o.puerto)], timeout: 5 };
+        // En herramientas, async: así Claude Code no espera al hook (son dos arranques de Node por herramienta).
+        const gancho = { type: 'command', command: 'node', args: [o.rutaHook, '--agente', agente, '--puerto', String(o.puerto)], timeout: 5, ...(ev === 'PreToolUse' || ev === 'PostToolUse' ? { async: true } : {}) };
         hooks[ev] = [CON_FILTRO.has(ev) ? { matcher: '*', hooks: [gancho] } : { hooks: [gancho] }];
       }
       return responder(res, 200, { configuracion: { hooks }, ruta: o.rutaHook });

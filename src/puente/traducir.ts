@@ -29,7 +29,9 @@ const nombreFichero = (ruta: string) => recortar(ruta.split(/[\\/]/).filter(Bool
 const primeraPalabra = (comando: string) => {
   const trozos = comando.trim().split(/\s+/);
   const orden = trozos.find((t) => !/^[A-Za-z_][A-Za-z0-9_]*=/.test(t)) ?? '';
-  return recortar(orden.split(/[\\/]/).pop() ?? '', 30);
+  const nombre = orden.split(/[\\/]/).pop() ?? '';
+  // Solo un nombre normal: nada de variables, comillas ni trozos de contraseñas o carpetas.
+  return /^[\w.-]{1,30}$/.test(nombre) && !orden.startsWith('"') && !orden.startsWith("'") ? nombre : '';
 };
 
 const VERBOS_FICHERO: Record<string, string> = {
@@ -64,18 +66,20 @@ export function traducir(crudo: unknown, agente: string, t: number, previo: Cont
   const evento = texto(d.hook_event_name);
   const estado = (e: Extract<AvisoOficina, { tipo: 'estado' }>['estado']): AvisoOficina => ({ tipo: 'estado', agente, estado: e, t });
   const actividad = (x: string): AvisoOficina => ({ tipo: 'actividad', agente, texto: x, t });
+  /** Una tarea que se quedó abierta (p. ej. interrumpida con Esc, que no avisa) se da por cerrada. */
+  const cerrarTarea = (): AvisoOficina[] => previo.tarea ? [{ tipo: 'tarea', agente, tarea: { ...previo.tarea, estado: 'hecha' }, t }] : [];
   const sinCambios = (): Traduccion => ({ avisos: [], contexto: previo });
 
   switch (evento) {
     case 'SessionStart':
       return { avisos: [{ tipo: 'conexion', agente, conectado: true, t }, estado('esperando')], contexto: { tarea: null, fallos: 0 } };
     case 'SessionEnd':
-      return { avisos: [{ tipo: 'conexion', agente, conectado: false, t }], contexto: CONTEXTO_VACIO };
+      return { avisos: [...cerrarTarea(), { tipo: 'conexion', agente, conectado: false, t }], contexto: CONTEXTO_VACIO };
     case 'UserPromptSubmit': {
       const id = texto(d.prompt_id) || `t-${t}`;
       const titulo = recortar(texto(d.prompt), MAX_TITULO) || 'Tarea sin título';
       return {
-        avisos: [estado('pensando'), { tipo: 'tarea', agente, tarea: { id, titulo, estado: 'en_curso' }, t }],
+        avisos: [...cerrarTarea(), estado('pensando'), { tipo: 'tarea', agente, tarea: { id, titulo, estado: 'en_curso' }, t }],
         contexto: { tarea: { id, titulo }, fallos: 0 },
       };
     }
@@ -104,7 +108,7 @@ export function traducir(crudo: unknown, agente: string, t: number, previo: Cont
       return { avisos, contexto: CONTEXTO_VACIO };
     }
     case 'StopFailure':
-      return { avisos: [estado('error'), actividad('Error al responder')], contexto: { ...previo, fallos: 0 } };
+      return { avisos: [estado('error'), actividad('Error al responder'), ...cerrarTarea()], contexto: CONTEXTO_VACIO };
     default:
       return sinCambios();
   }

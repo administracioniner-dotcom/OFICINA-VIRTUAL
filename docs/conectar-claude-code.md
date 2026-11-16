@@ -21,7 +21,7 @@ No se envían respuestas de Claude, contenido de ficheros, resultados de comando
 1. Abre la oficina con `iniciar.bat` (el puente va dentro de ese mismo servidor; mientras esté abierta, recibe avisos).
 2. **＋ Nuevo agente** → nombre (por ejemplo, «Claude de Ingeniería») → **Real: lo mueve un Claude Code mío** → Guardar.
 3. Clic en el agente → **Conectar a Claude Code** → **Copiar**.
-4. Pega la configuración en `.claude/settings.json` del proyecto donde trabaja ese Claude Code (o en `~/.claude/settings.json` para todos). Si el fichero ya tiene un apartado `hooks`, une los eventos en vez de duplicarlos.
+4. Pega la configuración en `.claude/settings.json` del proyecto donde trabaja ese Claude Code (mejor que en `~/.claude/settings.json`: ahí todas tus sesiones compartirían el mismo agente y se pisarían los estados). Si el fichero ya tiene un apartado `hooks`, une los eventos en vez de duplicarlos.
 5. Reinicia ese Claude Code y dale una orden. El agente pasa a «En directo».
 
 El **nombre** del agente en la oficina debe ser el mismo que el de la configuración copiada (no distingue mayúsculas). Si cambias el nombre, vuelve a copiar la configuración.

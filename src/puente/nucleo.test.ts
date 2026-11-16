@@ -89,4 +89,13 @@ describe('núcleo del puente', () => {
     for (let i = 0; i < 60; i++) nucleo.recibir(hook(`Agente ${i}`, 'SessionStart'));
     expect(new Set(vistos.map((a) => a.agente)).size).toBe(50);
   });
+
+  it('al cerrar la sesión se libera el nombre (no gasta una de las 50 plazas)', () => {
+    const { nucleo } = montar();
+    for (let i = 0; i < 80; i++) { nucleo.recibir(hook(`A${i}`, 'SessionStart')); nucleo.recibir(hook(`A${i}`, 'SessionEnd')); }
+    const vistos: AvisoOficina[] = [];
+    nucleo.suscribir((a) => vistos.push(a));
+    nucleo.recibir(hook('Nuevo', 'SessionStart'));
+    expect(vistos.length).toBeGreaterThan(0);
+  });
 });

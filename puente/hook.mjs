@@ -17,7 +17,7 @@ function argumento(nombre, porDefecto) {
 const recorte = (v, n) => (typeof v === 'string' ? v.slice(0, n) : undefined);
 
 /** Deja solo los campos que la oficina necesita, recortados. */
-export function reducir(d, agente) {
+function reducir(d, agente) {
   const e = d && typeof d === 'object' ? d : {};
   const ti = e.tool_input && typeof e.tool_input === 'object' ? e.tool_input : {};
   return {
@@ -53,6 +53,4 @@ async function main() {
   });
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  main().catch(() => {}).finally(salir);
-}
+main().catch(() => {}).finally(salir);

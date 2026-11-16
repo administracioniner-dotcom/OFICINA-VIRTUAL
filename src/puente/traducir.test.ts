@@ -23,7 +23,10 @@ describe('traducir: avisos de hooks de Claude Code → avisos de la oficina', ()
 
   it('SessionEnd: desconectado y sin tarea abierta', () => {
     const r = ir({ hook_event_name: 'SessionEnd' }, { tarea: { id: 'a', titulo: 'b' }, fallos: 2 });
-    expect(r.avisos).toEqual([{ tipo: 'conexion', agente: 'Ana', conectado: false, t: T }]);
+    expect(r.avisos).toEqual([
+      { tipo: 'tarea', agente: 'Ana', tarea: { id: 'a', titulo: 'b', estado: 'hecha' }, t: T },
+      { tipo: 'conexion', agente: 'Ana', conectado: false, t: T },
+    ]);
     expect(r.contexto).toEqual(CONTEXTO_VACIO);
   });
 
@@ -126,5 +129,23 @@ describe('traducir: avisos de hooks de Claude Code → avisos de la oficina', ()
     expect(r.avisos).toContainEqual({ tipo: 'estado', agente: 'Ana', estado: 'error', t: T });
     expect(r.avisos).toContainEqual({ tipo: 'actividad', agente: 'Ana', texto: 'Error al responder', t: T });
     expect(JSON.stringify(r.avisos)).not.toContain('detalle');
+  });
+
+  it('una orden nueva cierra la tarea anterior que se quedó abierta (p. ej. interrumpida con Esc)', () => {
+    const r = ir({ hook_event_name: 'UserPromptSubmit', prompt: 'Otra', prompt_id: 'p2' }, { tarea: { id: 'p1', titulo: 'Vieja' }, fallos: 0 });
+    expect(r.avisos).toContainEqual({ tipo: 'tarea', agente: 'Ana', tarea: { id: 'p1', titulo: 'Vieja', estado: 'hecha' }, t: T });
+    expect(r.contexto.tarea?.id).toBe('p2');
+  });
+  it('un fallo de la API también cierra la tarea abierta', () => {
+    const r = ir({ hook_event_name: 'StopFailure' }, { tarea: { id: 'p1', titulo: 'Vieja' }, fallos: 0 });
+    expect(r.avisos).toContainEqual({ tipo: 'tarea', agente: 'Ana', tarea: { id: 'p1', titulo: 'Vieja', estado: 'hecha' }, t: T });
+    expect(r.contexto.tarea).toBeNull();
+  });
+  it('de un comando solo se enseña la primera palabra si es un nombre normal; si no, nada (privacidad)', () => {
+    const texto = (command: string) => (ir({ hook_event_name: 'PreToolUse', tool_name: 'PowerShell', tool_input: { command } }).avisos.find((a) => a.tipo === 'actividad') as { texto: string }).texto;
+    expect(texto('$env:GITHUB_TOKEN="ghp_abc123secret"; gh pr list')).toBe('Ejecuta un comando');
+    expect(texto('PGPASSWORD="mi clave" psql')).toBe('Ejecuta un comando');
+    expect(texto('"C:\\Users\\Jose\\Clientes\\Iberdrola SA\\run.bat"')).toBe('Ejecuta un comando');
+    expect(texto('git status')).toBe('Ejecuta git');
   });
 });

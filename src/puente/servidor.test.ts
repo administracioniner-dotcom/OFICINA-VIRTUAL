@@ -64,6 +64,20 @@ describe('POST /api/oficina/aviso', () => {
   });
 });
 
+describe('avisos que vienen de una web (no del hook)', () => {
+  it('con Origin o Sec-Fetch-Site no se aceptan aunque lleven la clave', async () => {
+    expect((await aviso({ a: 1 }, { origin: 'http://localhost:3000' })).status).toBe(403);
+    expect((await aviso({ a: 1 }, { 'sec-fetch-site': 'same-site' })).status).toBe(403);
+    expect(puente.recibidos).toEqual([]);
+  });
+  it('las configuraciones de hooks no esperan al hook en las herramientas (async)', async () => {
+    const r = await fetch(url('/api/oficina/configuracion?agente=x'), { headers: { 'sec-fetch-site': 'same-origin' } });
+    const j = await r.json() as { configuracion: { hooks: Record<string, Array<{ hooks: Array<{ async?: boolean }> }>> } };
+    expect(j.configuracion.hooks['PreToolUse']![0]!.hooks[0]!.async).toBe(true);
+    expect(j.configuracion.hooks['Stop']![0]!.hooks[0]!.async).toBeUndefined();
+  });
+});
+
 describe('GET /api/oficina/flujo (SSE para la página)', () => {
   it('desde la propia página (Sec-Fetch-Site: same-origin) manda la instantánea y los avisos nuevos', async () => {
     const ctl = new AbortController();
