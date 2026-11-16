@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import { mamparasVisibles, zonaEn, type Plano, type TipoZona, type Zona } from '../domain/plano';
-import { ETIQUETA_ZONA } from '../domain/zonas';
 import { bus } from '../state/bus';
 import { instalarControles, type ControlCamara } from './camara/controles';
 import { PALETA, TILE } from './paleta';
+import { colocarRotulos } from './rotulos';
 import { claveObjeto } from './texturas/claves';
 import { generarTexturas } from './texturas/registro';
 
@@ -56,9 +56,25 @@ export class OfficeScene extends Phaser.Scene {
         .setDepth(profundidad);
     }
 
-    // Zonas: línea tenue de borde y rótulo
+    // Zonas: línea tenue de borde (con un pequeño margen entre vecinas) y rótulo
     const g = this.add.graphics().setDepth(2);
-    for (const z of p.zonas) this.dibujarZona(g, z);
+    for (const z of p.zonas) {
+      g.lineStyle(1, 0x2a2e37, 0.45);
+      g.strokeRect(z.x * TILE + 2.5, z.y * TILE + 2.5, z.ancho * TILE - 5, z.alto * TILE - 5);
+    }
+    for (const r of colocarRotulos(p)) {
+      this.add
+        .text(r.x, r.y, r.lineas.join('\n'), {
+          fontFamily: '"Press Start 2P", monospace',
+          fontSize: '8px',
+          color: PALETA.blanco,
+          lineSpacing: 2,
+        })
+        .setStroke(PALETA.contorno, 3)
+        .setDepth(100000)
+        .setResolution(2)
+        .setAlpha(0.95);
+    }
 
     this.camara = instalarControles(this, { ancho: p.ancho * TILE, alto: p.alto * TILE });
     this.camara.ajustar();
@@ -82,22 +98,4 @@ export class OfficeScene extends Phaser.Scene {
     this.resalte = g;
     this.tweens.add({ targets: g, alpha: 0, delay: 1200, duration: 600, onComplete: () => g.destroy() });
   }
-
-  private dibujarZona(g: Phaser.GameObjects.Graphics, z: Zona): void {
-    g.lineStyle(1, 0x2a2e37, 0.35);
-    g.strokeRect(z.x * TILE + 0.5, z.y * TILE + 0.5, z.ancho * TILE - 1, z.alto * TILE - 1);
-    const t = this.add
-      .text(z.x * TILE + 3, z.y * TILE + 3, ETIQUETA_ZONA[z.tipo], {
-        fontFamily: '"Press Start 2P", monospace',
-        fontSize: '8px',
-        color: PALETA.blanco,
-        wordWrap: { width: z.ancho * TILE - 6, useAdvancedWrap: true },
-      })
-      .setStroke(PALETA.contorno, 3)
-      .setDepth(p_ETIQUETA)
-      .setResolution(2);
-    t.setAlpha(0.95);
-  }
 }
-
-const p_ETIQUETA = 100000;
