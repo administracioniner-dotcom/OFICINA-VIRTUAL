@@ -37,7 +37,7 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
 | Descanso | 1 | 0 | 6 | 10 | Sofá, nevera, dispensador de agua, mesa sin sillas con un microondas encima, futbolín, 2 sillas sueltas, planta |
 | Sala de reuniones | 1 | 10 | 6 | 10 | Mesa grande con 8 sillas, televisor |
 | Ingeniería (norte) | 7 | 1 | 10 | 4 | 2 escritorios, bicicleta y patinete |
-| Ingeniería (sur) | 7 | 10 | 8 | 10 | Mesa de 4 personas, mesa pequeña |
+| Ingeniería (sur) | 7 | 10 | 8 | 10 | Mesa de 4 personas; mesa pequeña en (8,16) que es la **zona de comer** del equipo |
 | Dirección | 16 | 11 | 10 | 9 | 2 escritorios, mesa pequeña, televisor |
 | Compras | 27 | 1 | 5 | 4 | 1 escritorio, impresora |
 | Recepción | 32 | 1 | 4 | 4 | 1 escritorio |
@@ -56,7 +56,7 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
     - **Rojas:** CAE y Desarrollo.
     - **Grises:** Administración, Compras, Recepción, Dirección y Marketing.
     - **Naranjas:** Ingeniería (escritorios y mesa de 4 personas).
-  - **Sillas por tipo de mesa** (mandan sobre el departamento): las de las **mesas pequeñas** son **blancas**; las **sillas sueltas** son **blancas**; las de la **mesa de la Sala de reuniones** son **verdes**.
+  - **Sillas por tipo de mesa** (mandan sobre el departamento): las de las **mesas pequeñas** son **blancas** (incluida la de la zona de comer de Ingeniería); las **sillas sueltas** son **blancas**; las de la **mesa de la Sala de reuniones** son **verdes**.
   - **Estanterías blancas**, con **archivadores rojos** en sus baldas.
   - **Microondas** encima de la mesa sin sillas del Descanso, en la baldosa (2,1). Es un objeto «sobre» otro: no ocupa una baldosa propia ni bloquea el paso. Ya consta en `data/plano-v1.json`.
 - Como el suelo ya es verde, **las zonas no se distinguen pintando el suelo**: se marcan con rótulo en pixel art, una línea tenue en el borde y la barra de zonas. Al seleccionar una zona se resalta su rectángulo.
