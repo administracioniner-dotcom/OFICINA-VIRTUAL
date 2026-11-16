@@ -3,11 +3,10 @@ import { mamparasVisibles, zonaEn, type Plano, type TipoZona, type Zona } from '
 import { bus } from '../state/bus';
 import { instalarControles, type ControlCamara } from './camara/controles';
 import { PALETA, TILE } from './paleta';
+import { mascaraMuro } from './muros';
 import { colocarRotulos } from './rotulos';
-import { claveObjeto } from './texturas/claves';
+import { claveMuro, claveObjeto } from './texturas/claves';
 import { generarTexturas } from './texturas/registro';
-
-const clave = (x: number, y: number) => `${x},${y}`;
 
 export class OfficeScene extends Phaser.Scene {
   private camara!: ControlCamara;
@@ -21,7 +20,6 @@ export class OfficeScene extends Phaser.Scene {
     generarTexturas(this);
     const p = this.plano;
 
-    const ocupadoMuro = new Set(p.muros.map(([x, y]) => clave(x, y)));
     const enDireccion = (x: number, y: number) => zonaEn(p, x, y)?.tipo === 'direccion';
 
     // Suelo: verde limón con variación; alfombra gris en Dirección.
@@ -34,10 +32,18 @@ export class OfficeScene extends Phaser.Scene {
       }
     }
 
-    // Muros, ventanas y mamparas (3/4: cara frontal solo si debajo no hay muro)
+    // Borde de la alfombra de Dirección
+    const alfombra = p.zonas.find((z) => z.tipo === 'direccion');
+    if (alfombra) {
+      const ga = this.add.graphics().setDepth(0.5);
+      const x = alfombra.x * TILE, y = alfombra.y * TILE, w = alfombra.ancho * TILE, h = alfombra.alto * TILE;
+      ga.lineStyle(4, 0x7f8691, 1); ga.strokeRect(x + 6, y + 6, w - 12, h - 12);
+      ga.lineStyle(2, 0xc3c8d0, 1); ga.strokeRect(x + 12, y + 12, w - 24, h - 24);
+    }
+
+    // Muros, ventanas y mamparas (3/4: borde y cara frontal según las baldosas vecinas)
     for (const [x, y] of p.muros) {
-      const k = ocupadoMuro.has(clave(x, y + 1)) ? 'muro' : 'muro-frente';
-      this.add.image(x * TILE, y * TILE, k).setOrigin(0).setDepth((y + 1) * TILE);
+      this.add.image(x * TILE, y * TILE, claveMuro(mascaraMuro(p, x, y))).setOrigin(0).setDepth((y + 1) * TILE);
     }
     for (const [x, y] of p.ventanas) this.add.image(x * TILE, y * TILE, 'ventana').setOrigin(0).setDepth((y + 1) * TILE);
     for (const [x, y] of mamparasVisibles(p)) this.add.image(x * TILE, y * TILE, 'mampara').setOrigin(0).setDepth((y + 1) * TILE);
@@ -59,18 +65,18 @@ export class OfficeScene extends Phaser.Scene {
     // Zonas: línea tenue de borde (con un pequeño margen entre vecinas) y rótulo
     const g = this.add.graphics().setDepth(2);
     for (const z of p.zonas) {
-      g.lineStyle(1, 0x2a2e37, 0.45);
-      g.strokeRect(z.x * TILE + 2.5, z.y * TILE + 2.5, z.ancho * TILE - 5, z.alto * TILE - 5);
+      g.lineStyle(2, 0x2a2e37, 0.45);
+      g.strokeRect(z.x * TILE + 5, z.y * TILE + 5, z.ancho * TILE - 10, z.alto * TILE - 10);
     }
     for (const r of colocarRotulos(p)) {
       this.add
         .text(r.x, r.y, r.lineas.join('\n'), {
           fontFamily: '"Press Start 2P", monospace',
-          fontSize: '8px',
+          fontSize: `${TILE / 2}px`,
           color: PALETA.blanco,
-          lineSpacing: 2,
+          lineSpacing: TILE / 8,
         })
-        .setStroke(PALETA.contorno, 3)
+        .setStroke(PALETA.contorno, TILE / 5)
         .setDepth(100000)
         .setResolution(2)
         .setAlpha(0.95);
@@ -93,8 +99,8 @@ export class OfficeScene extends Phaser.Scene {
 
     this.resalte?.destroy();
     const g = this.add.graphics().setDepth(200000);
-    g.lineStyle(2, 0xf57c00, 1);
-    for (const z of zs) g.strokeRect(z.x * TILE + 1, z.y * TILE + 1, z.ancho * TILE - 2, z.alto * TILE - 2);
+    g.lineStyle(4, 0xf57c00, 1);
+    for (const z of zs) g.strokeRect(z.x * TILE + 2, z.y * TILE + 2, z.ancho * TILE - 4, z.alto * TILE - 4);
     this.resalte = g;
     this.tweens.add({ targets: g, alpha: 0, delay: 1200, duration: 600, onComplete: () => g.destroy() });
   }

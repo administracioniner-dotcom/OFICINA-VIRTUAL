@@ -21,7 +21,7 @@ export function App() {
     if (!plano || !contenedor.current) return;
     let juego: ReturnType<typeof crearJuego> | undefined;
     let cancelado = false;
-    document.fonts.load('8px "Press Start 2P"').finally(() => {
+    document.fonts.load('16px "Press Start 2P"').finally(() => {
       if (!cancelado && contenedor.current) juego = crearJuego(contenedor.current, plano);
     });
     return () => { cancelado = true; juego?.destroy(true); };

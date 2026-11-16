@@ -10,7 +10,7 @@ export interface ControlCamara {
   irA(rect: RectMundo): void;
 }
 
-const VELOCIDAD_TECLADO = 320; // píxeles del mapa por segundo con zoom 1
+const VELOCIDAD_TECLADO = 640; // píxeles del mapa por segundo con zoom 1
 const MUESCA_RUEDA = 40;
 
 export function instalarControles(escena: Phaser.Scene, mapa: Tam): ControlCamara {

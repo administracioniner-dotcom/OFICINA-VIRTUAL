@@ -35,7 +35,7 @@ export function zoomTrasRedimensionar(actual: number, minimoAnterior: number, mi
 }
 
 /** Nivel más grande que cabe para ver un rectángulo entero con margen. */
-export function zoomParaRect(vista: Tam, rect: Tam, minimo: number, margen = 24): number {
+export function zoomParaRect(vista: Tam, rect: Tam, minimo: number, margen = 48): number {
   const ajuste = Math.min(vista.ancho / (rect.ancho + margen), vista.alto / (rect.alto + margen));
   const validos = nivelesZoom(minimo).filter((n) => n <= ajuste + 1e-6);
   return validos.length ? validos[validos.length - 1]! : minimo;

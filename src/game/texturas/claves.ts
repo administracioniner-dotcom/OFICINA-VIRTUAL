@@ -18,7 +18,8 @@ export const DIMENSIONES: Record<TipoObjeto, readonly [number, number]> = {
 };
 
 export const TEXTURAS_REQUERIDAS: readonly string[] = [
-  'suelo-0', 'suelo-1', 'suelo-2', 'suelo-3', 'alfombra', 'muro', 'muro-frente',
+  'suelo-0', 'suelo-1', 'suelo-2', 'suelo-3', 'alfombra',
+  ...Array.from({ length: 16 }, (_, i) => `muro-${i}`),
   'mampara', 'ventana', 'estanteria',
   'obj-escritorio-rojo', 'obj-escritorio-gris', 'obj-escritorio-naranja',
   'obj-mesa4-naranja', 'obj-mesa4-isla',
@@ -33,3 +34,6 @@ export function claveObjeto(o: Objeto, zona?: TipoZona): string {
   if (o.tipo === 'mesa4') return zona === 'ingenieria' ? 'obj-mesa4-naranja' : 'obj-mesa4-isla';
   return `obj-${o.tipo}`;
 }
+
+/** Clave de la textura de un muro según su máscara de vecinas (0–15). */
+export const claveMuro = (mascara: number): string => `muro-${mascara}`;

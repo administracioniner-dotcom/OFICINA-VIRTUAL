@@ -1,4 +1,5 @@
-export const TILE = 16;
+/** Píxeles por baldosa. Se dibuja a 32 px para tener más detalle en cada objeto. */
+export const TILE = 32;
 
 export const PALETA = {
   fondo: '#1d1f24',

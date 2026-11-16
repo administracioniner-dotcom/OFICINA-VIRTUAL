@@ -2,8 +2,9 @@ import type { Plano, Zona } from '../domain/plano';
 import { ETIQUETA_ZONA } from '../domain/zonas';
 import { TILE } from './paleta';
 
-const ANCHO_LETRA = 8; // fuente pixel de 8 px
-const SEPARACION = 4; // hueco mínimo entre rótulos, en píxeles
+const ANCHO_LETRA = TILE / 2; // fuente pixel de media baldosa (16 px)
+const SEPARACION = TILE / 4; // hueco mínimo entre rótulos
+const MARGEN = TILE / 4; // margen del rótulo respecto al borde de su zona
 
 export interface Rect { x: number; y: number; ancho: number; alto: number }
 export interface Rotulo extends Rect { zona: Zona; lineas: string[] }
@@ -51,24 +52,24 @@ export function colocarRotulos(p: Plano): Rotulo[] {
     !colocados.some((c) => choca(r, c, SEPARACION));
 
   for (const zona of p.zonas) {
-    const lineas = lineasRotulo(ETIQUETA_ZONA[zona.tipo], zona.ancho * TILE - 8);
+    const lineas = lineasRotulo(ETIQUETA_ZONA[zona.tipo], zona.ancho * TILE - 2 * MARGEN);
     const ancho = Math.max(...lineas.map((l) => l.length)) * ANCHO_LETRA;
-    const alto = lineas.length * ANCHO_LETRA + (lineas.length - 1) * 2;
-    const derecha = (zona.x + zona.ancho) * TILE - 2;
+    const alto = lineas.length * ANCHO_LETRA + (lineas.length - 1) * (TILE / 8);
+    const derecha = (zona.x + zona.ancho) * TILE - MARGEN / 2;
     const abajo = (zona.y + zona.alto) * TILE;
 
     const candidatos: Rect[] = [];
     // dentro de la zona: filas de arriba abajo, columnas de izquierda a derecha
     for (let f = 0; f < zona.alto; f++) {
       for (let c = 0; c < zona.ancho; c++) {
-        const r = { x: (zona.x + c) * TILE + 4, y: (zona.y + f) * TILE + 4, ancho, alto };
+        const r = { x: (zona.x + c) * TILE + MARGEN, y: (zona.y + f) * TILE + MARGEN, ancho, alto };
         if (r.x + ancho <= derecha && r.y + alto <= abajo) candidatos.push(r);
       }
     }
     // fuera: centrado, encima y debajo
     const xCentro = zona.x * TILE + (zona.ancho * TILE - ancho) / 2;
-    for (const k of [1, 2]) candidatos.push({ x: xCentro, y: (zona.y - k) * TILE + 4, ancho, alto });
-    for (const k of [0, 1]) candidatos.push({ x: xCentro, y: (zona.y + zona.alto + k) * TILE + 4, ancho, alto });
+    for (const k of [1, 2]) candidatos.push({ x: xCentro, y: (zona.y - k) * TILE + MARGEN, ancho, alto });
+    for (const k of [0, 1]) candidatos.push({ x: xCentro, y: (zona.y + zona.alto + k) * TILE + MARGEN, ancho, alto });
 
     const elegido = candidatos.find(cabe) ?? candidatos[0]!;
     colocados.push({ ...elegido, zona, lineas });

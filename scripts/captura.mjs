@@ -41,6 +41,10 @@ try {
   await esperar(900); await foto('direccion');
   await pagina.getByRole('button', { name: 'Desarrollo' }).click();
   await esperar(900); await foto('isla');
+  await pagina.getByRole('button', { name: 'Descanso' }).click();
+  await esperar(900); await foto('descanso');
+  await pagina.getByRole('button', { name: 'Ingeniería' }).click();
+  await esperar(900); await foto('ingenieria');
 
   await pagina.getByRole('button', { name: 'Alejar' }).click();
   await esperar(300);

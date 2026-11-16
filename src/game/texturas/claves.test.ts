@@ -44,7 +44,7 @@ describe('claveObjeto', () => {
     expect(claves).toEqual(['obj-mesa4-isla', 'obj-mesa4-naranja']);
   });
   it('muros, mamparas, ventanas y estanterías tienen textura', () => {
-    for (const k of ['muro', 'muro-frente', 'mampara', 'ventana', 'estanteria', 'alfombra', 'suelo-0', 'suelo-3']) {
+    for (const k of ['muro-0', 'muro-15', 'mampara', 'ventana', 'estanteria', 'alfombra', 'suelo-0', 'suelo-3']) {
       expect(TEXTURAS_REQUERIDAS).toContain(k);
     }
   });

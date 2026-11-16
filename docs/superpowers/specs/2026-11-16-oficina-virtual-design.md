@@ -108,7 +108,7 @@ data/          plano-v1.json
 
 ### Vista, rejilla y escala
 - **Vista:** desde arriba en estilo 3/4 (como los RPG clásicos): los personajes se ven de frente, de espaldas y de lado; los muros son bloques planos con una cara frontal visible para dar volumen; los objetos se ordenan por la fila `y` para que un personaje quede delante o detrás. *(Decisión mía, a confirmar con la primera captura de la fase 1.)*
-- Baldosa nativa de **16 px**; el mapa completo mide 592 × 320 px nativos, escalado por la cámara con zoom.
+- Baldosa nativa de **32 px** (se dibuja a doble resolución para llegar al nivel de detalle de la referencia de José: contorno oscuro, sombreado en tres tonos y sombras en el suelo); el mapa completo mide 1.184 × 640 px nativos, escalado por la cámara con zoom.
 - Phaser con `pixelArt: true` y `roundPixels`, para que no se vea borroso.
 - **Pantalla:** el lienzo ocupa toda la ventana y los paneles (fichas, tareas, barra de zonas) **flotan encima**, con botón para cerrarlos o plegarlos, para no tapar el mapa de forma permanente.
 - **Zoom:** el nivel mínimo es «ver todo el mapa» ajustado a la ventana (puede ser fraccionario); por encima, pasos enteros (2×, 3×, 4× de píxel) para que el pixel art se vea nítido. El fondo alrededor del mapa es gris oscuro corporativo.

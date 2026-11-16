@@ -11,11 +11,11 @@ const choca = (a: { x: number; y: number; ancho: number; alto: number }, b: type
   a.x < b.x + b.ancho + margen && b.x < a.x + a.ancho + margen && a.y < b.y + b.alto + margen && b.y < a.y + a.alto + margen;
 
 describe('lineasRotulo', () => {
-  it('parte «SALA DE REUNIONES» en dos líneas dentro de 88 px', () => {
-    expect(lineasRotulo('SALA DE REUNIONES', 88)).toEqual(['SALA DE', 'REUNIONES']);
+  it('parte «SALA DE REUNIONES» en dos líneas dentro de 176 px', () => {
+    expect(lineasRotulo('SALA DE REUNIONES', 176)).toEqual(['SALA DE', 'REUNIONES']);
   });
   it('deja una sola línea si cabe', () => {
-    expect(lineasRotulo('COMPRAS', 72)).toEqual(['COMPRAS']);
+    expect(lineasRotulo('COMPRAS', 144)).toEqual(['COMPRAS']);
   });
 });
 
@@ -30,10 +30,10 @@ describe('colocarRotulos', () => {
       }
     }
   });
-  it('los rótulos no se tocan: al menos 4 px entre ellos', () => {
+  it('los rótulos no se tocan: al menos un cuarto de baldosa entre ellos', () => {
     for (let i = 0; i < rotulos.length; i++) {
       for (let j = i + 1; j < rotulos.length; j++) {
-        expect(choca(rotulos[i]!, rotulos[j]!, 4), `${rotulos[i]!.zona.tipo} y ${rotulos[j]!.zona.tipo}`).toBe(false);
+        expect(choca(rotulos[i]!, rotulos[j]!, TILE / 4), `${rotulos[i]!.zona.tipo} y ${rotulos[j]!.zona.tipo}`).toBe(false);
       }
     }
   });
