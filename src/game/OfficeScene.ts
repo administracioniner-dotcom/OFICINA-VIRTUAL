@@ -63,10 +63,15 @@ export class OfficeScene extends Phaser.Scene {
       this.add.image(x * TILE + TILE / 2, y * TILE + TILE / 2, 'estanteria').setAngle(90).setDepth((y + 1) * TILE);
     }
 
-    // Logotipo de INER en el muro de Dirección, justo encima del televisor
+    // Logotipo de INER en el muro de Dirección, en el extremo más cercano a la entrada principal
     const tele = p.objetos.find((o) => o.tipo === 'tele' && zonaEn(p, o.x, o.y)?.tipo === 'direccion');
     if (tele) {
-      const cx = (tele.x + tele.ancho / 2) * TILE, y = (tele.y - 1) * TILE;
+      const filaMuro = tele.y - 1;
+      const dir = zonaEn(p, tele.x, tele.y)!;
+      const muros = p.muros.filter(([x, y]) => y === filaMuro && x >= dir.x - 1 && x < dir.x + dir.ancho).map(([x]) => x);
+      const extremo = muros.length ? (Math.max(...muros) + 1) * TILE : (tele.x + tele.ancho) * TILE;
+      const cx = extremo - 4 - 49;
+      const y = filaMuro * TILE;
       const placa = this.add.graphics().setDepth(tele.y * TILE + 1);
       placa.fillStyle(0x232733, 1).fillRect(cx - 49, y + 1, 98, 30);
       placa.fillStyle(0xfbfaf6, 1).fillRect(cx - 48, y + 2, 96, 28);
