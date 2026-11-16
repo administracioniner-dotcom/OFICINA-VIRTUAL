@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import datos from '../../data/plano-v1.json';
-import { crearAgentes, crearAgentesExtra, type Agente } from '../domain/agentes';
+import { crearAgentes, crearAgentesExtra, esReal, type Agente } from '../domain/agentes';
 import { PlanoInvalido, cargarPlano } from '../domain/plano';
 import { asientosDelPlano } from '../game/asientos';
 import { crearJuego } from '../game/crearJuego';
+import { FuenteClaudeCode } from '../source/claudeCode';
+import { FuenteCompuesta } from '../source/compuesta';
 import { SimuladorAgentes } from '../source/simulado';
 import { crearAlmacen } from '../state/almacen';
 import { crearGestor } from '../state/gestor';
@@ -40,9 +42,15 @@ function preparar() {
     // ?velocidad=3 acelera la simulación (para pruebas)
     const escala = Number(new URLSearchParams(window.location.search).get('velocidad'));
     const sillas = asientos.filter((a) => a.tipo === 'reuniones').map((a) => a.id);
-    const fuente = new SimuladorAgentes(inicial, sillas, Math.random, escala > 0 ? escala : 1);
+    const simulador = new SimuladorAgentes(inicial, sillas, Math.random, escala > 0 ? escala : 1);
+    // Agentes reales: Claude Code avisa al puente local (servidor de Vite) y este nos lo cuenta por SSE
+    const claude = new FuenteClaudeCode({
+      crearFlujo: () => new EventSource('/api/oficina/flujo'),
+      agentes: () => gestor.agentes(),
+    });
+    const fuente = new FuenteCompuesta([simulador, claude]);
     const almacen = crearAlmacen(fuente, asientos);
-    const gestor = crearGestor({ almacenamiento, fuente, asientos, inicial, guardadoInicial: !nav.bloqueado });
+    const gestor = crearGestor({ almacenamiento, fuente: simulador, asientos, inicial, guardadoInicial: !nav.bloqueado });
     // si otra pestaña cambia la lista, esta la recoge en vez de pisarla al guardar
     const releer = () => cargarAgentes(almacenamiento, base, asientos);
     return { plano, fuente, almacen, gestor, releer, escuchaOtrasPestanas: !estres && !nav.bloqueado };
@@ -82,7 +90,7 @@ export function App() {
       <MisAgentes almacen={almacen} gestor={gestor} alCrear={() => setFormulario({})} />
       <Fichas almacen={almacen} gestor={gestor} alEditar={(a) => setFormulario({ editar: a })} />
       {formulario && <FormularioAgente almacen={almacen} gestor={gestor} editar={formulario.editar} alCerrar={() => setFormulario(null)} />}
-      <div className="panel marca">INER SMART Virtual Office · simulación</div>
+      <Marca almacen={almacen} />
     </>
   );
 }
@@ -97,4 +105,10 @@ function Fichas({ almacen, gestor, alEditar }: { almacen: Preparado; gestor: Non
   const agente = e.agentes[seleccion.id];
   if (!agente) return null;
   return <FichaAgente almacen={almacen} id={seleccion.id} alEditar={() => alEditar(agente)} alQuitar={() => { gestor.quitar(seleccion.id); }} />;
+}
+
+function Marca({ almacen }: { almacen: Preparado }) {
+  const e = useAlmacen(almacen);
+  const reales = Object.values(e.agentes).filter(esReal).length;
+  return <div className="panel marca">INER SMART Virtual Office · simulación{reales > 0 ? ` + ${reales} real${reales > 1 ? 'es' : ''}` : ''}</div>;
 }

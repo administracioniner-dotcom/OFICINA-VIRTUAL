@@ -1,4 +1,4 @@
-import type { Agente, EstadoAgente } from '../domain/agentes';
+import { esReal, type Agente, type EstadoAgente } from '../domain/agentes';
 import type { AgentSource, EventoOficina } from './tipos';
 
 type Azar = () => number;
@@ -18,6 +18,7 @@ function elegir<T>(opciones: ReadonlyArray<readonly [T, number]>, azar: Azar): T
 
 /**
  * Agentes SIMULADOS: cambian de estado al azar con reglas simples. No hay ningún agente real detrás.
+ * Los agentes de origen «real» se dan de alta y se editan igual, pero aquí nunca se mueven: los mueve Claude Code.
  * El tiempo lo mueve `avanzar(dt)`; `iniciar()` lo conecta a un reloj real.
  */
 export class SimuladorAgentes implements AgentSource {
@@ -60,6 +61,11 @@ export class SimuladorAgentes implements AgentSource {
   actualizar(agente: Agente): void {
     const i = this.internos.find((x) => x.agente.id === agente.id);
     if (!i) return;
+    if ((i.agente.origen ?? 'simulado') !== (agente.origen ?? 'simulado')) {
+      // Cambia de simulado a real (o al revés): suelta su silla de reunión y empieza de cero.
+      if (i.silla) { i.silla = null; this.emitir({ tipo: 'agente.reunion', id: agente.id, asiento: null }); }
+      i.estado = agente.estado; i.resta = this.duracion(agente.estado);
+    }
     i.agente = agente;
     this.emitir({ tipo: 'agente.cambio', agente: { ...agente, estado: i.estado } });
   }
@@ -78,6 +84,7 @@ export class SimuladorAgentes implements AgentSource {
   avanzar(dt: number): void {
     if (!this.activo) return;
     for (const i of [...this.internos]) {
+      if (esReal(i.agente)) continue;
       i.resta -= dt;
       if (i.resta <= 0) this.siguiente(i);
     }

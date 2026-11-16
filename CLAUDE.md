@@ -5,14 +5,16 @@ Oficina virtual 2D en pixel art (vista desde arriba) para INER SMART ENERGY SYST
 ## Reglas del proyecto
 - Responde **en español, corto y directo**. Pregunta antes de empezar cada fase nueva.
 - Proyecto **independiente**: no toca la ERP `CONTROL-DE-OBRAS`, ni Supabase, ni ningún otro repositorio.
-- **Sin servicios externos, sin llamadas de red, sin credenciales ni secretos** en el código ni en el repositorio.
-- **No hay agentes reales todavía:** todo lo que muestre la interfaz es simulado y debe verse como simulado. No se inventan personas ni datos de negocio.
+- **Sin servicios externos, sin credenciales ni secretos** en el código ni en el repositorio. La única comunicación es el puente local de Claude Code: solo `127.0.0.1`, con clave en `.oficina/clave` (ignorada por git).
+- **Simulado vs real:** los agentes de origen `simulado` se mueven solos y se ven como simulados; los de origen `real` solo se mueven con avisos de hooks de Claude Code (`puente/hook.mjs` → servidor de Vite → SSE). No se inventan personas ni datos de negocio.
+- **Privacidad del puente:** de los comandos solo la primera palabra, de los ficheros solo el nombre, la orden a 80 caracteres; nunca respuestas ni contenido.
 - Antes de decir que algo funciona, compruébalo (`npm run build`, navegador real, capturas). Di claramente lo que no has podido probar (p. ej. Windows real).
 - Commits con la línea `Co-Authored-By` de Claude. Flujo: rama nueva → pull request → fusionar con commit de fusión.
 
 ## Dónde está todo
 - Arranque en Windows: `iniciar.bat` (doble clic). Los agentes del usuario se guardan en el navegador (`localStorage`, dirección fija `localhost:5173`).
 - Diseño (pendiente de aprobación de José): `docs/superpowers/specs/2026-11-16-oficina-virtual-design.md`.
+- Agentes reales: `docs/conectar-claude-code.md` y `src/puente/` (traducir, núcleo, servidor).
 - Plano de la oficina (37 × 20 baldosas): `data/plano-v1.json`.
 
 ## Tecnología prevista

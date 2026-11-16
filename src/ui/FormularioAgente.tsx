@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Agente, Genero } from '../domain/agentes';
+import type { Agente, Genero, Origen } from '../domain/agentes';
 import { etiquetaPuesto } from '../domain/etiquetas';
 import { MAX_NOMBRE, VARIANTES, puestosLibres, validarDatosAgente } from '../domain/gestionAgentes';
 import type { Almacen } from '../state/almacen';
@@ -20,6 +20,7 @@ export function FormularioAgente({ almacen, gestor, editar, alCerrar }: Props) {
   const [asientoId, setAsientoId] = useState(editar?.asientoId ?? libres[0]?.id ?? '');
   const [genero, setGenero] = useState<Genero>(editar?.genero ?? 'f');
   const [variante, setVariante] = useState(editar?.variante ?? 0);
+  const [origen, setOrigen] = useState<Origen>(editar?.origen ?? 'simulado');
   const [errores, setErrores] = useState<string[]>([]);
   const entrada = useRef<HTMLInputElement>(null);
   const pulsoEnFondo = useRef(false);
@@ -43,7 +44,7 @@ export function FormularioAgente({ almacen, gestor, editar, alCerrar }: Props) {
   }, [libres]);
 
   const zona = todos.find((p) => p.id === asientoId)?.zona;
-  const datos = { nombre, asientoId, genero, variante };
+  const datos = { nombre, asientoId, genero, variante, origen };
 
   const guardar = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -75,6 +76,12 @@ export function FormularioAgente({ almacen, gestor, editar, alCerrar }: Props) {
         </select>
 
         <fieldset>
+          <legend>Tipo de agente</legend>
+          <label className="opcion"><input type="radio" name="origen" checked={origen === 'simulado'} onChange={() => setOrigen('simulado')} /> Simulado (cambia de estado solo)</label>
+          <label className="opcion"><input type="radio" name="origen" checked={origen === 'real'} onChange={() => setOrigen('real')} /> Real: lo mueve un Claude Code mío</label>
+        </fieldset>
+
+        <fieldset>
           <legend>Persona</legend>
           <label className="opcion"><input type="radio" name="genero" checked={genero === 'f'} onChange={() => setGenero('f')} /> Chica</label>
           <label className="opcion"><input type="radio" name="genero" checked={genero === 'm'} onChange={() => setGenero('m')} /> Chico</label>
@@ -93,7 +100,9 @@ export function FormularioAgente({ almacen, gestor, editar, alCerrar }: Props) {
         </fieldset>
 
         {errores.length > 0 && <ul id="f-errores" className="errores" role="alert">{errores.map((m) => <li key={m}>{m}</li>)}</ul>}
-        <p className="nota">Los agentes son simulados por ahora: cambian de estado solos.</p>
+        <p className="nota">{origen === 'real'
+          ? 'Un agente real solo se mueve con los avisos de su Claude Code. Al guardar, abre su ficha y pulsa «Conectar a Claude Code».'
+          : 'Un agente simulado cambia de estado solo, sin ninguna IA detrás.'}</p>
         <div className="acciones">
           <button type="submit" className="boton principal" disabled={opciones.length === 0}>Guardar</button>
           <button type="button" className="boton" onClick={alCerrar}>Cancelar</button>

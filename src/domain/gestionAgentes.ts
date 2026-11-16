@@ -1,4 +1,4 @@
-import { camisaDeDepartamento, type Agente, type Genero, type PuestoAsignable } from './agentes';
+import { camisaDeDepartamento, type Agente, type Genero, type Origen, type PuestoAsignable } from './agentes';
 
 export const MAX_NOMBRE = 40;
 export const VARIANTES = 12;
@@ -9,6 +9,8 @@ export interface DatosAgente {
   genero: Genero;
   /** Aspecto (piel, pelo y peinado), de 0 a 11. */
   variante: number;
+  /** Simulado (por defecto) o real (lo mueve un Claude Code conectado). */
+  origen?: Origen;
 }
 
 /** Puestos de trabajo sin agente. `editandoId` libera el puesto del agente que se está editando. */
@@ -31,6 +33,7 @@ export function validarDatosAgente(d: DatosAgente, asientos: readonly PuestoAsig
 
   if (d.genero !== 'f' && d.genero !== 'm') errores.push('Elige si es chico o chica.');
   if (!Number.isInteger(d.variante) || d.variante < 0 || d.variante >= VARIANTES) errores.push('Elige un aspecto de la lista.');
+  if (d.origen !== undefined && d.origen !== 'simulado' && d.origen !== 'real') errores.push('El origen del agente debe ser «simulado» o «real».');
   return errores;
 }
 
@@ -49,6 +52,9 @@ export function construirAgente(d: DatosAgente, asientos: readonly PuestoAsignab
     while (usados.has(`${zona}-${n}`)) n++;
     id = `${zona}-${n}`;
   }
+  const origen: Origen = d.origen ?? existente?.origen ?? 'simulado';
+  // Si cambia el origen, el estado anterior ya no vale: un real espera, un simulado trabaja.
+  const estado = existente && (existente.origen ?? 'simulado') === origen ? existente.estado : origen === 'real' ? 'esperando' : 'trabajando';
   return {
     id,
     nombre: d.nombre.trim(),
@@ -57,6 +63,7 @@ export function construirAgente(d: DatosAgente, asientos: readonly PuestoAsignab
     camisa: camisaDeDepartamento(zona),
     variante: d.variante,
     asientoId: d.asientoId,
-    estado: existente?.estado ?? 'trabajando',
+    estado,
+    origen,
   };
 }

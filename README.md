@@ -1,6 +1,6 @@
 # INER SMART Virtual Office
 
-Oficina virtual 2D en pixel art para INER SMART, de **uso personal** (en tu propio ordenador). Muestra a tus agentes en su puesto, caminando y cambiando de estado, y te deja crearlos, editarlos y quitarlos. Los agentes son **simulados** hasta conectar agentes reales.
+Oficina virtual 2D en pixel art para INER SMART, de **uso personal** (en tu propio ordenador). Muestra a tus agentes en su puesto, caminando y cambiando de estado, y te deja crearlos, editarlos y quitarlos. Los agentes son **simulados**, salvo los que marques como **reales**: esos los mueve un Claude Code tuyo (ver `docs/conectar-claude-code.md`).
 
 ## Usarla en Windows (doble clic)
 1. Instala **Node.js (versión LTS)** desde https://nodejs.org (solo la primera vez).
@@ -29,6 +29,9 @@ npm test           # pruebas del plano, texturas y cámara
 - Barra de zonas que lleva la cámara a cada zona y resalta su rectángulo; botones de zoom.
 - Control de errores: si el plano está mal formado se muestra el motivo en pantalla.
 
+## Agentes reales (Claude Code)
+**＋ Nuevo agente** → «Real» → en su ficha, **Conectar a Claude Code** (guía: `docs/conectar-claude-code.md`). Prueba en navegador: `npm run build && node scripts/verificar-claude-code.mjs`.
+
 ## Comprobaciones (`scripts/captura.mjs`)
 Con `npm run build` hecho: `node scripts/captura.mjs prefijo` genera capturas en `capturas/` y mide fotogramas. Usa el Playwright que ya trae el entorno de desarrollo; no es dependencia del proyecto.
 
@@ -36,5 +39,6 @@ Con `npm run build` hecho: `node scripts/captura.mjs prefijo` genera capturas en
 Windows real con Chrome, Edge y Firefox, ni una tarjeta gráfica real: las pruebas se hicieron en un Chromium de pruebas sin GPU.
 
 ## Documentos
+- Conectar un Claude Code real: `docs/conectar-claude-code.md`
 - Diseño: `docs/superpowers/specs/2026-11-16-oficina-virtual-design.md`
 - Plan de la fase 1: `docs/superpowers/plans/2026-11-16-fase-1-oficina.md`

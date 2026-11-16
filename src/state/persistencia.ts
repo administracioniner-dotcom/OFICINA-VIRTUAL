@@ -33,9 +33,11 @@ export function cargarAgentes(alm: Almacenamiento, porDefecto: Agente[], asiento
     const asiento = asientos.find((s) => s.id === a.asientoId);
     if (!asiento || !asiento.zona || asiento.tipo === 'reuniones' || ids.has(a.id) || puestos.has(a.asientoId)) continue;
     ids.add(a.id); puestos.add(a.asientoId);
+    const real = a.origen === 'real';
     res.push({
       id: a.id, nombre: a.nombre, departamento: asiento.zona, genero: a.genero,
-      camisa: a.camisa, variante: a.variante as number, asientoId: a.asientoId, estado: 'trabajando',
+      camisa: a.camisa, variante: a.variante as number, asientoId: a.asientoId,
+      estado: real ? 'esperando' : 'trabajando', origen: real ? 'real' : 'simulado',
     });
   }
   return res;

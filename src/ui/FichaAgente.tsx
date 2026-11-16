@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
+import { esReal } from '../domain/agentes';
 import { etiquetaPuesto, hace } from '../domain/etiquetas';
 import { NOMBRE_ZONA } from '../domain/zonas';
 import { COLOR_ESTADO, NOMBRE_ESTADO } from '../game/sprites/globos';
 import type { Almacen } from '../state/almacen';
 import { bus } from '../state/bus';
 import { useAlmacen } from '../state/useAlmacen';
+import { ConectarClaudeCode } from './ConectarClaudeCode';
+
+const SIN_SENAL_MS = 10 * 60 * 1000;
 
 const NOMBRE_TAREA = { pendiente: 'Pendiente', en_curso: 'En curso', hecha: 'Hecha' } as const;
 
@@ -20,6 +24,9 @@ export function FichaAgente({ almacen, id, alEditar, alQuitar }: { almacen: Alma
   if (!agente) return null;
   const puesto = e.puestos[agente.asientoId];
   const tareas = e.tareas[id] ?? [];
+  const real = esReal(agente);
+  const con = e.conexion[id];
+  const enDirecto = !!con?.conectado && con.ultimaSenal !== null && ahora - con.ultimaSenal < SIN_SENAL_MS;
   const actividad = e.actividad.filter((a) => a.agenteId === id).slice(0, 5);
 
   return (
@@ -28,13 +35,20 @@ export function FichaAgente({ almacen, id, alEditar, alQuitar }: { almacen: Alma
         <span className="muestra" style={{ background: agente.camisa }} aria-hidden="true" />
         <div>
           <h2>{agente.nombre}</h2>
-          <span className="sello">Simulado</span>
+          {real ? <span className="sello real">Real · Claude Code</span> : <span className="sello">Simulado</span>}
         </div>
         <button type="button" className="boton cerrar" aria-label="Cerrar ficha" onClick={() => almacen.seleccionar(null)}>✕</button>
       </header>
       <dl>
         <dt>Estado</dt>
         <dd><span className="pildora" style={{ ['--c' as string]: COLOR_ESTADO[agente.estado] }}>{NOMBRE_ESTADO[agente.estado]}</span></dd>
+        {real && (<>
+          <dt>Conexión</dt>
+          <dd>
+            <span className="pildora" style={{ ['--c' as string]: enDirecto ? '#66bb6a' : '#78909c' }}>{enDirecto ? 'En directo' : 'Sin señal'}</span>
+            {con?.ultimaSenal != null && <small> último aviso {hace(con.ultimaSenal, ahora)}</small>}
+          </dd>
+        </>)}
         <dt>Departamento</dt>
         <dd>{NOMBRE_ZONA[agente.departamento]}</dd>
         <dt>Puesto</dt>
@@ -56,10 +70,13 @@ export function FichaAgente({ almacen, id, alEditar, alQuitar }: { almacen: Alma
         </div>
       )}
 
+      {real && <ConectarClaudeCode nombre={agente.nombre} />}
+
       <section className="ventana-tareas" aria-label="Tareas asignadas">
         <button type="button" className="boton plegable" aria-expanded={verTareas} onClick={() => setVerTareas(!verTareas)}>
           Tareas asignadas ({tareas.filter((t) => t.estado !== 'hecha').length} activas) {verTareas ? '▴' : '▾'}
         </button>
+        {verTareas && real && tareas.length === 0 && <p className="vacio">Todavía no ha recibido ninguna orden.</p>}
         {verTareas && (
           <ul>
             {tareas.map((t) => (
@@ -81,7 +98,9 @@ export function FichaAgente({ almacen, id, alEditar, alQuitar }: { almacen: Alma
           </ul>
         )}
       </section>
-      <p className="aviso">Datos simulados: no hay ningún agente real conectado.</p>
+      <p className="aviso">{real
+        ? 'Datos reales de Claude Code, recibidos en este ordenador.'
+        : 'Datos simulados: no hay ningún agente real detrás.'}</p>
     </aside>
   );
 }
