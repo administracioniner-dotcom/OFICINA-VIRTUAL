@@ -23,6 +23,8 @@ export const TEXTURAS_REQUERIDAS: readonly string[] = [
   'mampara', 'ventana', 'estanteria', 'sombra-muro',
   'obj-escritorio-rojo', 'obj-escritorio-gris', 'obj-escritorio-naranja',
   'obj-mesa4-naranja', 'obj-mesa4-isla',
+  ...(['rojo', 'gris', 'naranja'] as const).flatMap((c) => ([0, 90, 180, 270] as const).map((g) => `obj-escritorio-${c}-${g}`)),
+  'obj-mesa-90', 'obj-mesa4-naranja-90', 'obj-mesa4-isla-90', 'obj-tele-180',
   'obj-puerta', 'obj-sofa', 'obj-mesa', 'obj-planta', 'obj-entrada', 'obj-nevera',
   'obj-mesapeq', 'obj-mesasola', 'obj-impresora', 'obj-tele', 'obj-agua', 'obj-silla',
   'obj-futbolin', 'obj-patinete', 'obj-bici', 'obj-microondas',
@@ -37,3 +39,20 @@ export function claveObjeto(o: Objeto, zona?: TipoZona): string {
 
 /** Clave de la textura de un muro según su máscara de vecinas (0–15). */
 export const claveMuro = (mascara: number): string => `muro-${mascara}`;
+
+/**
+ * Texturas que ya vienen dibujadas en su orientación final (pantallas y papeles derechos).
+ * La escena no las gira. Si un objeto tiene un giro sin textura propia, se usa la textura base girada.
+ */
+const PREGIRADAS: ReadonlySet<string> = new Set([
+  ...(['rojo', 'gris', 'naranja'] as const).flatMap((c) => ([0, 90, 180, 270] as const).map((g) => `obj-escritorio-${c}-${g}`)),
+  'obj-mesa-90', 'obj-mesa4-naranja-90', 'obj-mesa4-isla-90', 'obj-tele-180',
+]);
+
+export interface TexturaObjeto { clave: string; angulo: number }
+
+export function texturaObjeto(o: Objeto, zona?: TipoZona): TexturaObjeto {
+  const base = claveObjeto(o, zona);
+  const girada = `${base}-${o.giro}`;
+  return PREGIRADAS.has(girada) ? { clave: girada, angulo: 0 } : { clave: base, angulo: o.giro };
+}

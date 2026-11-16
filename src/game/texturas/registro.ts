@@ -191,14 +191,16 @@ function dibujarMuros(escena: Phaser.Scene): void {
     for (let y = 0; y < 8; y++) { c.fillStyle = `rgba(20, 24, 12, ${(0.3 * (8 - y)) / 8})`; c.fillRect(0, y, TILE, 1); }
   });
 
+  // Mampara: cristal completo, sin marcos; solo un reflejo suave para que se vea que hay vidrio
   lienzo(escena, 'mampara', TILE, TILE, (c) => {
     const r = rectCtx(c);
+    c.globalAlpha = 0.32;
+    r(0, 0, TILE, TILE, C.cristal);
+    c.globalAlpha = 0.5;
+    r(0, 0, TILE, 1, C.cristalLuz); r(0, TILE - 1, TILE, 1, C.cristalLuz);
     c.globalAlpha = 0.55;
-    r(11, 0, 10, TILE, C.cristal);
+    for (const [dx, dy, l] of [[4, 3, 7], [9, 8, 9], [20, 18, 6], [15, 22, 4]] as const) for (let i = 0; i < l; i++) r(dx + i, dy + (i >> 0), 2, 1, C.blancoLuz);
     c.globalAlpha = 1;
-    r(10, 0, 1, TILE, C.contorno); r(21, 0, 1, TILE, C.contorno);
-    r(11, 0, 1, TILE, C.blancoLuz); r(20, 0, 1, TILE, C.cristalOscuro);
-    for (const [y, h] of [[3, 6], [14, 4], [22, 6]] as const) { r(13, y, 1, h, C.blancoLuz); r(14, y + 1, 1, h - 2, C.cristalLuz); }
   });
 
   lienzo(escena, 'estanteria', TILE, TILE, (c) => {
@@ -286,6 +288,103 @@ function mesaCuatro(c: Ctx, r: Rect, w: number, h: number, norte: readonly [Pues
   // utensilios en los extremos de la mesa
   r(14, 25, 9, 11, C.contorno); r(15, 26, 7, 9, C.blancoLuz); for (const dy of [28, 30, 32]) r(16, dy, 5, 1, C.blancoOscuro);
   disco(c, 110, 32, 4, C.contorno); disco(c, 110, 32, 3, C.naranja); disco(c, 109, 31, 1, '#ffc07a');
+}
+
+
+function dibujarTele(c: Ctx, r: Rect): void {
+    sombraSuelo(c, 4, 12, 58, 18);
+    caja(r, 3, 6, 58, 20, '#11151c', '#2b3140', undefined);
+    r(5, 8, 54, 16, '#16263a');
+    // imagen: gráfico de barras y línea
+    r(9, 18, 4, 4, C.azulPantalla); r(15, 14, 4, 8, C.verdePantalla); r(21, 16, 4, 6, C.azulPantalla);
+    r(27, 11, 4, 11, C.verdePantalla); r(33, 13, 4, 9, C.azulPantalla); r(39, 10, 4, 12, C.naranja);
+    r(45, 12, 4, 10, C.verdePantalla);
+    r(8, 22, 44, 1, '#3a5a80');
+    r(6, 9, 20, 1, '#2f4f78'); r(8, 10, 14, 1, '#2f4f78');
+    for (let i = 0; i < 6; i++) r(48 + i, 8 + i, 1, 1, '#4a6a94');                // reflejo
+    r(24, 26, 16, 3, C.contorno); r(26, 27, 12, 1, C.metalOscuro);
+}
+
+/* ---------- Objetos pregirados: ya vienen en su orientación final (pantallas derechas) ---------- */
+function papelesFinal(r: Rect, x: number, y: number): void {
+  r(x, y, 9, 11, C.contorno); r(x + 1, y + 1, 7, 9, C.blancoLuz);
+  for (const dy of [2, 4, 6, 8]) r(x + 2, y + dy, 5, 1, C.blancoOscuro);
+}
+function tazaFinal(c: Ctx, x: number, y: number): void {
+  disco(c, x, y, 4, C.contorno); disco(c, x, y, 3, C.naranja); disco(c, x - 1, y - 1, 1, '#ffc07a'); disco(c, x, y, 1, '#5a2e00');
+}
+
+/** Ordenador derecho: pantalla arriba, teclado debajo y el utensilio del puesto. `x0` es el borde izquierdo (15 px de ancho). */
+function puestoDerecho(c: Ctx, r: Rect, x0: number, cy: number, tipo: Puesto): void {
+  pantallaPuesto(r, x0, cy - 14, tipo === 'dev' ? 15 : 14, tipo, 'norte');
+  teclado(r, x0, cy - 4);
+  r(x0 + 11, cy + 2, 3, 4, C.contorno); r(x0 + 12, cy + 3, 1, 2, C.metalLuz);   // ratón
+  const y = cy + 3;
+  if (tipo === 'ing') { r(x0, y, 7, 9, C.contorno); r(x0 + 1, y + 1, 5, 7, '#dff0ff'); r(x0 + 2, y + 3, 3, 1, '#4f86c6'); r(x0 + 2, y + 5, 3, 1, '#4f86c6'); }
+  if (tipo === 'cae') { r(x0, y, 7, 9, C.contorno); r(x0 + 1, y + 1, 5, 7, C.rojo); r(x0 + 1, y + 1, 5, 1, C.rojoLuz); r(x0 + 2, y + 4, 3, 1, C.blancoLuz); }
+  if (tipo === 'mkt') { r(x0, y, 4, 4, C.contorno); r(x0 + 1, y + 1, 2, 2, '#ffe08a'); r(x0 + 4, y + 3, 4, 4, C.contorno); r(x0 + 5, y + 4, 2, 2, '#ff9ac2'); }
+  if (tipo === 'adm') { r(x0, y, 7, 9, C.contorno); r(x0 + 1, y + 1, 5, 2, '#8fd3a0'); for (const [dx, dy] of [[1, 4], [3, 4], [5, 4], [1, 6], [3, 6], [5, 6]] as const) r(x0 + dx, y + dy, 1, 1, C.blancoLuz); }
+  if (tipo === 'dev') tazaFinal(c, x0 + 4, y + 4);
+}
+
+function dibujarPregiradas(escena: Phaser.Scene): void {
+  // Escritorios: cuatro orientaciones por color; la silla va en su lado y el contenido siempre derecho
+  const CONFIG = {
+    0: { cuerpo: [2, 3, 60, 21], silla: [32, 24, 'sur'] },
+    180: { cuerpo: [2, 8, 60, 21], silla: [32, 8, 'norte'] },
+    90: { cuerpo: [8, 2, 21, 60], silla: [8, 32, 'oeste'] },
+    270: { cuerpo: [3, 2, 21, 60], silla: [24, 32, 'este'] },
+  } as const;
+  for (const color of ['rojo', 'gris', 'naranja'] as const) {
+    for (const giro of [0, 90, 180, 270] as const) {
+      const horizontal = giro === 0 || giro === 180;
+      lienzo(escena, `obj-escritorio-${color}-${giro}`, horizontal ? 2 * TILE : TILE, horizontal ? TILE : 2 * TILE, (c) => {
+        const r = rectCtx(c);
+        const [bx, by, bw, bh] = CONFIG[giro].cuerpo;
+        const [sx, sy, lado] = CONFIG[giro].silla;
+        silla(c, sx, sy, color, lado);
+        sombraSuelo(c, bx + 1, by + 1, bw, bh);
+        tablero(r, bx, by, bw, bh);
+        if (horizontal) {
+          monitor(r, bx + 23, by + 3); teclado(r, bx + 22, by + 14); papelesFinal(r, bx + 4, by + 4); tazaFinal(c, bx + 50, by + 9);
+          r(bx + 41, by + 14, 3, 5, C.contorno); r(bx + 42, by + 15, 1, 3, C.metalLuz);
+          r(bx + 12, by + 13, 6, 5, C.contorno); r(bx + 13, by + 14, 4, 3, '#ffe08a');
+          disco(c, bx + 54, by + 17, 3, C.contorno); disco(c, bx + 54, by + 16, 2, C.verdeHoja); r(bx + 52, by + 17, 5, 3, C.terracota);
+        } else {
+          monitor(r, bx + 3, by + 4); teclado(r, bx + 3, by + 17); papelesFinal(r, bx + 5, by + 33); tazaFinal(c, bx + 11, by + 54);
+          r(bx + 14, by + 24, 3, 5, C.contorno); r(bx + 15, by + 25, 1, 3, C.metalLuz);
+          r(bx + 15, by + 34, 5, 5, C.contorno); r(bx + 16, by + 35, 3, 3, '#ffe08a');
+          disco(c, bx + 4, by + 52, 3, C.contorno); disco(c, bx + 4, by + 51, 2, C.verdeHoja); r(bx + 2, by + 52, 5, 3, C.terracota);
+        }
+      });
+    }
+  }
+
+  // Mesas verticales (2 × 4 baldosas): sillas a oeste y este, ordenadores derechos
+  const mesaVertical = (clave: string, oeste: keyof typeof SILLA, este: keyof typeof SILLA, filas: readonly number[], puestos: ((lado: 'oeste' | 'este', fila: number) => Puesto) | null) => {
+    lienzo(escena, clave, 2 * TILE, 4 * TILE, (c) => {
+      const r = rectCtx(c);
+      for (const cy of filas) { silla(c, 9, cy, oeste, 'oeste'); silla(c, 55, cy, este, 'este'); }
+      sombraSuelo(c, 17, 10, 32, 112);
+      tablero(r, 16, 8, 32, 112);
+      if (puestos) {
+        filas.forEach((cy, i) => { puestoDerecho(c, r, 17, cy, puestos('oeste', i)); puestoDerecho(c, r, 33, cy, puestos('este', i)); });
+        papelesFinal(r, 27, 11); tazaFinal(c, 32, 114);
+      } else {
+        // reuniones: portátiles, papeles y tazas en el centro
+        for (const y of [30, 94]) { monitor(r, 25, y); teclado(r, 24, y + 11); }
+        papelesFinal(r, 19, 60); papelesFinal(r, 34, 62); papelesFinal(r, 27, 12);
+        tazaFinal(c, 24, 114); tazaFinal(c, 40, 114); tazaFinal(c, 32, 76);
+      }
+    });
+  };
+  mesaVertical('obj-mesa-90', 'verde', 'verde', [16, 48, 80, 112], null);
+  mesaVertical('obj-mesa4-naranja-90', 'naranja', 'naranja', [48, 80], () => 'ing');
+  // Isla: oeste (rojas) Desarrollo y CAE; este (grises) Marketing y Administración
+  mesaVertical('obj-mesa4-isla-90', 'rojo', 'gris', [48, 80], (lado, i) => (lado === 'oeste' ? (['dev', 'cae'] as const)[i]! : (['mkt', 'adm'] as const)[i]!));
+
+  // Televisor ya del derecho (el plano lo gira 180°)
+  lienzo(escena, 'obj-tele-180', 2 * TILE, TILE, (c) => dibujarTele(c, rectCtx(c)));
 }
 
 /* ---------- Mobiliario ---------- */
@@ -424,19 +523,7 @@ function dibujarMobiliario(escena: Phaser.Scene): void {
     caja(r, 21, 12, 6, 5, '#2b3240', undefined, undefined);
     r(23, 14, 1, 1, '#58c68a'); r(25, 14, 1, 1, C.naranja);
   });
-  obj('obj-tele', 'tele', (c, r) => {
-    sombraSuelo(c, 4, 12, 58, 18);
-    caja(r, 3, 6, 58, 20, '#11151c', '#2b3140', undefined);
-    r(5, 8, 54, 16, '#16263a');
-    // imagen: gráfico de barras y línea
-    r(9, 18, 4, 4, C.azulPantalla); r(15, 14, 4, 8, C.verdePantalla); r(21, 16, 4, 6, C.azulPantalla);
-    r(27, 11, 4, 11, C.verdePantalla); r(33, 13, 4, 9, C.azulPantalla); r(39, 10, 4, 12, C.naranja);
-    r(45, 12, 4, 10, C.verdePantalla);
-    r(8, 22, 44, 1, '#3a5a80');
-    r(6, 9, 20, 1, '#2f4f78'); r(8, 10, 14, 1, '#2f4f78');
-    for (let i = 0; i < 6; i++) r(48 + i, 8 + i, 1, 1, '#4a6a94');                // reflejo
-    r(24, 26, 16, 3, C.contorno); r(26, 27, 12, 1, C.metalOscuro);
-  });
+  obj('obj-tele', 'tele', (c, r) => dibujarTele(c, r));
   obj('obj-futbolin', 'futbolin', (c, r) => {
     sombraSuelo(c, 3, 8, 60, 22);
     caja(r, 2, 4, 60, 24, '#8a5a2b', '#b07b43', '#5e3b18');
@@ -505,4 +592,5 @@ export function generarTexturas(escena: Phaser.Scene): void {
   dibujarSuelo(escena);
   dibujarMuros(escena);
   dibujarMobiliario(escena);
+  dibujarPregiradas(escena);
 }

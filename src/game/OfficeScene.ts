@@ -5,7 +5,8 @@ import { instalarControles, type ControlCamara } from './camara/controles';
 import { PALETA, TILE } from './paleta';
 import { mascaraMuro } from './muros';
 import { colocarRotulos } from './rotulos';
-import { claveMuro, claveObjeto } from './texturas/claves';
+import logoIner from '../assets/logo-iner.png';
+import { claveMuro, texturaObjeto } from './texturas/claves';
 import { generarTexturas } from './texturas/registro';
 
 export class OfficeScene extends Phaser.Scene {
@@ -14,6 +15,10 @@ export class OfficeScene extends Phaser.Scene {
 
   constructor(private readonly plano: Plano) {
     super('oficina');
+  }
+
+  preload(): void {
+    this.load.image('logo-iner', logoIner);
   }
 
   create(): void {
@@ -58,14 +63,25 @@ export class OfficeScene extends Phaser.Scene {
       this.add.image(x * TILE + TILE / 2, y * TILE + TILE / 2, 'estanteria').setAngle(90).setDepth((y + 1) * TILE);
     }
 
+    // Logotipo de INER en el muro de Dirección, justo encima del televisor
+    const tele = p.objetos.find((o) => o.tipo === 'tele' && zonaEn(p, o.x, o.y)?.tipo === 'direccion');
+    if (tele) {
+      const cx = (tele.x + tele.ancho / 2) * TILE, y = (tele.y - 1) * TILE;
+      const placa = this.add.graphics().setDepth(tele.y * TILE + 1);
+      placa.fillStyle(0x232733, 1).fillRect(cx - 49, y + 1, 98, 30);
+      placa.fillStyle(0xfbfaf6, 1).fillRect(cx - 48, y + 2, 96, 28);
+      this.add.image(cx, y + 16, 'logo-iner').setDepth(tele.y * TILE + 2);
+    }
+
     // Objetos (el microondas va encima de su soporte)
     for (const o of p.objetos) {
       const zona = zonaEn(p, o.x, o.y)?.tipo;
       const suelo = o.tipo === 'entrada' || o.tipo === 'puerta';
       const profundidad = suelo ? 1 : (o.y + o.alto) * TILE + (o.sobre ? 1 : 0);
+      const { clave, angulo } = texturaObjeto(o, zona);
       this.add
-        .image((o.x + o.ancho / 2) * TILE, (o.y + o.alto / 2) * TILE, claveObjeto(o, zona))
-        .setAngle(o.giro)
+        .image((o.x + o.ancho / 2) * TILE, (o.y + o.alto / 2) * TILE, clave)
+        .setAngle(angulo)
         .setDepth(profundidad);
     }
 

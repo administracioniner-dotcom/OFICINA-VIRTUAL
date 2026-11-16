@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import datos from '../../../data/plano-v1.json';
 import { cargarPlano, zonaEn } from '../../domain/plano';
-import { TEXTURAS_REQUERIDAS, claveObjeto, colorSilla } from './claves';
+import { TEXTURAS_REQUERIDAS, claveObjeto, colorSilla, texturaObjeto } from './claves';
 
 const p = cargarPlano(datos);
 
@@ -47,5 +47,37 @@ describe('claveObjeto', () => {
     for (const k of ['muro-0', 'muro-15', 'mampara', 'ventana', 'estanteria', 'alfombra', 'suelo-0', 'suelo-3']) {
       expect(TEXTURAS_REQUERIDAS).toContain(k);
     }
+  });
+});
+
+describe('texturaObjeto', () => {
+  const textura = (tipo: string, giro?: number) => {
+    const o = p.objetos.find((x) => x.tipo === tipo && (giro === undefined || x.giro === giro))!;
+    return texturaObjeto(o, zonaEn(p, o.x, o.y)?.tipo);
+  };
+  it('todo objeto del plano usa una textura que existe', () => {
+    for (const o of p.objetos) {
+      const { clave } = texturaObjeto(o, zonaEn(p, o.x, o.y)?.tipo);
+      expect(TEXTURAS_REQUERIDAS, `${o.tipo} (${o.x},${o.y}) giro ${o.giro}`).toContain(clave);
+    }
+  });
+  it('los escritorios vienen ya girados: la pantalla se ve derecha y la escena no los gira', () => {
+    for (const o of p.objetos.filter((x) => x.tipo === 'escritorio')) {
+      const r = texturaObjeto(o, zonaEn(p, o.x, o.y)?.tipo);
+      expect(r.clave.endsWith(`-${o.giro}`)).toBe(true);
+      expect(r.angulo).toBe(0);
+    }
+  });
+  it('las mesas de 4, la mesa de reuniones y las teles también vienen giradas', () => {
+    expect(textura('mesa4', 90)).toEqual({ clave: expect.stringMatching(/^obj-mesa4-(isla|naranja)-90$/), angulo: 0 });
+    expect(textura('mesa', 90)).toEqual({ clave: 'obj-mesa-90', angulo: 0 });
+    expect(textura('tele', 180)).toEqual({ clave: 'obj-tele-180', angulo: 0 });
+  });
+  it('lo demás sigue girándose en la escena (patinete 270°)', () => {
+    expect(textura('patinete')).toEqual({ clave: 'obj-patinete', angulo: 270 });
+  });
+  it('un giro sin textura propia vuelve a la textura base girada', () => {
+    const o = { ...p.objetos.find((x) => x.tipo === 'tele')!, giro: 90 as const };
+    expect(texturaObjeto(o, undefined)).toEqual({ clave: 'obj-tele', angulo: 90 });
   });
 });
