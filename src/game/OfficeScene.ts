@@ -72,9 +72,6 @@ export class OfficeScene extends Phaser.Scene {
       const extremo = muros.length ? (Math.max(...muros) + 1) * TILE : (tele.x + tele.ancho) * TILE;
       const cx = extremo - 4 - 49;
       const y = filaMuro * TILE;
-      const placa = this.add.graphics().setDepth(tele.y * TILE + 1);
-      placa.fillStyle(0x232733, 1).fillRect(cx - 49, y + 1, 98, 30);
-      placa.fillStyle(0xfbfaf6, 1).fillRect(cx - 48, y + 2, 96, 28);
       // Girado 180°: se lee desde la entrada (norte), que es hacia donde mira el logotipo
       this.add.image(cx, y + 16, 'logo-iner').setAngle(180).setDepth(tele.y * TILE + 2);
     }
