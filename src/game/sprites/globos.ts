@@ -1,5 +1,6 @@
 /** Globos de estado sobre la cabeza de cada agente (16 × 16 px). */
-export type EstadoAgente = 'trabajando' | 'pensando' | 'esperando' | 'en_reunion' | 'completada' | 'error';
+import type { EstadoAgente } from '../../domain/agentes';
+export type { EstadoAgente };
 
 export const NOMBRE_ESTADO: Record<EstadoAgente, string> = {
   trabajando: 'Trabajando',

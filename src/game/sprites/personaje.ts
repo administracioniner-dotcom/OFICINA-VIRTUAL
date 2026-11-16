@@ -31,11 +31,14 @@ export function oscurecer(hex: string, f = 0.25): string {
   return `#${ch((n >> 16) & 255)}${ch((n >> 8) & 255)}${ch(n & 255)}`;
 }
 
-export function aspecto(camisa: string, variante: number): AspectoPersonaje {
+import type { Genero } from '../../domain/agentes';
+export type { Genero };
+
+export function aspecto(camisa: string, variante: number, genero: Genero): AspectoPersonaje {
   return {
     piel: PIELES[variante % PIELES.length]!,
     pelo: PELOS[(variante * 3 + 1) % PELOS.length]!,
-    estilo: (variante % 4) as 0 | 1 | 2 | 3,
+    estilo: genero === 'f' ? ((variante % 2 ? 2 : 1) as 1 | 2) : ((variante % 2 ? 3 : 0) as 0 | 3),
     camisa,
     camisaOscura: oscurecer(camisa, 0.25),
     pantalon: '#2f3542',
