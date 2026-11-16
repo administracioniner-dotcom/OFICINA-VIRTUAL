@@ -49,6 +49,8 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
 - **Entradas** (norte, fila 0): columnas 10–13 y 20–23. **Confirmado por José:** la principal es la que está cerca de Compras, la central (20–23); la de 10–13 es secundaria.
 - **Muros:** perímetro del edificio y tramos interiores. **Mamparas de cristal:** columna 6, que separa Descanso/Sala de reuniones de Ingeniería, con un hueco de 2 baldosas (filas 8–9). **Ventanas:** toda la fachada sur (fila 19, columnas 1–14, 16–25 y 28–35).
 - Las zonas sin nombre (centro y derecha) son **pasillos y vestíbulo**.
+- **Suelo (decisión de José):** todo el edificio tiene **suelo verde**, pasillos incluidos, **excepto Dirección**, que lleva una **alfombra gris** (la zona completa: columnas 16–25, filas 11–19). El tono exacto de verde y de gris lo elige el constructor (un verde apagado que combine con el naranja corporativo) y se enseña en la primera captura.
+- Como el suelo ya es verde, **las zonas no se distinguen pintando el suelo**: se marcan con rótulo en pixel art, una línea tenue en el borde y la barra de zonas. Al seleccionar una zona se resalta su rectángulo.
 - Total de sitios de trabajo en el plano: 6 escritorios + 4 puestos de la isla + 4 sillas de la mesa de Ingeniería.
 
 ### Comprobaciones hechas sobre el plano
