@@ -42,6 +42,7 @@
     {"tipo":"tele","x":17,"y":11,"ancho":2,"alto":1,"giro":180},
     {"tipo":"tele","x":3,"y":10,"ancho":2,"alto":1,"giro":180},
     {"tipo":"mesasola","x":2,"y":1,"ancho":2,"alto":1,"giro":0},
+    {"tipo":"microondas","x":2,"y":1,"ancho":1,"alto":1,"giro":0,"sobre":"mesasola"},
     {"tipo":"agua","x":4,"y":1,"ancho":1,"alto":1,"giro":0},
     {"tipo":"silla","x":3,"y":9,"ancho":1,"alto":1,"giro":180},
     {"tipo":"silla","x":4,"y":9,"ancho":1,"alto":1,"giro":180},
