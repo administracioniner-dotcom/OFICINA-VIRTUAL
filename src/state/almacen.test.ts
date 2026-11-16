@@ -145,3 +145,58 @@ describe('almacén: selección y suscripciones', () => {
     expect(alm.getState().puestos['s-b']).toEqual({ id: 's-b', tipo: 'escritorio', zona: 'compras' });
   });
 });
+
+describe('almacén: cambios y bajas de agentes', () => {
+  it('una baja quita al agente, sus tareas y su actividad', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('a') });
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('b') });
+    fuente.emitir({ tipo: 'agente.estado', id: 'a', estado: 'pensando' });
+    fuente.emitir({ tipo: 'agente.estado', id: 'b', estado: 'pensando' });
+    fuente.emitir({ tipo: 'agente.baja', id: 'a' });
+    const e = alm.getState();
+    expect(e.ordenAgentes).toEqual(['b']);
+    expect(e.agentes['a']).toBeUndefined();
+    expect(e.tareas['a']).toBeUndefined();
+    expect(e.actividad.every((x) => x.agenteId === 'b')).toBe(true);
+  });
+  it('si se da de baja al agente seleccionado, se deselecciona', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('a') });
+    alm.seleccionar({ tipo: 'agente', id: 'a' });
+    fuente.emitir({ tipo: 'agente.baja', id: 'a' });
+    expect(alm.getState().seleccion).toBeNull();
+  });
+  it('una baja de alguien desconocido no cambia nada (ni avisa)', () => {
+    const { fuente, alm } = nuevo();
+    let avisos = 0;
+    alm.subscribe(() => avisos++);
+    fuente.emitir({ tipo: 'agente.baja', id: 'zzz' });
+    expect(avisos).toBe(0);
+  });
+  it('un cambio actualiza los datos y conserva el estado y las tareas', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('a') });
+    const antes = alm.getState().tareas['a'];
+    fuente.emitir({ tipo: 'agente.cambio', agente: { ...agente('a'), nombre: 'Lucía', estado: 'trabajando' } });
+    const e = alm.getState();
+    expect(e.agentes['a']!.nombre).toBe('Lucía');
+    expect(e.tareas['a']).toBe(antes);
+  });
+  it('si cambia de departamento, las tareas pasan a ser las del nuevo departamento', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('a') });
+    const antes = alm.getState().tareas['a']!.map((t) => t.titulo);
+    fuente.emitir({ tipo: 'agente.cambio', agente: { ...agente('a'), departamento: 'compras' } });
+    const despues = alm.getState().tareas['a']!;
+    expect(despues.map((t) => t.titulo)).not.toEqual(antes);
+    expect(despues.filter((t) => t.estado === 'en_curso')).toHaveLength(1);
+    expect(new Set(despues.map((t) => t.id)).size).toBe(despues.length);
+  });
+  it('un cambio de alguien desconocido se ignora', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.cambio', agente: agente('zzz') });
+    expect(alm.getState().ordenAgentes).toEqual([]);
+  });
+});
+

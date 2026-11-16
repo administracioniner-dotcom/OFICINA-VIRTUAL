@@ -50,10 +50,34 @@ export class SimuladorAgentes implements AgentSource {
     if (this.temporizador) { clearInterval(this.temporizador); this.temporizador = undefined; }
   }
 
+  /** Añade un agente; si la simulación ya está en marcha, se da de alta en el acto. */
+  agregar(agente: Agente): void {
+    this.internos.push({ agente, estado: agente.estado, resta: this.duracion(agente.estado), silla: null });
+    if (this.activo) this.emitir({ tipo: 'agente.alta', agente: { ...agente, estado: agente.estado } });
+  }
+
+  /** Cambia los datos de un agente (conserva su estado actual). */
+  actualizar(agente: Agente): void {
+    const i = this.internos.find((x) => x.agente.id === agente.id);
+    if (!i) return;
+    i.agente = agente;
+    this.emitir({ tipo: 'agente.cambio', agente: { ...agente, estado: i.estado } });
+  }
+
+  /** Quita un agente; si estaba en una reunión, libera su silla antes. */
+  quitar(id: string): void {
+    const k = this.internos.findIndex((x) => x.agente.id === id);
+    if (k < 0) return;
+    const i = this.internos[k]!;
+    if (i.silla) { i.silla = null; this.emitir({ tipo: 'agente.reunion', id, asiento: null }); }
+    this.internos.splice(k, 1);
+    this.emitir({ tipo: 'agente.baja', id });
+  }
+
   /** Hace pasar `dt` segundos de simulación. */
   avanzar(dt: number): void {
     if (!this.activo) return;
-    for (const i of this.internos) {
+    for (const i of [...this.internos]) {
       i.resta -= dt;
       if (i.resta <= 0) this.siguiente(i);
     }

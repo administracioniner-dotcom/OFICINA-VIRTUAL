@@ -202,3 +202,8 @@ Las fases 1–4 forman la **primera versión visual funcional**. Se pregunta a J
 ## 11. Qué se deja al constructor
 
 Paleta exacta de pixel art, forma de los sprites y de los objetos, tamaño de los iconos de estado, curvas de las animaciones de cámara, velocidades, nombres internos de archivos y la elección de la fuente pixel.
+
+## 12. Uso personal y gestión de agentes (decisión de José, tras la fase 3)
+- La oficina la usa **solo José, en su ordenador**: no se publica (queda aparcado Vercel). Se arranca con `iniciar.bat`.
+- José **crea, edita y quita sus agentes** desde la propia oficina (nombre, puesto libre, chico o chica y aspecto). La lista se guarda en el navegador (`localStorage`). Plan: `docs/superpowers/plans/2026-11-16-fase-5-mis-agentes.md`.
+- Siguen **simulados** hasta conectar agentes reales. Pendiente: cómo informan sus agentes (por ejemplo, un fichero o un pequeño servicio local) y asignarles tareas.

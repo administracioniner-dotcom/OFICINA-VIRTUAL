@@ -8,7 +8,8 @@ import type { Almacen } from '../state/almacen';
 import { Actor } from './Actor';
 import { esClicEnLienzo } from './clic';
 import { asientosDelPlano, type Asiento } from './asientos';
-import { generarGlobos, generarHoja } from './sprites/hojas';
+import type { Agente } from '../domain/agentes';
+import { claveHoja, generarGlobos, generarHoja } from './sprites/hojas';
 import { mascaraMuro } from './muros';
 import { colocarRotulos } from './rotulos';
 import logoIner from '../assets/logo-iner.png';
@@ -137,13 +138,29 @@ export class OfficeScene extends Phaser.Scene {
     const porId = new Map<string, Asiento>(asientos.map((a) => [a.id, a]));
     const bloqueada = rejillaBloqueada(p);
     generarGlobos(this);
+    const crearActor = (agente: Agente) => {
+      this.textures.remove(claveHoja(agente.id));
+      generarHoja(this, agente);
+      const actor = new Actor(this, agente, porId, bloqueada);
+      actor.setEstado(agente.estado);
+      actor.alPulsar(() => this.almacen.seleccionar({ tipo: 'agente', id: agente.id }));
+      this.actores.set(agente.id, actor);
+    };
+    const quitarActor = (id: string) => {
+      this.actores.get(id)?.destruir();
+      this.actores.delete(id);
+      this.textures.remove(claveHoja(id));
+    };
     const alRecibir = (e: EventoOficina) => {
       if (e.tipo === 'agente.alta') {
-        generarHoja(this, e.agente);
-        const actor = new Actor(this, e.agente, porId, bloqueada);
-        actor.setEstado(e.agente.estado);
-        actor.alPulsar(() => this.almacen.seleccionar({ tipo: 'agente', id: e.agente.id }));
-        this.actores.set(e.agente.id, actor);
+        quitarActor(e.agente.id);
+        crearActor(e.agente);
+      } else if (e.tipo === 'agente.cambio') {
+        // el personaje vuelve a crearse (aspecto y puesto pueden haber cambiado)
+        quitarActor(e.agente.id);
+        crearActor(e.agente);
+      } else if (e.tipo === 'agente.baja') {
+        quitarActor(e.id);
       } else if (e.tipo === 'agente.estado') {
         this.actores.get(e.id)?.setEstado(e.estado);
       } else if (e.tipo === 'agente.reunion') {

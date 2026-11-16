@@ -88,3 +88,61 @@ describe('SimuladorAgentes', () => {
     quitar();
   });
 });
+
+describe('SimuladorAgentes: altas, cambios y bajas en marcha', () => {
+  const nuevo = (id: string): Agente => ({ ...agentes[0]!, id, nombre: `Agente ${id}`, asientoId: `s-${id}` });
+  const arrancar = () => {
+    const sim = new SimuladorAgentes(agentes.slice(0, 2), sillas, semilla(5));
+    const eventos: EventoOficina[] = [];
+    sim.suscribir((e) => eventos.push(e));
+    sim.iniciar();
+    eventos.length = 0;
+    return { sim, eventos };
+  };
+  it('agregar da de alta al agente y luego empieza a cambiar de estado', () => {
+    const { sim, eventos } = arrancar();
+    sim.agregar(nuevo('n1'));
+    expect(eventos).toEqual([expect.objectContaining({ tipo: 'agente.alta', agente: expect.objectContaining({ id: 'n1' }) })]);
+    for (let i = 0; i < 200; i++) sim.avanzar(0.5);
+    expect(eventos.some((e) => e.tipo === 'agente.estado' && e.id === 'n1')).toBe(true);
+  });
+  it('actualizar emite «cambio» con los datos nuevos y conserva el estado actual', () => {
+    const { sim, eventos } = arrancar();
+    sim.actualizar({ ...agentes[0]!, nombre: 'Otro nombre' });
+    expect(eventos).toEqual([expect.objectContaining({ tipo: 'agente.cambio', agente: expect.objectContaining({ id: agentes[0]!.id, nombre: 'Otro nombre', estado: 'trabajando' }) })]);
+  });
+  it('quitar emite «baja» y ese agente ya no genera más eventos', () => {
+    const { sim, eventos } = arrancar();
+    sim.quitar(agentes[0]!.id);
+    expect(eventos).toEqual([{ tipo: 'agente.baja', id: agentes[0]!.id }]);
+    eventos.length = 0;
+    for (let i = 0; i < 400; i++) sim.avanzar(0.5);
+    expect(eventos.some((e) => e.tipo === 'agente.estado' && e.id === agentes[0]!.id)).toBe(false);
+  });
+  it('quitar a quien está en una reunión libera su silla antes de darlo de baja', () => {
+    const { sim, eventos } = arrancar();
+    for (let i = 0; i < 4000 && !eventos.some((e) => e.tipo === 'agente.reunion' && e.asiento); i++) sim.avanzar(0.5);
+    const entra = eventos.find((e): e is Extract<EventoOficina, { tipo: 'agente.reunion' }> => e.tipo === 'agente.reunion' && !!e.asiento)!;
+    expect(entra).toBeDefined();
+    eventos.length = 0;
+    sim.quitar(entra.id);
+    expect(eventos.map((e) => e.tipo)).toEqual(['agente.reunion', 'agente.baja']);
+    expect(eventos[0]).toMatchObject({ id: entra.id, asiento: null });
+  });
+  it('quitar o actualizar a alguien que no existe no emite nada', () => {
+    const { sim, eventos } = arrancar();
+    sim.quitar('nadie');
+    sim.actualizar(nuevo('nadie'));
+    expect(eventos).toEqual([]);
+  });
+  it('lo agregado antes de iniciar se da de alta al iniciar', () => {
+    const sim = new SimuladorAgentes([], sillas, semilla(2));
+    const eventos: EventoOficina[] = [];
+    sim.suscribir((e) => eventos.push(e));
+    sim.agregar(nuevo('antes'));
+    expect(eventos).toEqual([]);
+    sim.iniciar();
+    expect(eventos).toEqual([expect.objectContaining({ tipo: 'agente.alta' })]);
+  });
+});
+

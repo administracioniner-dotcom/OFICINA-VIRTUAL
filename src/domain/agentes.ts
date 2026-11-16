@@ -73,3 +73,8 @@ export function crearAgentesExtra(asientos: readonly PuestoAsignable[], existent
   }
   return extra;
 }
+
+/** Color de camisa del departamento. */
+export function camisaDeDepartamento(zona: TipoZona): string {
+  return CAMISA_POR_DEPARTAMENTO[zona] ?? '#5c6bc0';
+}

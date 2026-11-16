@@ -56,6 +56,12 @@ export class Actor {
     });
   }
 
+  /** Quita al personaje y su globo de la escena. */
+  destruir(): void {
+    this.sprite.destroy();
+    this.globo.destroy();
+  }
+
   get posicion(): Punto { return { x: this.sprite.x, y: this.sprite.y }; }
   get estaSentado(): boolean { return this.modo === 'sentado'; }
   get asientoActual(): Asiento { return this.asiento; }

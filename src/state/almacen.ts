@@ -75,6 +75,33 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
       });
       return;
     }
+    if (ev.tipo === 'agente.baja') {
+      if (!estado.agentes[ev.id]) return;
+      const { [ev.id]: _a, ...agentes } = estado.agentes;
+      const { [ev.id]: _t, ...tareas } = estado.tareas;
+      contadorTareas.delete(ev.id);
+      const sel = estado.seleccion;
+      cambiar({
+        ...estado, agentes, tareas,
+        ordenAgentes: estado.ordenAgentes.filter((x) => x !== ev.id),
+        actividad: estado.actividad.filter((x) => x.agenteId !== ev.id),
+        seleccion: sel && sel.tipo === 'agente' && sel.id === ev.id ? null : sel,
+      });
+      return;
+    }
+    if (ev.tipo === 'agente.cambio') {
+      const a = ev.agente;
+      const previo = estado.agentes[a.id];
+      if (!previo) return;
+      let tareas = estado.tareas[a.id] ?? [];
+      if (previo.departamento !== a.departamento) {
+        contadorTareas.set(a.id, 4);
+        tareas = generarTareas(a, 1);
+        if (a.estado === 'trabajando') tareas = trabajar(tareas);
+      }
+      cambiar({ ...estado, agentes: { ...estado.agentes, [a.id]: a }, tareas: { ...estado.tareas, [a.id]: tareas } });
+      return;
+    }
     const agente = estado.agentes[ev.id];
     if (!agente) return;
     if (ev.tipo === 'agente.estado') {

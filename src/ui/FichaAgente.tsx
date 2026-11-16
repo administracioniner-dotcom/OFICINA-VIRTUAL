@@ -9,12 +9,14 @@ import { useAlmacen } from '../state/useAlmacen';
 const NOMBRE_TAREA = { pendiente: 'Pendiente', en_curso: 'En curso', hecha: 'Hecha' } as const;
 
 /** Ficha del agente seleccionado, con su ventana de tareas (todo simulado). */
-export function FichaAgente({ almacen, id }: { almacen: Almacen; id: string }) {
+export function FichaAgente({ almacen, id, alEditar, alQuitar }: { almacen: Almacen; id: string; alEditar(): void; alQuitar(): void }) {
   const e = useAlmacen(almacen);
   const agente = e.agentes[id];
   const [ahora, setAhora] = useState(() => Date.now());
   const [verTareas, setVerTareas] = useState(true);
+  const [confirmando, setConfirmando] = useState(false);
   useEffect(() => { const t = setInterval(() => setAhora(Date.now()), 1000); return () => clearInterval(t); }, []);
+  useEffect(() => setConfirmando(false), [id]);
   if (!agente) return null;
   const puesto = e.puestos[agente.asientoId];
   const tareas = e.tareas[id] ?? [];
@@ -41,7 +43,18 @@ export function FichaAgente({ almacen, id }: { almacen: Almacen; id: string }) {
       <div className="acciones">
         <button type="button" className="boton" onClick={() => bus.emit('zona:ir', agente.departamento)}>Ver su zona</button>
         {puesto && <button type="button" className="boton" onClick={() => almacen.seleccionar({ tipo: 'puesto', id: puesto.id })}>Ver su puesto</button>}
+        <button type="button" className="boton" onClick={alEditar}>Editar</button>
+        <button type="button" className="boton peligro" onClick={() => setConfirmando(true)}>Quitar</button>
       </div>
+      {confirmando && (
+        <div className="confirmar" role="alertdialog" aria-label="Confirmar que se quita el agente">
+          <p>¿Quitar a <strong>{agente.nombre}</strong> de la oficina?</p>
+          <div className="acciones">
+            <button type="button" className="boton peligro" onClick={alQuitar}>Sí, quitar</button>
+            <button type="button" className="boton" onClick={() => setConfirmando(false)}>Cancelar</button>
+          </div>
+        </div>
+      )}
 
       <section className="ventana-tareas" aria-label="Tareas asignadas">
         <button type="button" className="boton plegable" aria-expanded={verTareas} onClick={() => setVerTareas(!verTareas)}>

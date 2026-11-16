@@ -1,6 +1,19 @@
 # INER SMART Virtual Office
 
-Oficina virtual 2D en pixel art para INER SMART. Estado: **fase 1** (oficina visual con cámara, sin personajes todavía).
+Oficina virtual 2D en pixel art para INER SMART, de **uso personal** (en tu propio ordenador). Muestra a tus agentes en su puesto, caminando y cambiando de estado, y te deja crearlos, editarlos y quitarlos. Los agentes son **simulados** hasta conectar agentes reales.
+
+## Usarla en Windows (doble clic)
+1. Instala **Node.js (versión LTS)** desde https://nodejs.org (solo la primera vez).
+2. Haz doble clic en `iniciar.bat`. La primera vez instala lo necesario; después abre la oficina en el navegador (`http://localhost:5173`).
+3. Deja la ventana negra abierta mientras la uses. Para cerrar la oficina, ciérrala.
+
+**Tus agentes se guardan en el navegador**, ligados a la dirección `localhost:5173`: ábrela siempre con `iniciar.bat` y en el mismo navegador. Si borras los datos del sitio, la lista vuelve a los 9 agentes de ejemplo.
+
+## Crear y gestionar agentes
+- **＋ Nuevo agente** (arriba a la izquierda): nombre, puesto de trabajo libre, chico o chica y aspecto.
+- Clic en un agente → su ficha, con **Editar** y **Quitar**.
+- Los puestos son los del plano: hay 14 puestos de trabajo (6 escritorios, 4 en la mesa compartida de la derecha y 4 en la de Ingeniería).
+
 
 ## Arrancar
 ```bash
@@ -10,7 +23,7 @@ npm run build      # compila (debe pasar antes de entregar)
 npm test           # pruebas del plano, texturas y cámara
 ```
 
-## Qué incluye la fase 1
+## Qué incluye
 - Plano de la oficina (`data/plano-v1.json`, 37 × 20 baldosas): suelo verde limón, alfombra gris en Dirección, muros, mamparas, ventanas, entradas y mobiliario en pixel art generado por código.
 - Cámara: arrastrar con el ratón (botón izquierdo o central), rueda para el zoom, WASD y flechas.
 - Barra de zonas que lleva la cámara a cada zona y resalta su rectángulo; botones de zoom.
