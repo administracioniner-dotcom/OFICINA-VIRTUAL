@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef } from 'react';
 import datos from '../../data/plano-v1.json';
 import { PlanoInvalido, cargarPlano } from '../domain/plano';
 import { crearJuego } from '../game/crearJuego';
+import { BarraZonas } from './BarraZonas';
 import { ErrorPlano } from './ErrorPlano';
+import { Zoom } from './Zoom';
 
 export function App() {
   const contenedor = useRef<HTMLDivElement>(null);
@@ -26,5 +28,12 @@ export function App() {
   }, [resultado]);
 
   if (resultado.error) return <ErrorPlano mensaje={resultado.error} />;
-  return <div ref={contenedor} id="juego" style={{ position: 'absolute', inset: 0 }} />;
+  return (
+    <>
+      <div ref={contenedor} id="juego" style={{ position: 'absolute', inset: 0 }} />
+      <BarraZonas zonas={resultado.plano!.zonas} />
+      <Zoom />
+      <div className="panel marca">INER SMART Virtual Office · simulación</div>
+    </>
+  );
 }

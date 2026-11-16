@@ -1,0 +1,21 @@
+:root { --naranja: #f57c00; --panel: rgba(29, 31, 36, 0.88); --borde: #3a3f4a; --texto: #f4f5f7; }
+.panel {
+  position: absolute; z-index: 10; background: var(--panel); color: var(--texto);
+  border: 1px solid var(--borde); border-radius: 10px; font: 13px/1.2 system-ui, 'Segoe UI', sans-serif;
+  backdrop-filter: blur(4px);
+}
+.barra-zonas { top: 12px; left: 50%; transform: translateX(-50%); max-width: calc(100% - 24px); padding: 8px 10px; display: flex; align-items: center; gap: 8px; }
+.barra-zonas .lista { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.boton {
+  background: #2a2e37; color: var(--texto); border: 1px solid var(--borde); border-radius: 7px;
+  padding: 7px 10px; font: inherit; cursor: pointer; min-height: 32px;
+}
+.boton:hover { border-color: var(--naranja); }
+.boton:focus-visible { outline: 2px solid var(--naranja); outline-offset: 2px; }
+.boton.activo { background: var(--naranja); color: #1d1305; border-color: var(--naranja); font-weight: 600; }
+.plegar { padding: 7px 9px; }
+.barra-zonas.plegada .lista { display: none; }
+.zoom { right: 12px; bottom: 12px; padding: 6px; display: flex; align-items: center; gap: 6px; }
+.zoom .nivel { min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+.zoom .boton { width: 34px; padding: 0; font-size: 18px; }
+.marca { left: 12px; bottom: 12px; padding: 6px 10px; font-size: 12px; opacity: 0.85; }

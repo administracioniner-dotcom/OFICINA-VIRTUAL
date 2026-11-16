@@ -69,13 +69,13 @@ Se calculó con un recorrido (BFS) sobre la cuadrícula, con muros, mamparas, ve
 - La baldosa (6, 19) tiene a la vez mampara y ventana: bloquea el paso y se dibuja como ventana.
 
 ### Reglas de puestos y orientación (decisión de diseño)
-Los datos del plano no traen sillas ni asientos; se **derivan por reglas**:
-- `ancho` y `alto` de cada objeto son el **tamaño ya girado** (lo que ocupa en la rejilla). `giro` (0, 90, 180, 270) es el giro en sentido horario del objeto.
-- **Escritorio:** un puesto. El asiento es la baldosa pegada al escritorio por el **lado de la silla**, que con `giro` 0 es el sur y, girando en horario, 90 = oeste, 180 = norte y 270 = este. Si el escritorio mide 2 de ancho, la baldosa es la de la izquierda (o la de arriba). El ocupante mira hacia el escritorio.
-- **Mesa de reuniones** (`mesa`): una silla por cada baldosa de sus dos lados largos. La de la Sala de reuniones, en (3,13) con tamaño 2×4, tiene **8 asientos**: columnas 2 y 5, filas 13–16.
-- **Mesa de 4 personas** (`mesa4`): 2 asientos por lado largo, en las dos filas centrales. La mesa de Ingeniería, en (12,13), usa las columnas 11 y 14, filas 14 y 15. La **isla**, en (31,14), usa las columnas 30 y 33, filas 15 y 16.
-- **Isla, un puesto por departamento:** Desarrollo (30,15), Marketing (33,15), CAE (30,16) y Administración (33,16). Los de la columna 30 miran al este y los de la 33 al oeste. Cada asiento queda dentro de la zona 2×2 de su departamento.
-- El **departamento** de cada asiento es la zona que lo contiene.
+Los datos del plano no traen sillas ni asientos; se **derivan por reglas**. Como en el editor de José, **las sillas están dentro de la huella** de cada mesa o escritorio:
+- `ancho` y `alto` de cada objeto son el **tamaño ya girado** (lo que ocupa en la rejilla). `giro` (0, 90, 180, 270) es el giro en sentido horario del objeto, que se dibuja de frente (con la silla abajo, al sur) cuando `giro` es 0.
+- **Escritorio:** un puesto. La silla va en el lado sur con `giro` 0; girando en horario, 90 = oeste, 180 = norte y 270 = este. El ocupante se sienta en ese lado y mira al escritorio.
+- **Mesa de reuniones** (`mesa`): una silla por baldosa en sus dos lados largos. La de la Sala de reuniones, en (3,13) con tamaño 2×4, tiene **8 asientos**: columnas 3 y 4, filas 13–16.
+- **Mesa de 4 personas** (`mesa4`): 2 asientos por lado largo, en las dos filas centrales. La de Ingeniería, en (12,13), usa las columnas 12 y 13, filas 14 y 15.
+- **Isla, un puesto por departamento** (mesa de 4 en (31,14)): Desarrollo (31,15), Marketing (32,15), CAE (31,16) y Administración (32,16). Los de la columna 31 miran al este y los de la 32 al oeste. Cada asiento queda dentro de la zona 2×2 de su departamento.
+- El **departamento** de cada asiento es la zona que lo contiene. El color de la silla sale de ese departamento, salvo en las mesas pequeñas, las sillas sueltas y la mesa de reuniones.
 
 ## 4. Tecnología recomendada
 
