@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import datos from '../../data/plano-v1.json';
 import { asientosDelPlano } from '../game/asientos';
 import { cargarPlano, rejillaBloqueada, type Celda } from './plano';
-import { avanzar, buscarRuta } from './rutas';
+import { avanzar, avanzarPuntos, buscarRuta } from './rutas';
 
 const libre = (w: number, h: number) => Array.from({ length: h }, () => Array<boolean>(w).fill(false));
 
@@ -73,5 +73,22 @@ describe('avanzar', () => {
   });
   it('una ruta de una baldosa ya está terminada', () => {
     expect(avanzar({ x: centro(2), y: centro(2), indice: 1 }, [[2, 2]], 0.1, 96).terminado).toBe(true);
+  });
+});
+
+describe('avanzarPuntos', () => {
+  const pts = [{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 20 }];
+  it('recorre una línea quebrada a velocidad constante y cambia de dirección en la esquina', () => {
+    let est = { x: 0, y: 0, indice: 1 };
+    let r = avanzarPuntos(est, pts, 0.05, 100);     // 5 px: aún en el primer tramo
+    expect(r.estado.x).toBeCloseTo(5); expect(r.dir).toBe('este');
+    r = avanzarPuntos(r.estado, pts, 0.1, 100);     // 10 px más: llega a la esquina (5) y baja 5
+    expect(r.estado.x).toBeCloseTo(10); expect(r.estado.y).toBeCloseTo(5); expect(r.dir).toBe('sur');
+    r = avanzarPuntos(r.estado, pts, 10, 100);
+    expect(r.terminado).toBe(true); expect(r.estado.y).toBeCloseTo(20);
+  });
+  it('un punto que coincide con la posición no produce dirección', () => {
+    const r = avanzarPuntos({ x: 3, y: 3, indice: 1 }, [{ x: 0, y: 0 }, { x: 3, y: 3 }], 1, 100);
+    expect(r.terminado).toBe(true); expect(r.dir).toBeNull();
   });
 });

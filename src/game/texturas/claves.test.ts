@@ -69,8 +69,8 @@ describe('texturaObjeto', () => {
     }
   });
   it('las mesas de 4, la mesa de reuniones y las teles también vienen giradas', () => {
-    expect(textura('mesa4', 90)).toEqual({ clave: expect.stringMatching(/^obj-mesa4-(isla|naranja)-90$/), angulo: 0 });
-    expect(textura('mesa', 90)).toEqual({ clave: 'obj-mesa-90', angulo: 0 });
+    expect(textura('mesa4', 90)).toMatchObject({ clave: expect.stringMatching(/^obj-mesa4-(isla|naranja)-90$/), angulo: 0 });
+    expect(textura('mesa', 90)).toMatchObject({ clave: 'obj-mesa-90', angulo: 0 });
     expect(textura('tele', 180)).toEqual({ clave: 'obj-tele-180', angulo: 0 });
   });
   it('lo demás sigue girándose en la escena (patinete 270°)', () => {
@@ -79,5 +79,16 @@ describe('texturaObjeto', () => {
   it('un giro sin textura propia vuelve a la textura base girada', () => {
     const o = { ...p.objetos.find((x) => x.tipo === 'tele')!, giro: 90 as const };
     expect(texturaObjeto(o, undefined)).toEqual({ clave: 'obj-tele', angulo: 90 });
+  });
+  it('escritorios y mesas se dibujan en dos capas (mesa y sillas) y la tele en una sola', () => {
+    for (const tipo of ['escritorio', 'mesa', 'mesa4']) {
+      for (const o of p.objetos.filter((x) => x.tipo === tipo)) {
+        const r = texturaObjeto(o, zonaEn(p, o.x, o.y)?.tipo);
+        expect(r.capas, `${tipo} (${o.x},${o.y})`).toEqual({ mesa: `${r.clave}-mesa`, sillas: `${r.clave}-sillas` });
+        expect(TEXTURAS_REQUERIDAS).toContain(r.capas!.mesa);
+        expect(TEXTURAS_REQUERIDAS).toContain(r.capas!.sillas);
+      }
+    }
+    expect(textura('tele', 180).capas).toBeUndefined();
   });
 });

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { TILE } from '../paleta';
 import { DIMENSIONES, type ColorSilla } from './claves';
+import { SILLAS_MESA_VERTICAL, SILLA_ESCRITORIO } from './geometria';
 
 /*
  * Pixel art dibujado por código a 32 px por baldosa.
@@ -330,58 +331,66 @@ function puestoDerecho(c: Ctx, r: Rect, x0: number, cy: number, tipo: Puesto): v
 function dibujarPregiradas(escena: Phaser.Scene): void {
   // Escritorios: cuatro orientaciones por color; la silla va en su lado y el contenido siempre derecho
   const CONFIG = {
-    0: { cuerpo: [2, 3, 60, 21], silla: [32, 24, 'sur'] },
-    180: { cuerpo: [2, 8, 60, 21], silla: [32, 8, 'norte'] },
-    90: { cuerpo: [8, 2, 21, 60], silla: [8, 32, 'oeste'] },
-    270: { cuerpo: [3, 2, 21, 60], silla: [24, 32, 'este'] },
+    0: { cuerpo: [2, 3, 60, 21] },
+    180: { cuerpo: [2, 8, 60, 21] },
+    90: { cuerpo: [8, 2, 21, 60] },
+    270: { cuerpo: [3, 2, 21, 60] },
   } as const;
+  type Capa = 'todo' | 'mesa' | 'sillas';
+  const CAPAS: ReadonlyArray<readonly [Capa, string]> = [['todo', ''], ['mesa', '-mesa'], ['sillas', '-sillas']];
   for (const color of ['rojo', 'gris', 'naranja'] as const) {
     for (const giro of [0, 90, 180, 270] as const) {
       const horizontal = giro === 0 || giro === 180;
-      lienzo(escena, `obj-escritorio-${color}-${giro}`, horizontal ? 2 * TILE : TILE, horizontal ? TILE : 2 * TILE, (c) => {
-        const r = rectCtx(c);
-        const [bx, by, bw, bh] = CONFIG[giro].cuerpo;
-        const [sx, sy, lado] = CONFIG[giro].silla;
-        silla(c, sx, sy, color, lado);
-        sombraSuelo(c, bx + 1, by + 1, bw, bh);
-        tablero(r, bx, by, bw, bh);
-        if (horizontal) {
-          monitor(r, bx + 23, by + 3); teclado(r, bx + 22, by + 14); papelesFinal(r, bx + 4, by + 4); tazaFinal(c, bx + 50, by + 9);
-          r(bx + 41, by + 14, 3, 5, C.contorno); r(bx + 42, by + 15, 1, 3, C.metalLuz);
-          r(bx + 12, by + 13, 6, 5, C.contorno); r(bx + 13, by + 14, 4, 3, '#ffe08a');
-          disco(c, bx + 54, by + 17, 3, C.contorno); disco(c, bx + 54, by + 16, 2, C.verdeHoja); r(bx + 52, by + 17, 5, 3, C.terracota);
-        } else {
-          monitor(r, bx + 3, by + 4); teclado(r, bx + 3, by + 17); papelesFinal(r, bx + 5, by + 33); tazaFinal(c, bx + 11, by + 54);
-          r(bx + 14, by + 24, 3, 5, C.contorno); r(bx + 15, by + 25, 1, 3, C.metalLuz);
-          r(bx + 15, by + 34, 5, 5, C.contorno); r(bx + 16, by + 35, 3, 3, '#ffe08a');
-          disco(c, bx + 4, by + 52, 3, C.contorno); disco(c, bx + 4, by + 51, 2, C.verdeHoja); r(bx + 2, by + 52, 5, 3, C.terracota);
-        }
-      });
+      for (const [capa, sufijo] of CAPAS) {
+        lienzo(escena, `obj-escritorio-${color}-${giro}${sufijo}`, horizontal ? 2 * TILE : TILE, horizontal ? TILE : 2 * TILE, (c) => {
+          const r = rectCtx(c);
+          const [bx, by, bw, bh] = CONFIG[giro].cuerpo;
+          const { x: sx, y: sy, lado } = SILLA_ESCRITORIO[giro];
+          if (capa !== 'mesa') silla(c, sx, sy, color, lado);
+          if (capa === 'sillas') return;
+          sombraSuelo(c, bx + 1, by + 1, bw, bh);
+          tablero(r, bx, by, bw, bh);
+          if (horizontal) {
+            monitor(r, bx + 23, by + 3); teclado(r, bx + 22, by + 14); papelesFinal(r, bx + 4, by + 4); tazaFinal(c, bx + 50, by + 9);
+            r(bx + 41, by + 14, 3, 5, C.contorno); r(bx + 42, by + 15, 1, 3, C.metalLuz);
+            r(bx + 12, by + 13, 6, 5, C.contorno); r(bx + 13, by + 14, 4, 3, '#ffe08a');
+            disco(c, bx + 54, by + 17, 3, C.contorno); disco(c, bx + 54, by + 16, 2, C.verdeHoja); r(bx + 52, by + 17, 5, 3, C.terracota);
+          } else {
+            monitor(r, bx + 3, by + 4); teclado(r, bx + 3, by + 17); papelesFinal(r, bx + 5, by + 33); tazaFinal(c, bx + 11, by + 54);
+            r(bx + 14, by + 24, 3, 5, C.contorno); r(bx + 15, by + 25, 1, 3, C.metalLuz);
+            r(bx + 15, by + 34, 5, 5, C.contorno); r(bx + 16, by + 35, 3, 3, '#ffe08a');
+            disco(c, bx + 4, by + 52, 3, C.contorno); disco(c, bx + 4, by + 51, 2, C.verdeHoja); r(bx + 2, by + 52, 5, 3, C.terracota);
+          }
+        });
+      }
     }
   }
 
   // Mesas verticales (2 × 4 baldosas): sillas a oeste y este, ordenadores derechos
   const mesaVertical = (clave: string, oeste: keyof typeof SILLA, este: keyof typeof SILLA, filas: readonly number[], puestos: ((lado: 'oeste' | 'este', fila: number) => Puesto) | null) => {
-    lienzo(escena, clave, 2 * TILE, 4 * TILE, (c) => {
-      const r = rectCtx(c);
-      for (const cy of filas) { silla(c, 9, cy, oeste, 'oeste'); silla(c, 55, cy, este, 'este'); }
-      sombraSuelo(c, 17, 10, 32, 112);
-      tablero(r, 16, 8, 32, 112);
-      if (puestos) {
-        filas.forEach((cy, i) => { puestoDerecho(c, r, 17, cy, puestos('oeste', i)); puestoDerecho(c, r, 33, cy, puestos('este', i)); });
-        papelesFinal(r, 27, 11); tazaFinal(c, 32, 114);
-      } else {
-        // reuniones: portátiles, papeles y tazas en el centro
-        for (const y of [30, 94]) { monitor(r, 25, y); teclado(r, 24, y + 11); }
-        papelesFinal(r, 19, 60); papelesFinal(r, 34, 62); papelesFinal(r, 27, 12);
-        tazaFinal(c, 24, 114); tazaFinal(c, 40, 114); tazaFinal(c, 32, 76);
-      }
-    });
+    for (const [capa, sufijo] of CAPAS) {
+      lienzo(escena, `${clave}${sufijo}`, 2 * TILE, 4 * TILE, (c) => {
+        const r = rectCtx(c);
+        if (capa !== 'mesa') for (const cy of filas) { silla(c, SILLAS_MESA_VERTICAL.oeste, cy, oeste, 'oeste'); silla(c, SILLAS_MESA_VERTICAL.este, cy, este, 'este'); }
+        if (capa === 'sillas') return;
+        sombraSuelo(c, 17, 10, 32, 112);
+        tablero(r, 16, 8, 32, 112);
+        if (puestos) {
+          filas.forEach((cy, i) => { puestoDerecho(c, r, 17, cy, puestos('oeste', i)); puestoDerecho(c, r, 33, cy, puestos('este', i)); });
+          papelesFinal(r, 27, 11); tazaFinal(c, 32, 114);
+        } else {
+          // reuniones: portátiles, papeles y tazas en el centro
+          for (const y of [30, 94]) { monitor(r, 25, y); teclado(r, 24, y + 11); }
+          papelesFinal(r, 19, 60); papelesFinal(r, 34, 62); papelesFinal(r, 27, 12);
+          tazaFinal(c, 24, 114); tazaFinal(c, 40, 114); tazaFinal(c, 32, 76);
+        }
+      });
+    }
   };
-  mesaVertical('obj-mesa-90', 'verde', 'verde', [16, 48, 80, 112], null);
-  mesaVertical('obj-mesa4-naranja-90', 'naranja', 'naranja', [48, 80], () => 'ing');
+  mesaVertical('obj-mesa-90', 'verde', 'verde', SILLAS_MESA_VERTICAL.filasReuniones, null);
+  mesaVertical('obj-mesa4-naranja-90', 'naranja', 'naranja', SILLAS_MESA_VERTICAL.filasMesa4, () => 'ing');
   // Isla: oeste (rojas) Desarrollo y CAE; este (grises) Marketing y Administración
-  mesaVertical('obj-mesa4-isla-90', 'rojo', 'gris', [48, 80], (lado, i) => (lado === 'oeste' ? (['dev', 'cae'] as const)[i]! : (['mkt', 'adm'] as const)[i]!));
+  mesaVertical('obj-mesa4-isla-90', 'rojo', 'gris', SILLAS_MESA_VERTICAL.filasMesa4, (lado, i) => (lado === 'oeste' ? (['dev', 'cae'] as const)[i]! : (['mkt', 'adm'] as const)[i]!));
 
   // Televisor ya del derecho (el plano lo gira 180°)
   lienzo(escena, 'obj-tele-180', 2 * TILE, TILE, (c) => dibujarTele(c, rectCtx(c)));

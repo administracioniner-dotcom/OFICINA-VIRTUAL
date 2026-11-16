@@ -40,22 +40,28 @@ export function buscarRuta(bloqueada: readonly (readonly boolean[])[], desde: Ce
   return null;
 }
 
+export interface Punto { x: number; y: number }
+
 /**
- * Mueve a un personaje a lo largo de una ruta de baldosas, a `velocidad` píxeles por segundo.
- * `indice` es la siguiente baldosa de la ruta a la que se dirige. Puede cruzar varias baldosas en un paso.
+ * Mueve a un personaje a lo largo de una línea quebrada de puntos (en píxeles), a `velocidad` px/s.
+ * `indice` es el siguiente punto al que se dirige. Puede cruzar varios puntos en un solo paso.
  */
-export function avanzar(est: EstadoMovimiento, ruta: readonly Celda[], dtSeg: number, velocidad: number): PasoMovimiento {
+export function avanzarPuntos(est: EstadoMovimiento, puntos: readonly Punto[], dtSeg: number, velocidad: number): PasoMovimiento {
   let { x, y, indice } = est;
   let resto = velocidad * dtSeg;
   let dir: DireccionPaso | null = null;
-  while (indice < ruta.length && resto > 0) {
-    const [cx, cy] = ruta[indice]!;
-    const tx = cx * TILE + TILE / 2, ty = cy * TILE + TILE / 2;
+  while (indice < puntos.length && resto > 0) {
+    const { x: tx, y: ty } = puntos[indice]!;
     const dx = tx - x, dy = ty - y;
     const dist = Math.hypot(dx, dy);
     if (dist > 0) dir = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'este' : 'oeste') : (dy > 0 ? 'sur' : 'norte');
     if (dist <= resto) { x = tx; y = ty; resto -= dist; indice++; }
     else { x += (dx / dist) * resto; y += (dy / dist) * resto; resto = 0; }
   }
-  return { estado: { x, y, indice }, dir, terminado: indice >= ruta.length };
+  return { estado: { x, y, indice }, dir, terminado: indice >= puntos.length };
+}
+
+/** Igual que `avanzarPuntos`, pero a lo largo de una ruta de baldosas (centros de baldosa). */
+export function avanzar(est: EstadoMovimiento, ruta: readonly Celda[], dtSeg: number, velocidad: number): PasoMovimiento {
+  return avanzarPuntos(est, ruta.map(([cx, cy]) => ({ x: cx * TILE + TILE / 2, y: cy * TILE + TILE / 2 })), dtSeg, velocidad);
 }

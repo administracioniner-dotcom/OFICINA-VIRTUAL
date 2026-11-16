@@ -1,8 +1,14 @@
 import Phaser from 'phaser';
-import { mamparasVisibles, zonaEn, type Plano, type TipoZona, type Zona } from '../domain/plano';
+import { mamparasVisibles, rejillaBloqueada, zonaEn, type Plano, type TipoZona, type Zona } from '../domain/plano';
 import { bus } from '../state/bus';
 import { instalarControles, type ControlCamara } from './camara/controles';
 import { PALETA, TILE } from './paleta';
+import { crearAgentes } from '../domain/agentes';
+import { SimuladorAgentes } from '../source/simulado';
+import type { AgentSource, EventoOficina } from '../source/tipos';
+import { Actor } from './Actor';
+import { asientosDelPlano, type Asiento } from './asientos';
+import { generarGlobos, generarHoja } from './sprites/hojas';
 import { mascaraMuro } from './muros';
 import { colocarRotulos } from './rotulos';
 import logoIner from '../assets/logo-iner.png';
@@ -11,6 +17,8 @@ import { generarTexturas } from './texturas/registro';
 
 export class OfficeScene extends Phaser.Scene {
   private camara!: ControlCamara;
+  private readonly actores = new Map<string, Actor>();
+  private fuente?: AgentSource;
   private resalte?: Phaser.GameObjects.Graphics;
 
   constructor(private readonly plano: Plano) {
@@ -81,11 +89,15 @@ export class OfficeScene extends Phaser.Scene {
       const zona = zonaEn(p, o.x, o.y)?.tipo;
       const suelo = o.tipo === 'entrada' || o.tipo === 'puerta';
       const profundidad = suelo ? 1 : (o.y + o.alto) * TILE + (o.sobre ? 1 : 0);
-      const { clave, angulo } = texturaObjeto(o, zona);
-      this.add
-        .image((o.x + o.ancho / 2) * TILE, (o.y + o.alto / 2) * TILE, clave)
-        .setAngle(angulo)
-        .setDepth(profundidad);
+      const { clave, angulo, capas } = texturaObjeto(o, zona);
+      const cx = (o.x + o.ancho / 2) * TILE, cy = (o.y + o.alto / 2) * TILE;
+      if (capas) {
+        // sillas y mesa por separado: la persona se sienta entre las dos
+        this.add.image(cx, cy, capas.sillas).setDepth(profundidad - 1);
+        this.add.image(cx, cy, capas.mesa).setDepth(profundidad);
+      } else {
+        this.add.image(cx, cy, clave).setAngle(angulo).setDepth(profundidad);
+      }
     }
 
     // Zonas: línea tenue de borde (con un pequeño margen entre vecinas) y rótulo
@@ -108,11 +120,59 @@ export class OfficeScene extends Phaser.Scene {
         .setAlpha(0.95);
     }
 
+    this.iniciarAgentes();
+
     this.camara = instalarControles(this, { ancho: p.ancho * TILE, alto: p.alto * TILE });
     this.camara.ajustar();
     const quitar = bus.on('zona:ir', (tipo) => this.irAZona(tipo));
     this.events.once('shutdown', quitar);
     this.events.once('destroy', quitar);
+  }
+
+  /** Crea los agentes simulados y aplica sus eventos. Todo lo que se ve aquí es SIMULACIÓN. */
+  private iniciarAgentes(): void {
+    const p = this.plano;
+    const asientos = asientosDelPlano(p);
+    const porId = new Map<string, Asiento>(asientos.map((a) => [a.id, a]));
+    const bloqueada = rejillaBloqueada(p);
+    generarGlobos(this);
+    const agentes = crearAgentes(asientos);
+    const sillasReunion = asientos.filter((a) => a.tipo === 'reuniones').map((a) => a.id);
+    // ?velocidad=4 acelera la simulación (para pruebas)
+    const escala = Number(new URLSearchParams(window.location.search).get('velocidad')) || 1;
+    this.fuente = new SimuladorAgentes(agentes, sillasReunion, Math.random, escala);
+    const alRecibir = (e: EventoOficina) => {
+      if (e.tipo === 'agente.alta') {
+        generarHoja(this, e.agente);
+        this.actores.set(e.agente.id, new Actor(this, e.agente, porId, bloqueada));
+        this.actores.get(e.agente.id)!.setEstado(e.agente.estado);
+      } else if (e.tipo === 'agente.estado') {
+        this.actores.get(e.id)?.setEstado(e.estado);
+      } else if (e.tipo === 'agente.reunion') {
+        const a = this.actores.get(e.id);
+        a?.irA(e.asiento ?? a.agente.asientoId);
+      }
+    };
+    // ?depurar expone el estado de los actores para las pruebas automáticas del navegador
+    if (new URLSearchParams(window.location.search).has('depurar')) {
+      (window as unknown as Record<string, unknown>).__oficina = () => ({
+        bloqueada,
+        actores: [...this.actores.values()].map((a) => ({
+          id: a.agente.id, sentado: a.estaSentado, x: a.posicion.x, y: a.posicion.y,
+          asiento: a.asientoActual.id, tipo: a.asientoActual.tipo, propio: a.agente.asientoId,
+        })),
+      });
+    }
+    const quitar = this.fuente.suscribir(alRecibir);
+    this.fuente.iniciar();
+    const parar = () => { quitar(); this.fuente?.detener(); };
+    this.events.once('shutdown', parar);
+    this.events.once('destroy', parar);
+  }
+
+  update(_tiempo: number, delta: number): void {
+    const dt = Math.min(delta / 1000, 0.1);
+    for (const a of this.actores.values()) a.actualizar(dt);
   }
 
   /** Lleva la cámara a todas las zonas de ese tipo y resalta su rectángulo. */

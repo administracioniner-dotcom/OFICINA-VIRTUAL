@@ -89,7 +89,7 @@ function frenteOEspalda(c: Ctx, a: AspectoPersonaje, dir: 'sur' | 'norte', fotog
   }
   const dy = rebote;
   // brazos (se balancean al caminar)
-  const braIzq = !sentado && fotograma === 1 ? 1 : !sentado && fotograma === 3 ? -1 : 0;
+  const braIzq = sentado ? (fotograma === 1 ? 1 : 0) : fotograma === 1 ? 1 : fotograma === 3 ? -1 : 0;
   r(c, 3, 13 + dy + braIzq, 3, 4, a.camisa); r(c, 3, 17 + dy + braIzq, 3, 4, a.piel);
   r(c, 18, 13 + dy - braIzq, 3, 4, a.camisa); r(c, 18, 17 + dy - braIzq, 3, 4, a.piel);
   // torso

@@ -17,6 +17,12 @@ export const DIMENSIONES: Record<TipoObjeto, readonly [number, number]> = {
   patinete: [2, 1], bici: [2, 1], microondas: [1, 1],
 };
 
+/** Texturas pregiradas que se dibujan en dos capas (mesa y sillas) para poder sentar a la gente entre ambas. */
+export const CON_SILLAS_SEPARADAS: readonly string[] = [
+  ...(['rojo', 'gris', 'naranja'] as const).flatMap((c) => ([0, 90, 180, 270] as const).map((g) => `obj-escritorio-${c}-${g}`)),
+  'obj-mesa-90', 'obj-mesa4-naranja-90', 'obj-mesa4-isla-90',
+];
+
 export const TEXTURAS_REQUERIDAS: readonly string[] = [
   'suelo-0', 'suelo-1', 'suelo-2', 'suelo-3', 'alfombra',
   ...Array.from({ length: 16 }, (_, i) => `muro-${i}`),
@@ -25,6 +31,7 @@ export const TEXTURAS_REQUERIDAS: readonly string[] = [
   'obj-mesa4-naranja', 'obj-mesa4-isla',
   ...(['rojo', 'gris', 'naranja'] as const).flatMap((c) => ([0, 90, 180, 270] as const).map((g) => `obj-escritorio-${c}-${g}`)),
   'obj-mesa-90', 'obj-mesa4-naranja-90', 'obj-mesa4-isla-90', 'obj-tele-180',
+  ...CON_SILLAS_SEPARADAS.flatMap((k) => [`${k}-mesa`, `${k}-sillas`]),
   'obj-puerta', 'obj-sofa', 'obj-mesa', 'obj-planta', 'obj-entrada', 'obj-nevera',
   'obj-mesapeq', 'obj-mesasola', 'obj-impresora', 'obj-tele', 'obj-agua', 'obj-silla',
   'obj-futbolin', 'obj-patinete', 'obj-bici', 'obj-microondas',
@@ -49,10 +56,13 @@ const PREGIRADAS: ReadonlySet<string> = new Set([
   'obj-mesa-90', 'obj-mesa4-naranja-90', 'obj-mesa4-isla-90', 'obj-tele-180',
 ]);
 
-export interface TexturaObjeto { clave: string; angulo: number }
+export interface TexturaObjeto { clave: string; angulo: number; capas?: { mesa: string; sillas: string } }
 
 export function texturaObjeto(o: Objeto, zona?: TipoZona): TexturaObjeto {
   const base = claveObjeto(o, zona);
   const girada = `${base}-${o.giro}`;
-  return PREGIRADAS.has(girada) ? { clave: girada, angulo: 0 } : { clave: base, angulo: o.giro };
+  if (!PREGIRADAS.has(girada)) return { clave: base, angulo: o.giro };
+  return CON_SILLAS_SEPARADAS.includes(girada)
+    ? { clave: girada, angulo: 0, capas: { mesa: `${girada}-mesa`, sillas: `${girada}-sillas` } }
+    : { clave: girada, angulo: 0 };
 }

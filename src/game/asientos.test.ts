@@ -46,4 +46,10 @@ describe('asientosDelPlano', () => {
       expect(alc[y]![x], `${a.id} acceso (${x},${y}) alcanzable`).toBe(true);
     }
   });
+  it('«fondo» es el borde inferior del mueble en píxeles (para ordenar por profundidad)', () => {
+    for (const a of asientos) {
+      const o = p.objetos.find((x) => x.x === a.objeto.x && x.y === a.objeto.y && ['escritorio', 'mesa', 'mesa4'].includes(x.tipo))!;
+      expect(a.fondo).toBe((o.y + o.alto) * 32);
+    }
+  });
 });

@@ -19,6 +19,8 @@ export interface Asiento {
   acceso: Celda;
   zona?: TipoZona;
   objeto: { x: number; y: number };
+  /** Borde inferior del mueble en píxeles: su profundidad al ordenar el dibujo. */
+  fondo: number;
 }
 
 const MIRA: Record<LadoSilla, Direccion> = { sur: 'norte', norte: 'sur', oeste: 'este', este: 'oeste' };
@@ -28,7 +30,7 @@ function crear(p: Plano, o: Objeto, id: string, tipo: TipoAsiento, lx: number, l
   const x = o.x * TILE + lx, y = o.y * TILE + ly;
   const [dx, dy] = HACIA_FUERA[lado];
   const acceso: Celda = [Math.floor((x + dx * 0.75 * TILE) / TILE), Math.floor((y + dy * 0.75 * TILE) / TILE)];
-  const asiento: Asiento = { id, tipo, x, y, mira: MIRA[lado], lado, acceso, objeto: { x: o.x, y: o.y } };
+  const asiento: Asiento = { id, tipo, x, y, mira: MIRA[lado], lado, acceso, objeto: { x: o.x, y: o.y }, fondo: (o.y + o.alto) * TILE };
   const zona = zonaEn(p, Math.floor(x / TILE), Math.floor(y / TILE))?.tipo;
   if (zona) asiento.zona = zona;
   return asiento;
