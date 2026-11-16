@@ -51,3 +51,25 @@ export function crearAgentes(asientos: readonly PuestoAsignable[]): Agente[] {
   }
   return agentes;
 }
+
+const CAMISA_POR_DEPARTAMENTO: Partial<Record<TipoZona, string>> = Object.fromEntries(PLANTILLAS.map((p) => [p.departamento, p.camisa]));
+
+/** Agentes de más para una prueba de carga: uno en cada puesto de trabajo que quede libre. No se usa en la versión normal. */
+export function crearAgentesExtra(asientos: readonly PuestoAsignable[], existentes: readonly Agente[]): Agente[] {
+  const usados = new Set(existentes.map((a) => a.asientoId));
+  const contador = new Map<TipoZona, number>();
+  for (const a of existentes) contador.set(a.departamento, (contador.get(a.departamento) ?? 0) + 1);
+  const extra: Agente[] = [];
+  let variante = existentes.length;
+  for (const s of asientos) {
+    if (usados.has(s.id) || s.tipo === 'reuniones' || !s.zona) continue;
+    const n = (contador.get(s.zona) ?? 0) + 1;
+    contador.set(s.zona, n);
+    extra.push({
+      id: `${s.zona}-${n}`, nombre: `Agente ${NOMBRE_ZONA[s.zona]} ${n}`, departamento: s.zona,
+      genero: variante % 2 ? 'f' : 'm', camisa: CAMISA_POR_DEPARTAMENTO[s.zona] ?? '#5c6bc0', variante: variante++,
+      asientoId: s.id, estado: 'trabajando',
+    });
+  }
+  return extra;
+}

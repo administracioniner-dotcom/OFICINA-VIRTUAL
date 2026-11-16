@@ -59,6 +59,7 @@ Mapa de **37 × 20 baldosas** (origen arriba a la izquierda del edificio). Los d
   - **Sillas por tipo de mesa** (mandan sobre el departamento): las de las **mesas pequeñas** son **blancas** (incluida la de la zona de comer de Ingeniería); las **sillas sueltas** son **blancas**; las de la **mesa de la Sala de reuniones** son **verdes**.
   - **Estanterías blancas**, con **archivadores rojos** en sus baldas.
   - **Mamparas: cristal completo**, sin marcos.
+  - **División de cristal entre Descanso y la Sala de reuniones** (fila 10; la tele de la sala forma parte de esa pared) y **puerta de la Sala** en la pared de cristal este: hueco de 2 baldosas (columna 6, filas 11 y 12). *(Añadido por José tras la fase 2; la posición de la puerta es decisión mía, a confirmar.)*
   - **Logotipo de INER** (solo «iner», sin «SMART»; versión en degradado naranja, de los logos que dio José) en el muro de Dirección, en el extremo más cercano a la entrada principal (a la derecha del televisor, sin placa ni fondo), **mirando hacia la entrada**: está girado 180°, así que en pantalla se ve del revés y se lee desde el norte. Archivo: `src/assets/logo-iner.png`.
   - **Pantallas siempre derechas:** los escritorios, la mesa de reuniones, las mesas de 4 y los televisores se dibujan ya en su orientación final, con la silla en su lado.
   - **Microondas** encima de la mesa sin sillas del Descanso, en la baldosa (2,1). Es un objeto «sobre» otro: no ocupa una baldosa propia ni bloquea el paso. Ya consta en `data/plano-v1.json`.

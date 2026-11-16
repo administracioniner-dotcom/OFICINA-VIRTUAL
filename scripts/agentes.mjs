@@ -19,7 +19,7 @@ try {
   await esperar(1500);
   await p.screenshot({ path: `capturas/${prefijo}-inicio.png` });
   await p.getByRole('button', { name: 'Sala de reuniones' }).click();
-  for (let i = 1; i <= 16; i++) { await esperar(5000); await p.screenshot({ path: `capturas/${prefijo}-t${i}.png` }); }
+  for (let i = 1; i <= 2; i++) { await esperar(2500); await p.screenshot({ path: `capturas/${prefijo}-t${i}.png` }); }
   console.log('errores de consola:', JSON.stringify(errores));
   await nav.close();
 } finally { servidor.kill(); }

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import datos from '../../data/plano-v1.json';
-import { crearAgentes } from '../domain/agentes';
+import { crearAgentes, crearAgentesExtra } from '../domain/agentes';
 import { PlanoInvalido, cargarPlano } from '../domain/plano';
 import { asientosDelPlano } from '../game/asientos';
 import { crearJuego } from '../game/crearJuego';
@@ -17,7 +17,9 @@ function preparar() {
   try {
     const plano = cargarPlano(datos);
     const asientos = asientosDelPlano(plano);
-    const agentes = crearAgentes(asientos);
+    const base = crearAgentes(asientos);
+    // ?agentes=14 añade agentes en los puestos libres (solo para probar el rendimiento)
+    const agentes = new URLSearchParams(window.location.search).get('agentes') === '14' ? [...base, ...crearAgentesExtra(asientos, base)] : base;
     const sillas = asientos.filter((a) => a.tipo === 'reuniones').map((a) => a.id);
     // ?velocidad=3 acelera la simulación (para pruebas)
     const escala = Number(new URLSearchParams(window.location.search).get('velocidad'));

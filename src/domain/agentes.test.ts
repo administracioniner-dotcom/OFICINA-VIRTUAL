@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import datos from '../../data/plano-v1.json';
 import { asientosDelPlano } from '../game/asientos';
-import { crearAgentes } from './agentes';
+import { crearAgentes, crearAgentesExtra } from './agentes';
 import { cargarPlano } from './plano';
 
 const p = cargarPlano(datos);
@@ -39,5 +39,24 @@ describe('crearAgentes', () => {
   });
   it('cada agente trae un color de camisa y una variante de aspecto', () => {
     for (const a of agentes) { expect(a.camisa).toMatch(/^#[0-9a-f]{6}$/); expect(Number.isInteger(a.variante)).toBe(true); }
+  });
+});
+
+describe('crearAgentesExtra (prueba de carga)', () => {
+  const extra = crearAgentesExtra(asientos, agentes);
+  it('añade 5 agentes en los puestos libres: el 2º escritorio de Dirección y los 4 de la mesa de Ingeniería', () => {
+    expect(extra).toHaveLength(5);
+    expect(new Set([...agentes, ...extra].map((a) => a.asientoId)).size).toBe(14);
+    expect(new Set([...agentes, ...extra].map((a) => a.id)).size).toBe(14);
+  });
+  it('no usa sillas de la sala de reuniones y cada uno está en su departamento', () => {
+    for (const a of extra) {
+      const s = asientos.find((x) => x.id === a.asientoId)!;
+      expect(s.tipo).not.toBe('reuniones');
+      expect(s.zona).toBe(a.departamento);
+    }
+  });
+  it('lleva nombre neutro y estado inicial', () => {
+    for (const a of extra) { expect(a.nombre).toMatch(/^Agente .+ \d+$/); expect(a.estado).toBe('trabajando'); }
   });
 });

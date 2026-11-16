@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import datos from '../../data/plano-v1.json';
+import { buscarRuta } from './rutas';
 import { PlanoInvalido, cargarPlano, celdasAlcanzables, mamparasVisibles, rejillaBloqueada, zonaEn } from './plano';
 
 const base = () => JSON.parse(JSON.stringify(datos));
@@ -99,5 +100,29 @@ describe('mamparasVisibles', () => {
     const v = mamparasVisibles(p);
     expect(v.some(([x, y]) => x === 6 && y === 19)).toBe(false);
     expect(v).toHaveLength(p.mamparas.length - 1);
+  });
+});
+
+describe('Sala de reuniones: división de cristal con Descanso y puerta', () => {
+  const p = cargarPlano(datos);
+  const bloq = rejillaBloqueada(p);
+  it('entre Descanso y la Sala hay una división: cristal y la tele cierran toda la fila 10', () => {
+    for (const x of [1, 2, 3, 4, 5, 6]) expect(bloq[10]![x], `(${x},10)`).toBe(true);
+  });
+  it('la puerta de la Sala es un hueco de 2 baldosas en la pared de cristal este (x=6, filas 11 y 12)', () => {
+    expect(bloq[11]![6]).toBe(false);
+    expect(bloq[12]![6]).toBe(false);
+    expect(bloq[13]![6]).toBe(true);
+  });
+  it('para ir de Descanso a la Sala hay que dar la vuelta por la puerta', () => {
+    const ruta = buscarRuta(bloq, [3, 5], [3, 12])!;
+    expect(ruta).not.toBeNull();
+    expect(ruta.some(([x, y]) => x === 6 && (y === 11 || y === 12))).toBe(true);
+    expect(ruta.length).toBeGreaterThan(14);
+  });
+  it('desde la entrada principal se llega a las sillas de la Sala por la puerta', () => {
+    const ruta = buscarRuta(bloq, [20, 0], [5, 14])!;
+    expect(ruta).not.toBeNull();
+    expect(ruta.some(([x, y]) => x === 6 && (y === 11 || y === 12))).toBe(true);
   });
 });
