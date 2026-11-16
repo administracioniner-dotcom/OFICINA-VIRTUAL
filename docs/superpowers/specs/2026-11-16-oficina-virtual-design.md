@@ -1,6 +1,6 @@
 # INER SMART Virtual Office — diseño de la primera versión
 
-Fecha: 16/11/2026 · Estado: **entrada principal y 10 agentes confirmados; el resto pendiente de visto bueno de José** · Idioma del proyecto: español
+Fecha: 16/11/2026 · Estado: **entrada principal y 9 agentes confirmados; el resto pendiente de visto bueno de José** · Idioma del proyecto: español
 
 ## 1. Intención
 
@@ -133,9 +133,9 @@ data/          plano-v1.json
 ## 6. Personajes, estados e interacción
 
 - Cada agente: nombre, departamento, puesto, estado, escritorio asignado, tarea actual.
-- **Departamentos de la fase 1:** los de las zonas con puestos: Dirección (2 agentes), Ingeniería (2), Compras (1), Recepción (1), Desarrollo (1), Marketing (1), CAE (1) y Administración (1). Son **10 agentes**, uno por puesto (6 escritorios + 4 de la isla). *(Decisión mía, a confirmar por José.)* La barra de zonas tiene una entrada por departamento, más Descanso y Sala de reuniones.
+- **Departamentos de la fase 1:** los de las zonas con puestos: Dirección (1 agente, chico), Ingeniería (2), Compras (1), Recepción (1), Desarrollo (1), Marketing (1), CAE (1) y Administración (1). Son **9 agentes** (el segundo escritorio de Dirección queda libre); todos de piel clara. *(Decisión mía, a confirmar por José.)* La barra de zonas tiene una entrada por departamento, más Descanso y Sala de reuniones.
 - **Nombres:** en fase 1 son identificadores neutros («Agente CAE 1», «Agente Dirección 2»…), marcados como simulados. No se inventan personas ni datos de negocio.
-- **Reuniones:** el estado «en reunión» envía al agente a una de las 8 sillas de la Sala de reuniones. Con 10 agentes y 8 sillas, si no hay silla libre el agente sigue en su puesto (como «pensando»); quedarse de pie junto a la mesa queda para cuando haya más agentes.
+- **Reuniones:** el estado «en reunión» envía al agente a una de las 8 sillas de la Sala de reuniones. Con 9 agentes y 8 sillas, si no hay silla libre el agente sigue en su puesto (como «pensando»); quedarse de pie junto a la mesa queda para cuando haya más agentes.
 - **Estados:** trabajando, pensando, esperando instrucciones, en reunión, tarea completada, error. Cada uno tiene indicador visual encima del personaje (globo o icono pixel) y color propio.
 - **Simulación:** `SimulatedSource` cambia estados al azar con reglas simples (p. ej. «en reunión» envía al agente a la sala; «error» lo marca en rojo). Ninguna cifra ni tarea simulada se presenta como real.
 - **Fichas:** de agente (departamento, estado, puesto, escritorio, historial corto) y de puesto (quién lo ocupa, zona, equipo). **Ventana de tareas:** lista de tareas simuladas del agente seleccionado, con estado.
@@ -187,13 +187,13 @@ Las fases 1–4 forman la **primera versión visual funcional**. Se pregunta a J
 
 - `npm run build` debe compilar antes de dar nada por hecho.
 - Navegador real (Playwright sobre `vite preview`): capturas y comprobación de que cámara, selección y paneles responden.
-- Medición de fotogramas por segundo con 10 agentes (versión normal) y con 14 (prueba de carga: los 10 más las 4 sillas de la mesa de Ingeniería). El tope de la fase 1 es 10; los 14 solo sirven para comprobar el rendimiento.
+- Medición de fotogramas por segundo con 9 agentes (versión normal) y con 14 (prueba de carga: los 9 más 5 puestos sueltos). El tope de la fase 1 es 9; los 14 solo sirven para comprobar el rendimiento.
 - **Lo que no se puede probar aquí:** Windows real con Edge/Firefox; solo se prueba un Chromium de pruebas. Se dirá claramente en cada informe y lo comprueba José con una lista de «qué mirar».
 
 ## 10. Decisiones abiertas
 
 1. **Entrada principal:** la central (columnas 20–23). **Confirmado por José.**
-2. **Número de agentes en la fase 1:** **10** (los 6 escritorios y los 4 puestos de la isla). **Confirmado por José.** Las 4 sillas de la mesa de Ingeniería quedan como ampliación.
+2. **Número de agentes en la fase 1:** 10 confirmados al principio; después José pidió **un solo agente en Dirección**, así que son **9**. Las 4 sillas de la mesa de Ingeniería quedan como ampliación.
 3. **Departamentos con agente:** se propone que los tengan Dirección, Ingeniería, Compras, Recepción y los 4 de la isla (sección 6). Confirmar.
 4. **Estilo de vista:** 3/4 con muros con volumen (sección 5). Se enseña en la primera captura y se ajusta si no gusta.
 5. **Hospedaje:** primero local; el despliegue estático (p. ej. Vercel) lo decide José más adelante. No hay secretos ni variables de entorno.

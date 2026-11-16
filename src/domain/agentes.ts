@@ -23,7 +23,7 @@ interface Plantilla { departamento: TipoZona; generos: readonly Genero[]; camisa
 
 /** Agentes de la fase 1: uno por puesto de trabajo. Los puestos de la mesa de Ingeniería quedan libres. */
 const PLANTILLAS: readonly Plantilla[] = [
-  { departamento: 'direccion', generos: ['m', 'f'], camisa: '#3d4452', tipoAsiento: 'escritorio' },
+  { departamento: 'direccion', generos: ['m'], camisa: '#3d4452', tipoAsiento: 'escritorio' },
   { departamento: 'ingenieria', generos: ['m', 'm'], camisa: '#f57c00', tipoAsiento: 'escritorio' },
   { departamento: 'compras', generos: ['f'], camisa: '#8d6e63', tipoAsiento: 'escritorio' },
   { departamento: 'recepcion', generos: ['f'], camisa: '#e5a800', tipoAsiento: 'escritorio' },

@@ -17,7 +17,8 @@ export interface AspectoPersonaje {
 export const ANCHO_FOTOGRAMA = 24;
 export const ALTO_FOTOGRAMA = 32;
 
-const PIELES = ['#f1c9a5', '#e0a97c', '#c68a5b', '#8d5a3b'] as const;
+/** Tonos de piel clara (decisión de José: todos los personajes de tez blanca). */
+export const PIELES = ['#f1c9a5', '#f6d6bb', '#efc3a0', '#f3cfb0'] as const;
 const PELOS = ['#2b2118', '#5a3b22', '#b5651d', '#e6c15a', '#8a8f98', '#c0392b'] as const;
 const CONTORNO = '#232733';
 

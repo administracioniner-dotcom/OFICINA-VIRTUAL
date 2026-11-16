@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (inline) to implement this plan task-by-task.
 
-**Goal:** 10 agentes simulados (humanos en pixel art) sentados en sus puestos, que caminan por los pasillos sin atravesar obstáculos y cambian de estado solos, siempre marcados como simulación.
+**Goal:** 9 agentes simulados (humanos en pixel art) sentados en sus puestos, que caminan por los pasillos sin atravesar obstáculos y cambian de estado solos, siempre marcados como simulación.
 
 **Architecture:** El dominio (puestos, agentes, rutas A\*, simulador) es TypeScript puro con tests. Phaser solo dibuja: `Actor` mueve un sprite siguiendo una ruta y la escena aplica los eventos del `AgentSource`. El simulador implementa la interfaz `AgentSource` del diseño (§7).
 
@@ -10,7 +10,7 @@
 
 ## Global Constraints
 - Sin red, sin credenciales; todo lo mostrado es **simulado** y se ve como tal («· simulación»). Nombres neutros («Agente CAE 1»).
-- Agentes (10): Dirección 2 (1 chico, 1 chica — decisión mía a confirmar), Ingeniería 2 (chicos), Compras 1 (chica), Recepción 1 (chica), Desarrollo 1 (chica), Marketing 1 (chica), CAE 1 (chico), Administración 1 (chica).
+- Agentes (9): Dirección 1 (chico), Ingeniería 2 (chicos), Compras 1 (chica), Recepción 1 (chica), Desarrollo 1 (chica), Marketing 1 (chica), CAE 1 (chico), Administración 1 (chica).
 - Caminar ≈ 3 baldosas/s, 4 direcciones; A\* de 4 direcciones; nunca atravesar muros ni mobiliario.
 - Estados: trabajando, pensando, esperando, en_reunion, completada, error. «En reunión»: hasta 8 sillas de la Sala de reuniones; si faltan, de pie junto a la mesa.
 - Ningún cambio de la cámara ni del aspecto de fase 1 salvo separar sillas de mesas para poder sentar a la gente.
@@ -27,3 +27,5 @@
 ## Resultado de la revisión final y pendientes
 - **Corregido:** el personaje se metía bajo la silla al sentarse y levantarse (ahora usa la profundidad de la silla en el primer y último tramo); los personajes se atravesaban (ahora el que tiene menos prioridad cede el paso, como mucho 1,2 s para no bloquearse); el moño salía cortado.
 - **Pendiente (menores):** si se interrumpe el tramo silla→acceso, el personaje se mete unos píxeles en el mueble; el temporizador del simulador usa `Date.now()` (mejor `performance.now()`); `?velocidad` negativo congela la simulación; `iniciar()` dos veces duplicaría los actores; recortes de 1 px en el respaldo de las sillas con giro 90/180/270; sin silla libre en la sala el agente no va de pie junto a la mesa (ver diseño §6).
+
+- **Cambio de José tras la entrega:** Dirección con un solo agente (chico) y todos los personajes de piel clara.

@@ -3,7 +3,7 @@ import { aspecto, dibujarPersonaje, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA, type Direcc
 import { COLOR_ESTADO, dibujarGlobo, type EstadoAgente } from './game/sprites/globos';
 
 const DEPTOS: Array<[string, string, 'f' | 'm']> = [
-  ['Dirección 1', '#3d4452', 'm'], ['Dirección 2', '#3d4452', 'f'], ['Ingeniería 1', '#f57c00', 'm'], ['Ingeniería 2', '#f57c00', 'm'],
+  ['Dirección 1', '#3d4452', 'm'], ['Ingeniería 1', '#f57c00', 'm'], ['Ingeniería 2', '#f57c00', 'm'],
   ['Compras', '#8d6e63', 'f'], ['Recepción', '#e5a800', 'f'], ['Desarrollo', '#d6403a', 'f'], ['Marketing', '#e84a9a', 'f'], ['CAE', '#00897b', 'm'], ['Administración', '#5c6bc0', 'f'],
 ];
 const ESC = 4, MARGEN = 10;
