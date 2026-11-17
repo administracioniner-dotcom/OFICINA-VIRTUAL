@@ -5,6 +5,12 @@ Ejecución automática de los miércoles a las 23:00. Trabajas solo con lo que e
 ## Alcance de esta tarea
 Solo **normativa CAE** y **fichas de actuaciones estandarizadas** de los sectores **residencial e industrial**. No investigues precios, empresas ni calcules RES060 (fases posteriores).
 
+## Puntos de partida (direcciones dadas por José, copiadas de un expediente; no comprobadas desde la sesión de desarrollo)
+- Catálogo vigente de fichas residenciales: `https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html` (busca la página equivalente del sector industrial dentro del mismo catálogo).
+- Ficha RES210, Anexo II (rendimiento de caldera sustituida): `https://www.miteco.gob.es/content/dam/miteco/es/energia/files-1/Eficiencia/CAE/catalogo-vigente/fichas-autocompletables/residencial/Ficha%20RES210_Anexo%20II.pdf`
+- «Criterios de verificación del Sistema CAE» (José cita la v14.0): búscala en el portal CAE de MITECO y apunta la versión y la fecha vigentes.
+Si una dirección no funciona, dilo en el informe y busca la vigente.
+
 ## Pasos
 1. Lee `conocimiento/normativa.json`, `conocimiento/fichas.json` y `conocimiento/alertas.json` para saber qué ya está registrado y no duplicarlo.
 2. **Normativa.** Busca y revisa, priorizando fuentes oficiales (`miteco.gob.es`, `boe.es`, `energia.gob.es` y el portal oficial del sistema CAE): órdenes, modificaciones, consultas públicas y borradores sobre el sistema CAE y las fichas. Registra en `normativa.json` lo nuevo o modificado, con su `estado` correcto (un borrador o una consulta pública nunca es «aprobada»).
