@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { bus } from '../../state/bus';
 import { esArrastre, limitarCamara, zoomAjustar, zoomParaRect, zoomSiguiente, zoomTrasRedimensionar, type Punto, type Tam } from './zoom';
+import { esCampoDeTexto, type ElementoEnfocado } from './teclado';
 
 export interface RectMundo { x: number; y: number; ancho: number; alto: number }
 export interface ControlCamara {
@@ -77,10 +78,12 @@ export function instalarControles(escena: Phaser.Scene, mapa: Tam): ControlCamar
   });
 
   // Teclado: WASD y flechas
-  const teclas = escena.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT') as
+  // Sin captura global (tercer parámetro en falso): Phaser no se queda las teclas y se puede escribir una «s» en un formulario
+  const teclas = escena.input.keyboard?.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT', false) as
     Record<string, Phaser.Input.Keyboard.Key> | undefined;
   escena.events.on('update', (_t: number, dt: number) => {
     if (!teclas) return;
+    if (esCampoDeTexto(document.activeElement as ElementoEnfocado | null)) return; // escribiendo: la cámara no se mueve
     const dx = (teclas.D!.isDown || teclas.RIGHT!.isDown ? 1 : 0) - (teclas.A!.isDown || teclas.LEFT!.isDown ? 1 : 0);
     const dy = (teclas.S!.isDown || teclas.DOWN!.isDown ? 1 : 0) - (teclas.W!.isDown || teclas.UP!.isDown ? 1 : 0);
     if (!dx && !dy) return;
