@@ -13,7 +13,7 @@ Cada `conocimiento/<categoría>.json` es una **lista** de registros. `node agent
 
 ## Campos por fichero
 - **normativa.json**: `titulo`, `estado` (`aprobada`, `borrador`, `propuesta`, `consulta_publica`, `derogada`), `fecha_publicacion` (obligatoria si `aprobada`), `entrada_en_vigor` (fecha o `null`), `afecta_a` (lista), `impacto_iner`, `oportunidades_riesgos`.
-- **fichas.json**: `codigo` (único), `denominacion`, `sector` (`residencial` o `industrial`), `version`, `fecha_ficha`, `formula_oficial` (texto copiado de la ficha oficial o `null`; solo con fuente `oficial`). Se pueden añadir más campos (requisitos, variables, documentación…) pero los anteriores son obligatorios.
+- **fichas.json**: `codigo` (único), `denominacion`, `sector` (`residencial` o `industrial`), `version` y `fecha_ficha` (texto/fecha, o `null` si la web no las publica: nunca se rellenan con la fecha de consulta), `formula_oficial` (texto copiado de la ficha oficial o `null`; solo con fuente `oficial`). Se pueden añadir más campos (requisitos, variables, documentación…) pero los anteriores son obligatorios.
 - **precios.json** (fase 5): `empresa`, `tipo_empresa`, `actuacion`, `precio` (número), `unidad` (`€/CAE` o `€/MWh`), `condiciones` (texto, puede ir vacío).
 - **oportunidades.json**: `descripcion`, `potencial_comercial`, `dificultad`, `recursos`, `recomendacion`, `estado` (`pendiente_revision`, `revisada`, `descartada`).
 - **empresas.json** (fase 5): `nombre`, `rol`, `rol_comprobado` (`true`/`false`).

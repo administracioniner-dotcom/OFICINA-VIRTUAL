@@ -87,3 +87,19 @@ describe('validarCarpeta', () => {
     expect(e.some((m) => m.startsWith('fichas.json'))).toBe(false);
   });
 });
+
+describe('fichas sin versión o fecha publicada (el catálogo web no siempre las da)', () => {
+  const f = (extra = {}) => ({
+    id: 'f-9', fecha_consulta: '2026-11-10', fuente: { nombre: 'MITECO', url: 'https://www.miteco.gob.es/x', tipo: 'oficial' },
+    fiabilidad: 'verificado', clasificacion: 'hecho', codigo: 'RES060', denominacion: 'Ejemplo', sector: 'residencial',
+    version: '1', fecha_ficha: '2025-01-01', formula_oficial: null, ...extra,
+  });
+  it('version y fecha_ficha pueden ser null (no publicadas); no se rellenan con la fecha de consulta', () => {
+    expect(validarArchivo('fichas.json', [f({ version: null, fecha_ficha: null })], HOY)).toEqual([]);
+  });
+  it('pero si se indican tienen que ser válidas', () => {
+    expect(validarArchivo('fichas.json', [f({ version: 5 })], HOY).join()).toMatch(/version/);
+    expect(validarArchivo('fichas.json', [f({ fecha_ficha: '2025-02-30' })], HOY).join()).toMatch(/fecha_ficha/);
+    expect(validarArchivo('fichas.json', [f({ version: '' })], HOY).join()).toMatch(/version/);
+  });
+});

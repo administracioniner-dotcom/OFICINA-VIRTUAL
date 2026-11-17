@@ -31,8 +31,8 @@ const ESPECIFICAS = {
     if (!texto(r.codigo)) p.push('falta codigo');
     if (!texto(r.denominacion)) p.push('falta denominacion');
     if (!['residencial', 'industrial'].includes(r.sector)) p.push('sector debe ser residencial o industrial (el terciario está fuera de alcance)');
-    if (!texto(r.version)) p.push('falta version');
-    if (!fechaValida(r.fecha_ficha)) p.push('fecha_ficha con formato AAAA-MM-DD');
+    if (r.version !== null && !texto(r.version)) p.push('version debe ser texto o null (null = no publicada)');
+    if (r.fecha_ficha !== null && !fechaValida(r.fecha_ficha)) p.push('fecha_ficha con formato AAAA-MM-DD o null (null = no publicada)');
     if (r.formula_oficial !== null && typeof r.formula_oficial !== 'string') p.push('formula_oficial debe ser el texto de la ficha o null');
     else if (typeof r.formula_oficial === 'string' && r.fuente?.tipo !== 'oficial') p.push('formula_oficial solo se admite copiada de una fuente oficial');
   },
