@@ -185,7 +185,7 @@ def construir(caso):
 
     f = fila[0]
     ca[f'B{f}'] = ('Fórmula de la ficha: AE = FP · [ (Dcal · S) · (1/ηi − 1/SCOP)' + (' + Dacs · (1/ηi − 1/SCOPdhw)' if acs else '') + ' ] · f. '
-                   'Estimación pendiente de contrastar con el texto de la ficha oficial.')
+                   'Fórmula contrastada con el texto oficial de la ficha RES060 V1.1 (MITECO, 17/11/2026).')
     ca[f'B{f}'].alignment = Alignment(wrap_text=True)
     ca.merge_cells(f'B{f}:H{f}')
     ca.row_dimensions[f].height = 32
@@ -280,7 +280,7 @@ def construir(caso):
 
     # ---------- Referencias ----------
     titulo(rf, 'B1', 'Referencias')
-    rf['B2'] = 'Documentos consultados y normativa aplicada (la normativa está pendiente de contrastar con los textos oficiales).'
+    rf['B2'] = 'Documentos consultados y normativa aplicada (ficha RES060 V1.1 y anexos, y Anexo II de RES210, contrastados con los textos oficiales de MITECO leídos el 17/11/2026).'
     seccion(rf, 4, 'A · DOCUMENTOS', 'F')
     cabecera(rf, 5, ['Cód.', 'Documento', 'Emisor · fecha', 'Identificación / enlace', 'Datos que se toman'])
     fd = 6
@@ -293,8 +293,8 @@ def construir(caso):
     cabecera(rf, fd + 1, ['Ref.', 'Documento', 'Ubicación', 'Qué establece', 'Dónde se aplica'])
     normas = [
         ('N1', 'Ficha RES060 V1.1', 'Apartado 3', 'AE = FP · [(Dcal · S) · (1/ηi − 1/SCOP) + Dacs · (1/ηi − 1/SCOPdhw)], ahorro anual de energía final en kWh/año.', 'Pasos de cálculo'),
-        ('N2', 'Ficha RES060 V1.1', 'Apartado 3 · tabla de variables', 'FP = 1; ηi referido a PCS; Dcal, S y Dacs según el certificado previo.', 'Datos de entrada'),
-        ('N3', 'Ficha RES060 V1.1', 'Anexo III', 'Se usa el SCOP del fabricante a la temperatura de impulsión; el clima de referencia depende de la zona.', 'ηs,h'),
+        ('N2', 'Ficha RES060 V1.1', 'Apartado 3 · tabla de variables', 'FP = 1; ηi referido a PCS; Dcal, S y DACS según el certificado de eficiencia energética antes de la actuación.', 'Datos de entrada'),
+        ('N3', 'Ficha RES060 V1.1', 'Anexo III', 'Se usa el SCOP del fabricante a la temperatura de impulsión; el SCOP será, al menos, el de clima medio o el de la zona equivalente (A3 a D3 cálido, E1 medio).', 'ηs,h'),
         ('N4', 'Ficha RES060 V1.1', 'Anexo IV', 'SCOP = CC · (ηs,h + F(1) + F(2)); CC = 2,5; F(1) = 3 % en aerotermia; F(2) = 0.', 'SCOP'),
         ('N5', 'Ficha RES060 V1.1', 'Anexo V', 'Hasta 70 kW, los rendimientos son los de EPREL o de la ficha técnica del fabricante.', 'ηs,h y COP'),
         ('N6', 'Ficha RES060 V1.1', 'Anexo VI', 'Conjunto del mismo fabricante (caso 1): CC·ηwh. Depósito no suministrado como conjunto (caso 3): COP A7/W55 × FC de la zona.', 'SCOPdhw'),

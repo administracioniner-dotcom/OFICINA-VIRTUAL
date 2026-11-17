@@ -12,6 +12,9 @@ export const CONSTANTES = {
   get dacsPorLitroDia() { return this.ce * this.deltaT * 365; },
 };
 
+/** Factor FC por zona climática del CTE para SCOPdhw = COP A7/W55 × FC (ficha RES060 V1.1, Anexo VI, caso 3; leído en MITECO el 17/11/2026). */
+export const FC_ZONA = { A3: 1.246, A4: 1.251, B3: 1.223, B4: 1.228, C1: 1.154, C2: 1.165, C3: 1.175, C4: 1.181, D1: 1.093, D2: 1.103, D3: 1.113, E1: 1.056 };
+
 /** Demanda de ACS (kWh/año) según la fórmula del catálogo, para los litros/día del CEE. */
 export const dacs = (litrosDia) => litrosDia * CONSTANTES.dacsPorLitroDia;
 
@@ -36,10 +39,16 @@ export function scopAcs(a) {
 }
 
 /**
- * Rendimiento de la caldera anterior (ηi) con la tabla B.3 del Anexo II de RES210/TER210 (criterio 24/11.03, según la guía).
- * Devuelve null cuando la guía no da valor: entonces hay que documentarlo aparte, no suponerlo.
+ * Rendimiento de la caldera anterior (ηi) con la tabla B.3 del Anexo II de RES210/TER210 (leída en MITECO el 17/11/2026; criterio 24/11.03 según la guía de José).
+ * Devuelve null cuando la tabla no da valor: entonces hay que documentarlo aparte, no suponerlo.
  */
-export function etaICaldera({ combustible, anio, condensacion, encendido } = {}) {
+export function etaICaldera({ combustible, anio, condensacion, encendido, tipo, alimentacion, espacio } = {}) {
+  if (combustible === 'solido') {
+    const manual = alimentacion === 'manual', auto = alimentacion === 'automatica';
+    if (!(manual || auto) || !['sin_calefactar', 'calefactado'].includes(espacio)) return null;
+    const calef = espacio === 'calefactado';
+    return manual ? (calef ? 0.6 : 0.55) : (calef ? 0.65 : 0.6);
+  }
   if (typeof anio !== 'number') return null;
   if (combustible === 'gasoleo') {
     if (anio < 1985) return 0.65;
@@ -48,7 +57,17 @@ export function etaICaldera({ combustible, anio, condensacion, encendido } = {})
     return condensacion ? 0.83 : 0.79;
   }
   if (combustible === 'gas') {
-    if (anio < 1998 || typeof condensacion !== 'boolean' || !['piloto', 'automatico'].includes(encendido)) return null;
+    if (anio < 1998) {
+      switch (tipo) {
+        case 'pie': return anio < 1979 ? 0.55 : 0.65;
+        case 'mural': return 0.65;
+        case 'forzado_alta': return 0.68;
+        case 'forzado_baja': return 0.72;
+        case 'condensacion': return 0.85;
+        default: return null;
+      }
+    }
+    if (typeof condensacion !== 'boolean' || !['piloto', 'automatico'].includes(encendido)) return null;
     if (!condensacion) return encendido === 'piloto' ? 0.69 : 0.73;
     return encendido === 'piloto' ? 0.79 : 0.83;
   }
@@ -60,20 +79,25 @@ function requerirPositivo(nombre, v) {
 }
 
 const DOCUMENTACION = [
-  'Certificado de eficiencia energética previo y posterior (CE3X) con número de registro.',
-  'Fotos de la placa de la caldera retirada y de la bomba de calor; marca, modelo y número de serie.',
-  'Prueba del año y del tipo de caldera (condensación, encendido) que respalde ηi.',
-  'Factura con el desmontaje de la caldera (la retirada es requisito).',
-  'EPREL o ficha del fabricante: ηs,h a la temperatura de impulsión y clima que correspondan; ηwh si es conjunto; COP A7/W55 si el depósito va aparte.',
+  'Ficha cumplimentada y firmada por el representante legal del solicitante de la emisión de CAE.',
+  'Declaración responsable del propietario inicial del ahorro sobre ayudas públicas (modelo del Anexo I de la ficha).',
+  'Facturas justificativas con descripción detallada de los elementos principales (de cuya ficha técnica se toman datos).',
+  'Informe fotográfico de la instalación térmica antes y después de la actuación.',
+  'Certificado de la instalación de la empresa instaladora con los valores de las variables de la fórmula.',
+  'Comunicación de puesta en funcionamiento de la instalación térmica en el registro de la comunidad autónoma (hasta 70 kW, vale el acta de puesta en servicio si se cumple lo que indica la ficha).',
+  'Certificado de eficiencia energética final con justificante de registro (o el del estado previo con la actuación como mejora).',
+  'Prueba del año y del tipo de la caldera (condensación, encendido) que respalde ηi.',
+  'Prueba de la retirada física de la caldera y su depósito (punto limpio) o de su condena física.',
+  'EPREL o ficha técnica del fabricante: ηs,h a la temperatura de impulsión y clima que correspondan; ηwh si es conjunto; COP A7/W55 si el depósito va aparte.',
   'Confirmación de emisores y temperatura de impulsión (el CEE puede decir otra cosa que la instalación).',
-  'Informe fotográfico y comunicación de puesta en marcha.',
 ];
 const RIESGOS = [
-  'ηi sin prueba del año o de la condensación de la caldera.',
-  'Retirada de la caldera sin prueba documental.',
+  'ηi sin prueba del año o del tipo de la caldera, o sin valor de última inspección.',
+  'Ni retirada física ni condena física de la caldera probadas (Anexo II de la ficha).',
+  'Caldera que se mantiene de respaldo en zonas D1, D2, D3 o E1 sin cumplir que la bomba supere el 35 % de la carga de diseño; en ese caso el ahorro solo cuenta sobre el porcentaje cubierto por la bomba.',
   'Marca o tipo del depósito sin confirmar (cambia entre Anexo VI caso 1 y caso 3).',
-  'Clima del SCOP distinto del de la zona del CEE.',
-  'Dacs distinta de la fórmula del catálogo.',
+  'Clima del SCOP: el de la zona (Anexo III) o, como mínimo, el de clima medio; un clima distinto del que el verificador acepta.',
+  'Dacs distinta de la que acepte el verificador (la ficha dice «según el certificado de eficiencia energética antes de la actuación»).',
   'Cobertura (f) mal aplicada: debe ser la «demanda cubierta» del CE3X si la caldera no era el único generador.',
   'Datos incoherentes entre CEE, facturas y fotos (por ejemplo, emisores).',
 ];

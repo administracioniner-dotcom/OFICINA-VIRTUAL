@@ -61,12 +61,41 @@ describe('siguientesPreguntas', () => {
   });
 });
 
-describe('climaDeZona: solo lo que da la guía', () => {
-  it('B4 y D3 → cálido, E1 → medio, el resto → null (hay que mirar la tabla del Anexo III)', () => {
-    expect(climaDeZona('d3')).toBe('calido');
-    expect(climaDeZona('B4')).toBe('calido');
+describe('climaDeZona: tabla oficial del Anexo III de la ficha RES060', () => {
+  it('A3 a D3 → cálido; E1 → medio; una zona que no existe → null', () => {
+    for (const z of ['A3', 'A4', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'D1', 'D2', 'D3']) expect(climaDeZona(z.toLowerCase())).toBe('calido');
     expect(climaDeZona('E1')).toBe('medio');
-    expect(climaDeZona('C2')).toBeNull();
+    expect(climaDeZona('Z9')).toBeNull();
+    expect(climaDeZona('B1')).toBeNull();
+  });
+});
+
+describe('factor de zona y tipos de caldera', () => {
+  it('con la zona conocida no se pregunta el factor FC: sale de la tabla oficial', () => {
+    const r = { zonaClimatica: 'D3', calderaDaAcs: 'si', acsTipo: 'deposito_aparte' };
+    expect(ids(r, 99)).not.toContain('fcZona');
+    expect(ids({ ...r, zonaClimatica: 'Z9' }, 99)).toContain('fcZona');
+  });
+  it('gas anterior a 1998: se pregunta el tipo de caldera, no la condensación ni el encendido', () => {
+    const r = { superficieM2: 90, zonaClimatica: 'D3', dcalKwhM2: 60, combustible: 'gas', anioCaldera: '1990' };
+    expect(ids(r, 20)).toContain('tipoCalderaGas');
+    expect(ids(r, 20)).not.toContain('condensacion');
+    expect(ids(r, 20)).not.toContain('encendido');
+    expect(ids(r, 20)).not.toContain('etaIDirecto');
+  });
+  it('combustible sólido: alimentación y espacio; sin año', () => {
+    const r = { superficieM2: 90, zonaClimatica: 'D3', dcalKwhM2: 60, combustible: 'solido' };
+    expect(ids(r, 20)).toEqual(expect.arrayContaining(['alimentacion', 'espacioCaldera']));
+    expect(ids(r, 20)).not.toContain('anioCaldera');
+  });
+  it('aEntrada calcula ηi para gas antiguo y para sólido', () => {
+    const completas = { superficieM2: '100', zonaClimatica: 'D3', dcalKwhM2: '50', calderaDaAcs: 'no', unicoGenerador: 'si', temperaturaImpulsion: '55', etaSH: '1,78', retiradaCaldera: 'si' };
+    expect(aEntrada({ ...completas, combustible: 'gas', anioCaldera: '1990', tipoCalderaGas: 'forzado_alta' }).entrada.etaI).toBe(0.68);
+    expect(aEntrada({ ...completas, combustible: 'solido', alimentacion: 'automatica', espacioCaldera: 'calefactado' }).entrada.etaI).toBe(0.65);
+  });
+  it('la prueba de retirada admite también la condena física del equipo', () => {
+    const q = PREGUNTAS.find((p) => p.id === 'retiradaCaldera');
+    expect(q.pregunta + q.donde).toMatch(/condena/i);
   });
 });
 
@@ -111,7 +140,12 @@ describe('aEntrada: de las respuestas al cálculo', () => {
     expect(aEntrada({ ...completas, retiradaCaldera: 'no' }).pendientes.join(' ')).toMatch(/retirada/i);
     expect(aEntrada({ ...completas, retiradaCaldera: 'no_se' }).pendientes.join(' ')).toMatch(/retirada/i);
   });
-  it('si el clima/zona no está en la guía, avisa de que hay que consultar la tabla del Anexo III', () => {
-    expect(aEntrada({ ...completas, zonaClimatica: 'C2' }).pendientes.join(' ')).toMatch(/Anexo III/);
+  it('una zona que no está en la tabla del Anexo III se avisa como pendiente', () => {
+    expect(aEntrada({ ...completas, zonaClimatica: 'Z9' }).pendientes.join(' ')).toMatch(/Anexo III/);
+  });
+  it('el factor FC sale de la tabla oficial de la zona aunque se escriba otro (y se avisa)', () => {
+    const { entrada, pendientes } = aEntrada({ ...completas, fcZona: '1,2' });
+    expect(entrada.acs.fcZona).toBe(1.113);
+    expect(pendientes.join(' ')).toMatch(/FC/);
   });
 });

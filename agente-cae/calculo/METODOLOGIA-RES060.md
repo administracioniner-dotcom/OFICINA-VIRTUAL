@@ -1,6 +1,6 @@
 # Metodología RES060 (sustitución de caldera por aerotermia)
 
-> Fuente: guía interna de INER (ficha RES060 V1.1). **Pendiente de contrastar con el texto de la ficha oficial** (el agente lo hará en la fase 2 al acceder a MITECO/BOE). Hasta entonces es una **estimación comercial**, no un cálculo técnicamente justificable. El calculador es `res060.mjs`; las pruebas, `res060.test.mjs`.
+> Fuente: guía interna de INER **contrastada el 17/11/2026 con los textos oficiales de MITECO** (ficha RES060 V1.1 y sus anexos II a VI, y Anexo II de RES210). Es una **estimación comercial**, no un cálculo técnicamente justificable, hasta que cada dato de un caso se contraste con su documento. El calculador es `res060.mjs`; las pruebas, `res060.test.mjs`.
 
 ## Fórmula
 `AE = FP · [ (Dcal·S)·(1/ηi − 1/SCOP) + Dacs·(1/ηi − 1/SCOPdhw) ] · f`
@@ -39,3 +39,13 @@ Zonas con clima conocido por la guía: B4 y D3 → cálido, E1 → medio; para o
 `generar_excel.py` crea el Excel de 4 hojas con fórmulas vivas a partir de un JSON de caso (ver `ejemplos/caso-ficticio.json`). Se comprueba con LibreOffice (recalcula y compara con el calculador). Los casos reales van en `agente-cae/casos/` (git lo ignora). Necesita Python 3 con `openpyxl`; para recalcular, LibreOffice.
 Comprobado con los Excel de José (clima y datos de cada caso): Caso 2 → 8.931 (igual que el validado), Caso 3 (clima cálido) → 46.399 (igual que su Excel), Caso 1 → 12.217 (el validado, 12.213, recorta el SCOP). Caso 3 con clima medio y Dacs de catálogo → 43.780, el validado.
 Cada paso del Excel indica su base (columna «Base», hoja Referencias) y lleva la sustitución numérica; hay dos controles (límite físico y contraste del Dacs con el catálogo).
+
+## Contraste con el texto oficial (MITECO, 17/11/2026)
+Coincide con la ficha: la fórmula, FP = 1, CC = 2,5, F(1) = 3 % y F(2) = 0, SCOP = CC·(ηs,h + F(1) + F(2)), SCOPdhw conjunto = CC·ηhw, SCOPdhw depósito aparte = COP A7/W55 × FC, la tabla de climas (A3–D3 cálido, E1 medio), la tabla completa de FC por zona y la tabla B.3 de rendimientos de caldera (el calculador ya incluye gas anterior a 1998 y combustibles sólidos).
+- **DACS:** la ficha dice «según el certificado de eficiencia energética antes de la actuación» (kWh/año). Respalda el método derivado del CEE.
+- **ηi:** la ficha pone 0,92 por defecto (sobre PCS) o «el valor de la última inspección»; la tabla B.3 es la que da el Anexo II de RES210 en ausencia de datos del rendimiento estacional. Que el verificador use la tabla B.3 viene del criterio 24/11.03 que cita José (no está en la ficha).
+- **Clima del SCOP:** «al menos» el de clima medio, o el de la zona equivalente (Anexo III). Con clima medio el resultado es menor y siempre admisible; en D3 con clima cálido sube.
+- **Recorte del SCOP a 2 decimales:** no aparece en la ficha; es una práctica vista en el Caso 1 (12.213). Por eso se calcula sin recortar y se informa de la diferencia.
+- **Retirada de la caldera:** retirada física y de su depósito en el punto limpio, **o condena física** del equipo (Anexo II de la ficha).
+- **Caldera que se mantiene de respaldo** (D1, D2, D3, E1): la bomba debe superar el 35 % de la carga de diseño y el ahorro se calcula sobre el % de demanda que cubre la bomba.
+- **Resolución de 4-11-2026 (BOE-A-2026-23657, publicada el 11-11-2026):** suprime del ámbito de RES060 el requisito de que «la actuación no afecta a los elementos terminales», sin cambiar el cálculo ni la documentación. El PDF de la ficha en la web (V1.1) aún lleva el texto antiguo.

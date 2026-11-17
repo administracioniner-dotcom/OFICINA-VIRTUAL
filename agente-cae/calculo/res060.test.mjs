@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CONSTANTES, calcularRES060, dacs, etaICaldera, scopAcs, scopCalefaccion } from './res060.mjs';
+import { CONSTANTES, FC_ZONA, calcularRES060, dacs, etaICaldera, scopAcs, scopCalefaccion } from './res060.mjs';
 
 describe('piezas de la fórmula RES060 V1.1 (según la guía interna)', () => {
   it('Dacs: 0,001162 × 46 × 365 = 19,50998 kWh por l/día (100 l/día = 1.951,0)', () => {
@@ -32,6 +32,28 @@ describe('piezas de la fórmula RES060 V1.1 (según la guía interna)', () => {
   });
 });
 
+describe('tablas oficiales de la ficha RES060 V1.1 y del Anexo II de RES210 (leídas en MITECO el 17/11/2026)', () => {
+  it('factores FC del Anexo VI (caso 3): las 12 zonas', () => {
+    expect(FC_ZONA).toEqual({ A3: 1.246, A4: 1.251, B3: 1.223, B4: 1.228, C1: 1.154, C2: 1.165, C3: 1.175, C4: 1.181, D1: 1.093, D2: 1.103, D3: 1.113, E1: 1.056 });
+  });
+  it('rendimientos de caldera de gas anteriores a 1998 (tabla B.3)', () => {
+    expect(etaICaldera({ combustible: 'gas', anio: 1975, tipo: 'pie' })).toBe(0.55);
+    expect(etaICaldera({ combustible: 'gas', anio: 1990, tipo: 'pie' })).toBe(0.65);
+    expect(etaICaldera({ combustible: 'gas', anio: 1990, tipo: 'mural' })).toBe(0.65);
+    expect(etaICaldera({ combustible: 'gas', anio: 1990, tipo: 'forzado_alta' })).toBe(0.68);
+    expect(etaICaldera({ combustible: 'gas', anio: 1990, tipo: 'forzado_baja' })).toBe(0.72);
+    expect(etaICaldera({ combustible: 'gas', anio: 1990, tipo: 'condensacion' })).toBe(0.85);
+    expect(etaICaldera({ combustible: 'gas', anio: 1990 })).toBeNull();
+  });
+  it('rendimientos de caldera de combustible sólido (tabla B.3)', () => {
+    expect(etaICaldera({ combustible: 'solido', alimentacion: 'manual', espacio: 'sin_calefactar' })).toBe(0.55);
+    expect(etaICaldera({ combustible: 'solido', alimentacion: 'manual', espacio: 'calefactado' })).toBe(0.6);
+    expect(etaICaldera({ combustible: 'solido', alimentacion: 'automatica', espacio: 'sin_calefactar' })).toBe(0.6);
+    expect(etaICaldera({ combustible: 'solido', alimentacion: 'automatica', espacio: 'calefactado' })).toBe(0.65);
+    expect(etaICaldera({ combustible: 'solido', alimentacion: 'manual' })).toBeNull();
+  });
+});
+
 describe('calcularRES060', () => {
   // Ejemplo de ILUSTRACIÓN (no es un caso real): 100 m², Dcal 50, ηi 0,79, ηs,h 1,78 (SCOP 4,525), 100 l/día, SCOPdhw 3,31674
   const base = { superficieM2: 100, dcalKwhM2: 50, etaI: 0.79, etaSH: 1.78, acs: { litrosDia: 100, tipo: 'deposito_aparte', copA7W55: 2.98, fcZona: 1.113 } };
@@ -52,6 +74,12 @@ describe('calcularRES060', () => {
     expect(r.aeSinRedondear).toBeCloseTo(100 * 50 * (1 / 0.79 - 1 / 4.525), 3);
     expect(r.terminos.acs).toBe(0);
     expect(r.hipotesis.join(' ')).toMatch(/sin ACS/i);
+  });
+  it('la documentación y los riesgos son los de la ficha: ficha firmada, facturas, informe fotográfico, certificado del instalador, puesta en marcha y CEE con registro; retirada o condena física', () => {
+    const r = calcularRES060(base);
+    const d = r.documentacion.join(' ');
+    expect(d).toMatch(/firmada/i); expect(d).toMatch(/fotogr/i); expect(d).toMatch(/instalador/i); expect(d).toMatch(/puesta en funcionamiento/i); expect(d).toMatch(/registro/i);
+    expect(r.riesgosReduccion.join(' ')).toMatch(/condena/i);
   });
   it('el resultado enseña datos de entrada, fórmula, hipótesis, pendientes, documentación y riesgos', () => {
     const r = calcularRES060(base);

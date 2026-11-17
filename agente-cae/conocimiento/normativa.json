@@ -18,7 +18,7 @@
       "RES",
       "IND"
     ],
-    "impacto_iner": "Catálogo consolidado base. Exige firma del responsable legal del sujeto obligado/delegado, permite una ficha para actuaciones replicables con informe de replicabilidad (límite: una CCAA, mismo año) y la clasificación sectorial no depende del CNAE del propietario del ahorro. Periodo transitorio de 3 meses. (BOE núm. 173, BOE-A-2024-14816; leído solo hasta el carácter 100000 de 164485.)",
+    "impacto_iner": "Catálogo consolidado base. Exige firma del responsable legal del sujeto obligado/delegado, permite una ficha para actuaciones replicables con informe de replicabilidad (límite: una CCAA, mismo año) y la clasificación sectorial no depende del CNAE del propietario del ahorro. Periodo transitorio de 3 meses. (BOE núm. 173, 18-07-2024, BOE-A-2024-14816; texto leído y contrastado el 2026-11-17: firma del responsable legal, informe de replicabilidad, CNAE y transitorio de tres meses.)",
     "oportunidades_riesgos": "Posibilidad de usar fichas de otro sector si no hay equivalente. Riesgo: confirmar en el texto completo los requisitos antes de aplicarlos."
   },
   {
@@ -65,6 +65,41 @@
     ],
     "impacto_iner": "Corrige solo fichas de transporte. No afecta a RES ni IND.",
     "oportunidades_riesgos": "Ninguna para el alcance de INER."
+  },
+  {
+    "id": "normativa-2026-11-04-res-actualiza-anexo-i-ted-845-2023",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "BOE",
+      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-23657",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "verificado",
+    "clasificacion": "hecho",
+    "titulo": "Resolución de 4 de noviembre de 2026, de la DG de Planificación y Coordinación Energética, por la que se actualiza el anexo I de la Orden TED/845/2023 (amplía el catálogo con TRA050.R y modifica el ámbito de aplicación de RES060, RES090 a RES099, TER040, TER100 y TER170 a TER179)",
+    "estado": "aprobada",
+    "fecha_publicacion": "2026-11-11",
+    "entrada_en_vigor": "2026-11-11",
+    "afecta_a": [
+      "RES060",
+      "RES090",
+      "RES091",
+      "RES092",
+      "RES093",
+      "RES094",
+      "RES095",
+      "RES096",
+      "RES097",
+      "RES098",
+      "RES099",
+      "TER040",
+      "TER100",
+      "TER170-179",
+      "TRA050.R",
+      "TRA050"
+    ],
+    "impacto_iner": "RES060 (y RES090–RES099): se suprime del ámbito de aplicación el requisito de que «la actuación no afecta a los elementos terminales que configuran la instalación térmica», sin computar ahorros adicionales por esos elementos y sin cambiar el procedimiento de cálculo ni la documentación exigida. RES090–RES099 además dejan de excluir la renovación de calderas existentes en hibridación con bomba de calor (sin ahorro computable por esa renovación). Periodo transitorio de tres meses para las fichas modificadas, desde el día siguiente a su publicación (11-11-2026). Amplía hasta el 01-02-2027 el transitorio de la ficha TRA050 V1.1. Surte efectos desde su publicación.",
+    "oportunidades_riesgos": "Oportunidad: instalaciones de aerotermia que también cambien radiadores o emisores ya no quedan fuera del ámbito de RES060 (sin ahorro adicional por ellos). Riesgo: la ficha RES060 publicada en el catálogo web (V1.1) conserva el texto antiguo del ámbito; comprobar si MITECO publica una versión nueva y qué documentación de verificación se exige. Texto leído el 2026-11-17."
   },
   {
     "id": "normativa-2026-consulta-snoee-ventas-consumos-energia-final",

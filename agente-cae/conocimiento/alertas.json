@@ -10,5 +10,17 @@
     "fiabilidad": "verificado",
     "clasificacion": "hecho",
     "titulo": "Las páginas del catálogo vigente no muestran fecha ni versión para la mayoría de fichas; la lista de IND modificadas en agosto de 2025 (fuente de consultoría) no se pudo verificar en BOE"
+  },
+  {
+    "id": "alerta-2026-11-17-res060-ficha-web-no-actualizada",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Ficha RES060 (catálogo vigente)",
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/energia/files-1/Eficiencia/CAE/catalogo-vigente/fichas-autocompletables/residencial/Ficha%20RES060.pdf",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "verificado",
+    "clasificacion": "hecho",
+    "titulo": "La ficha RES060 publicada en MITECO (V1.1) aún incluye «la actuación no afecta a los elementos terminales», que la Resolución de 4-11-2026 (BOE-A-2026-23657) suprime del ámbito; la web no refleja el cambio"
   }
 ]
