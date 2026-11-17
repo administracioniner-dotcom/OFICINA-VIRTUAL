@@ -6,3 +6,4 @@ capturas
 .oficina
 agente-cae/informes/*
 !agente-cae/informes/.gitkeep
+agente-cae/referencias/

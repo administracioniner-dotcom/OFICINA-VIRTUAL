@@ -7,7 +7,7 @@ Analista técnico y comercial de Certificados de Ahorro Energético (CAE) de INE
 
 ## Alcance (decidido por José)
 - **Solo sectores residencial e industrial.** El terciario está fuera de alcance.
-- **Fase actual: 1 (estructura, sin investigar).** Aún no hay tareas de investigación: no busques en la web ni rellenes registros hasta que se pida una tarea concreta. La web se permite a partir de la fase 2, solo para investigar.
+- **Fase actual: 2 (normativa y fichas).** Puedes buscar en la web solo para investigar, y solo lo que pida la tarea que te lancen (normalmente `tareas/semanal.md`). Sin tarea concreta, no investigues ni rellenes registros.
 - Orden de prioridad futuro: normativa y fichas → RES060 → precios y empresas. Precios y empresas no se investigan todavía.
 
 ## Frecuencia

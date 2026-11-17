@@ -15,7 +15,7 @@ Oficina virtual 2D en pixel art (vista desde arriba) para INER SMART ENERGY SYST
 - Arranque en Windows: `iniciar.bat` (doble clic). Los agentes del usuario se guardan en el navegador (`localStorage`, dirección fija `localhost:5173`).
 - Diseño (pendiente de aprobación de José): `docs/superpowers/specs/2026-11-16-oficina-virtual-design.md`.
 - Agentes reales: `docs/conectar-claude-code.md` y `src/puente/` (traducir, núcleo, servidor).
-- Agente CAE (investigación de certificados de ahorro energético): `agente-cae/` (alcance residencial e industrial, semanal los miércoles 23:00, web solo para investigar, sin contactar con nadie). Fase 1 hecha; sigue fase 2 (normativa y fichas).
+- Agente CAE (investigación de certificados de ahorro energético): `agente-cae/` (alcance residencial e industrial, semanal los miércoles 23:00, web solo para investigar, sin contactar con nadie). Fase 2 (normativa y fichas) preparada, pendiente de primera ejecución real en el PC de José.
 - Plano de la oficina (37 × 20 baldosas): `data/plano-v1.json`.
 
 ## Tecnología prevista
