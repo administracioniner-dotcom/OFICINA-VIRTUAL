@@ -25,3 +25,11 @@ La carpeta `casos/` no se sube a GitHub. Sin probar en Windows.
 
 Qué se envía a la oficina: estado, herramienta usada (primera palabra de comandos o nombre de fichero; de las páginas web solo «Consulta la web»), la orden recortada a 80 caracteres y solo a este ordenador. El panel lee solo recuentos y títulos cortos de `conocimiento/` e `informes/`, nunca fórmulas ni contenido de fichas.
 Si la oficina está cerrada, los avisos se pierden sin molestar al agente; el informe y los datos se guardan igual.
+
+## Hablar con el agente (preguntas y cálculos)
+Doble clic en **`hablar-con-el-agente.bat`** (abre Claude Code dentro de esta carpeta; la primera vez di que **sí confías en la carpeta**). Escribe, por ejemplo:
+- «Quiero una estimación RES060»: te hace las preguntas que faltan (con el origen de cada dato) y calcula.
+- «Revisa este cálculo: casos\\mi-caso.xlsx»: comprueba el cálculo contra los documentos y la ficha.
+- «Genera el Excel de este caso»: crea el Excel de 4 hojas en `casos\` (necesita Python con `openpyxl`: `winget install Python.Python.3.12` y luego `pip install openpyxl`).
+- Cualquier pregunta sobre fichas y normativa: contesta con lo registrado en `conocimiento\` y, si hace falta, busca en MITECO y el BOE.
+Al terminar, escribe `/exit`. Si la oficina está abierta y conectada, verás al agente trabajar.
