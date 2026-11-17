@@ -12,6 +12,7 @@ export function oficinaPuente(): Plugin {
     puerto,
     puente,
     rutaHook: resolve(raiz, 'puente', 'hook.mjs'),
+    carpetaCae: resolve(raiz, 'agente-cae'),
   });
   return {
     name: 'oficina-puente',

@@ -246,6 +246,37 @@ describe('almacén: agentes reales (Claude Code)', () => {
     fuente.emitir({ tipo: 'agente.conexion', id: 'r', conectado: false });
     expect(alm.getState().conexion['r']!.conectado).toBe(false);
   });
+  it('al convertir un agente simulado en real se descartan sus tareas y su actividad simuladas', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: agente('a', 'trabajando') });
+    fuente.emitir({ tipo: 'agente.estado', id: 'a', estado: 'pensando' });
+    expect(alm.getState().tareas['a']!.length).toBeGreaterThan(0);
+    expect(alm.getState().actividad.some((x) => x.agenteId === 'a')).toBe(true);
+    fuente.emitir({ tipo: 'agente.cambio', agente: { ...agente('a', 'esperando'), origen: 'real' } });
+    const e = alm.getState();
+    expect(e.tareas['a']).toEqual([]);
+    expect(e.actividad.filter((x) => x.agenteId === 'a')).toEqual([]);
+    expect(e.conexion['a']).toEqual({ conectado: false, ultimaSenal: null });
+    fuente.emitir({ tipo: 'agente.tarea', id: 'a', tarea: { id: 't1', titulo: 'Real', estado: 'en_curso' } });
+    expect(alm.getState().tareas['a']!.map((t) => t.titulo)).toEqual(['Real']);
+  });
+  it('al convertir un agente real en simulado vuelve a tener tareas simuladas y deja de tener conexión', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    fuente.emitir({ tipo: 'agente.tarea', id: 'r', tarea: { id: 't1', titulo: 'Real', estado: 'en_curso' } });
+    fuente.emitir({ tipo: 'agente.cambio', agente: { ...agente('r', 'trabajando'), origen: 'simulado' } });
+    const e = alm.getState();
+    expect(e.tareas['r']!.some((t) => t.titulo === 'Real')).toBe(false);
+    expect(e.tareas['r']!.length).toBeGreaterThan(0);
+    expect(e.conexion['r']).toBeUndefined();
+  });
+  it('un cambio que no toca el origen conserva las tareas reales', () => {
+    const { fuente, alm } = nuevo();
+    fuente.emitir({ tipo: 'agente.alta', agente: real('r') });
+    fuente.emitir({ tipo: 'agente.tarea', id: 'r', tarea: { id: 't1', titulo: 'Real', estado: 'en_curso' } });
+    fuente.emitir({ tipo: 'agente.cambio', agente: { ...real('r'), nombre: 'Otro nombre' } });
+    expect(alm.getState().tareas['r']!.map((t) => t.titulo)).toEqual(['Real']);
+  });
   it('un agente simulado no tiene estado de conexión', () => {
     const { fuente, alm } = nuevo();
     fuente.emitir({ tipo: 'agente.alta', agente: agente('s') });

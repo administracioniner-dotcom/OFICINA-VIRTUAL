@@ -10,3 +10,4 @@ agente-cae/referencias/
 agente-cae/respuestas-*.json
 agente-cae/casos/
 agente-cae/*.xlsx
+agente-cae/.claude/

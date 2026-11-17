@@ -101,12 +101,27 @@ export function crearAlmacen(fuente: AgentSource, puestos: readonly PuestoAsigna
       const previo = estado.agentes[a.id];
       if (!previo) return;
       let tareas = estado.tareas[a.id] ?? [];
-      if (previo.departamento !== a.departamento) {
+      let conexion = estado.conexion;
+      let actividad = estado.actividad;
+      if (esReal(previo) !== esReal(a)) {
+        // Cambia de simulado a real (o al revés): lo anterior ya no vale (nada simulado en un real).
+        actividad = actividad.filter((x) => x.agenteId !== a.id);
+        if (esReal(a)) {
+          tareas = [];
+          conexion = { ...conexion, [a.id]: { conectado: false, ultimaSenal: null } };
+        } else {
+          contadorTareas.set(a.id, 4);
+          tareas = generarTareas(a, 1);
+          if (a.estado === 'trabajando') tareas = trabajar(tareas);
+          const { [a.id]: _c, ...resto } = conexion;
+          conexion = resto;
+        }
+      } else if (previo.departamento !== a.departamento && !esReal(a)) {
         contadorTareas.set(a.id, 4);
         tareas = generarTareas(a, 1);
         if (a.estado === 'trabajando') tareas = trabajar(tareas);
       }
-      cambiar({ ...estado, agentes: { ...estado.agentes, [a.id]: a }, tareas: { ...estado.tareas, [a.id]: tareas } });
+      cambiar({ ...estado, agentes: { ...estado.agentes, [a.id]: a }, tareas: { ...estado.tareas, [a.id]: tareas }, conexion, actividad });
       return;
     }
     const agente = estado.agentes[ev.id];

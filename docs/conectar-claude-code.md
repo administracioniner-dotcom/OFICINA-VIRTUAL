@@ -35,3 +35,6 @@ El **nombre** del agente en la oficina debe ser el mismo que el de la configurac
 ## Qué no está probado todavía
 - Con un Claude Code real en Windows: se probó con avisos de ejemplo lanzando `puente/hook.mjs` de verdad (Linux, Chromium). El formato de los datos de los hooks sale de la documentación oficial de Claude Code; conviene comprobarlo la primera vez con un Claude Code real.
 - Varios Claude Code a la vez (cada uno con su agente) está cubierto por pruebas automáticas, no con Claude Code real.
+
+## Agente CAE
+Para el agente CAE hay un atajo: `agente-cae/conectar-oficina.bat` crea la configuración con la ruta correcta de tu carpeta. Los pasos y el panel «Base de conocimiento CAE» están en `agente-cae/README.md`.

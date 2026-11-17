@@ -2,6 +2,7 @@ import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { join } from 'node:path';
+import { resumirConocimiento } from './cae';
 import type { PuenteLike } from './tipos';
 
 const MAX_CUERPO = 100_000;
@@ -24,12 +25,25 @@ export function asegurarClave(dir: string): string {
   return nueva;
 }
 
+/** Configuración de hooks de Claude Code para un agente. La repite `agente-cae/conectar-oficina.mjs` (una prueba comprueba que son idénticas). */
+export function configuracionHooks(rutaHook: string, agente: string, puerto: number) {
+  const hooks: Record<string, unknown[]> = {};
+  for (const ev of EVENTOS) {
+    // En herramientas, async: así Claude Code no espera al hook (son dos arranques de Node por herramienta).
+    const gancho = { type: 'command', command: 'node', args: [rutaHook, '--agente', agente, '--puerto', String(puerto)], timeout: 5, ...(ev === 'PreToolUse' || ev === 'PostToolUse' ? { async: true } : {}) };
+    hooks[ev] = [CON_FILTRO.has(ev) ? { matcher: '*', hooks: [gancho] } : { hooks: [gancho] }];
+  }
+  return { hooks };
+}
+
 export interface OpcionesManejador {
   clave: string;
   puerto: number;
   puente: PuenteLike;
   /** Ruta absoluta de puente/hook.mjs en este ordenador. */
   rutaHook: string;
+  /** Carpeta del agente CAE (agente-cae). Sin ella, no hay panel CAE. */
+  carpetaCae?: string;
 }
 
 const iguales = (a: string, b: string) => {
@@ -100,13 +114,14 @@ export function crearManejador(o: OpcionesManejador) {
       if (!esLaPagina(req)) return responder(res, 403);
       const agente = (url.searchParams.get('agente') ?? '').trim();
       if (!agente || agente.length > 60) return responder(res, 400, { error: 'Falta el nombre del agente.' });
-      const hooks: Record<string, unknown[]> = {};
-      for (const ev of EVENTOS) {
-        // En herramientas, async: así Claude Code no espera al hook (son dos arranques de Node por herramienta).
-        const gancho = { type: 'command', command: 'node', args: [o.rutaHook, '--agente', agente, '--puerto', String(o.puerto)], timeout: 5, ...(ev === 'PreToolUse' || ev === 'PostToolUse' ? { async: true } : {}) };
-        hooks[ev] = [CON_FILTRO.has(ev) ? { matcher: '*', hooks: [gancho] } : { hooks: [gancho] }];
-      }
-      return responder(res, 200, { configuracion: { hooks }, ruta: o.rutaHook });
+      return responder(res, 200, { configuracion: configuracionHooks(o.rutaHook, agente, o.puerto), ruta: o.rutaHook });
+    }
+
+    if (url.pathname === '/api/oficina/cae') {
+      if (req.method !== 'GET') return responder(res, 405);
+      if (!esLaPagina(req)) return responder(res, 403);
+      if (!o.carpetaCae) return responder(res, 404);
+      return responder(res, 200, resumirConocimiento(o.carpetaCae));
     }
 
     responder(res, 404);

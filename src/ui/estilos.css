@@ -83,3 +83,12 @@
 .ficha .conectar pre { max-height: 180px; overflow: auto; margin: 6px 0; padding: 8px; background: #14161a; border: 1px solid #2c313a; border-radius: 6px; font-size: 11px; line-height: 1.35; user-select: text; }
 .ficha .conectar .pasos { margin: 4px 0; padding-left: 18px; font-size: 12px; color: #cfd4dc; }
 .ficha .conectar code { background: #2a2e36; padding: 0 4px; border-radius: 3px; }
+
+/* Panel del agente CAE */
+.ficha .panel-cae { margin: 8px 0; padding: 8px; border: 1px solid #2c313a; border-radius: 6px; background: #14161a; }
+.ficha .panel-cae h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #8a93a1; }
+.ficha .panel-cae dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin: 0; font-size: 12px; }
+.ficha .panel-cae dt { color: #8a93a1; }
+.ficha .panel-cae dd { margin: 0; }
+.ficha .panel-cae small { color: #8a93a1; }
+.ficha .panel-cae .alertas-cae { margin: 6px 0 0; padding-left: 16px; font-size: 11px; color: #ffb74d; }

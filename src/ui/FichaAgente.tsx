@@ -7,6 +7,7 @@ import type { Almacen } from '../state/almacen';
 import { bus } from '../state/bus';
 import { useAlmacen } from '../state/useAlmacen';
 import { ConectarClaudeCode } from './ConectarClaudeCode';
+import { PanelCae } from './PanelCae';
 
 const SIN_SENAL_MS = 10 * 60 * 1000;
 
@@ -71,6 +72,7 @@ export function FichaAgente({ almacen, id, alEditar, alQuitar }: { almacen: Alma
       )}
 
       {real && <ConectarClaudeCode nombre={agente.nombre} />}
+      {real && agente.departamento === 'cae' && <PanelCae />}
 
       <section className="ventana-tareas" aria-label="Tareas asignadas">
         <button type="button" className="boton plegable" aria-expanded={verTareas} onClick={() => setVerTareas(!verTareas)}>

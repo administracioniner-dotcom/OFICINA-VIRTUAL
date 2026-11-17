@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, statSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import http from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -133,6 +133,27 @@ describe('GET /api/oficina/configuracion', () => {
   it('sin nombre de agente: 400; desde otro sitio: 403', async () => {
     expect((await fetch(url('/api/oficina/configuracion'), { headers: { 'sec-fetch-site': 'same-origin' } })).status).toBe(400);
     expect((await fetch(url('/api/oficina/configuracion?agente=x'), { headers: { 'sec-fetch-site': 'cross-site' } })).status).toBe(403);
+  });
+});
+
+describe('GET /api/oficina/cae (panel del agente CAE)', () => {
+  it('desde la página devuelve el resumen; desde otro sitio, 403', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'oficina-cae-'));
+    mkdirSync(join(dir, 'conocimiento'));
+    writeFileSync(join(dir, 'conocimiento', 'fichas.json'), JSON.stringify([{ codigo: 'RES060', sector: 'residencial', version: 'V1.1', fecha_consulta: '2026-11-17' }]));
+    const s2 = http.createServer();
+    await new Promise<void>((r) => s2.listen(0, '127.0.0.1', r));
+    const p2 = (s2.address() as AddressInfo).port;
+    const m = crearManejador({ clave: CLAVE, puerto: p2, puente, rutaHook: 'x', carpetaCae: dir });
+    s2.on('request', (req, res) => m(req, res, () => { res.statusCode = 404; res.end(); }));
+    const ok = await fetch(`http://127.0.0.1:${p2}/api/oficina/cae`, { headers: { 'sec-fetch-site': 'same-origin' } });
+    expect(ok.status).toBe(200);
+    expect(((await ok.json()) as { fichas: { total: number } }).fichas.total).toBe(1);
+    expect((await fetch(`http://127.0.0.1:${p2}/api/oficina/cae`, { headers: { 'sec-fetch-site': 'cross-site' } })).status).toBe(403);
+    s2.closeAllConnections(); await new Promise((r) => s2.close(r));
+  });
+  it('sin carpeta del agente configurada: 404', async () => {
+    expect((await fetch(url('/api/oficina/cae'), { headers: { 'sec-fetch-site': 'same-origin' } })).status).toBe(404);
   });
 });
 
