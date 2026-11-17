@@ -87,21 +87,48 @@ export function calcularRES060(e) {
   requerirPositivo('dcalKwhM2', e.dcalKwhM2);
   requerirPositivo('etaSH', e.etaSH);
   if (typeof e.etaI !== 'number' || !(e.etaI > 0 && e.etaI <= 1)) throw new Error('etaI debe ser un número entre 0 (sin incluir) y 1.');
-  const cobertura = e.cobertura ?? 1;
+  let cobertura = e.cobertura ?? 1;
+  if (e.superficieCubiertaM2 !== undefined) {
+    requerirPositivo('superficieCubiertaM2', e.superficieCubiertaM2);
+    if (e.superficieCubiertaM2 > e.superficieM2) throw new Error('superficieCubiertaM2 no puede ser mayor que la superficie total.');
+    cobertura = e.superficieCubiertaM2 / e.superficieM2;
+  }
   if (typeof cobertura !== 'number' || !(cobertura > 0 && cobertura <= 1)) throw new Error('cobertura debe ser un número entre 0 (sin incluir) y 1.');
 
   const scop = scopCalefaccion(e.etaSH);
   const hipotesis = [
     'Fórmula y constantes de la ficha RES060 V1.1 según la guía interna; pendiente de contrastar con el texto oficial.',
     `FP = ${CONSTANTES.FP} (1 CAE = 1 kWh/año), CC = ${CONSTANTES.CC}, F(1) = ${CONSTANTES.F1}, F(2) = ${CONSTANTES.F2}.`,
+    'SCOP y resto de magnitudes con todas las cifras significativas, sin recortes intermedios (criterio 24/11.01, error de redondeo máximo 1 %).',
   ];
+  const controles = [];
   const terminoCalefaccion = e.superficieM2 * e.dcalKwhM2 * (1 / e.etaI - 1 / scop);
 
-  let terminoAcs = 0, scopdhw = null, dacsKwh = null;
+  let terminoAcs = 0, scopdhw = null, dacsKwh = null, dacsMetodo = null;
   if (e.acs) {
-    requerirPositivo('acs.litrosDia', e.acs.litrosDia);
     scopdhw = scopAcs(e.acs);
-    dacsKwh = dacs(e.acs.litrosDia);
+    const der = e.acs.derivado;
+    if (der) {
+      requerirPositivo('acs.derivado.epAcsKwhM2', der.epAcsKwhM2);
+      requerirPositivo('acs.derivado.factorEP', der.factorEP);
+      if (typeof der.etaCert !== 'number' || !(der.etaCert > 0 && der.etaCert <= 1)) throw new Error('acs.derivado.etaCert debe ser un número entre 0 (sin incluir) y 1.');
+      dacsKwh = der.epAcsKwhM2 / der.factorEP * der.etaCert * e.superficieM2;
+      dacsMetodo = 'derivado_cee';
+      hipotesis.push('Dacs derivado del CEE previo: EP_ACS ÷ f_EP × ηcert × S (consumo final de ACS por el rendimiento del certificado).');
+      if (e.acs.litrosDia !== undefined) {
+        requerirPositivo('acs.litrosDia', e.acs.litrosDia);
+        const catalogoKwh = dacs(e.acs.litrosDia);
+        const diferenciaPct = (catalogoKwh - dacsKwh) / dacsKwh * 100;
+        controles.push({ id: 'dacs_catalogo', catalogoKwh, derivadoKwh: dacsKwh, diferenciaPct, ok: Math.abs(diferenciaPct) <= 3,
+          texto: `Contraste con la fórmula del catálogo (${e.acs.litrosDia} l/día): ${catalogoKwh.toFixed(1)} kWh/año, diferencia ${diferenciaPct.toFixed(2)} %${Math.abs(diferenciaPct) <= 3 ? '' : ' (revisar)'}.` });
+      }
+    } else {
+      if (e.acs.litrosDia === undefined) throw new Error('Falta acs.litrosDia (método de catálogo) o acs.derivado (datos del CEE).');
+      requerirPositivo('acs.litrosDia', e.acs.litrosDia);
+      dacsKwh = dacs(e.acs.litrosDia);
+      dacsMetodo = 'catalogo';
+      hipotesis.push('Dacs por la fórmula del catálogo: litros/día × Ce × ΔT × 365.');
+    }
     terminoAcs = dacsKwh * (1 / e.etaI - 1 / scopdhw);
   } else {
     hipotesis.push('Caldera sin ACS: se omite el término de Dacs.');
@@ -112,6 +139,15 @@ export function calcularRES060(e) {
   const pendientes = [...(e.pendientes ?? [])];
   if (aeSinRedondear < 0) pendientes.push('Ahorro negativo: revisar los datos (ηi, ηs,h, Dcal); no es un resultado presentable.');
 
+  // Control de límite físico (criterio 25-07.03): el ahorro no puede superar el consumo que se evita.
+  const consumoPrevio = (e.superficieM2 * e.dcalKwhM2 + (dacsKwh ?? 0)) * cobertura / e.etaI;
+  controles.unshift({ id: 'ahorro_vs_consumo', valorPct: aeSinRedondear / consumoPrevio * 100, ok: aeSinRedondear < consumoPrevio,
+    texto: `El ahorro es el ${(aeSinRedondear / consumoPrevio * 100).toFixed(1)} % del consumo previo de la caldera${aeSinRedondear < consumoPrevio ? '' : ' (revisar: supera el consumo)'}.` });
+
+  // Solo informativo: qué pasaría si el verificador recortara el SCOP a 2 decimales.
+  const scopRecortado = Math.floor(scop * 100 + 1e-9) / 100;
+  const aeRecortado = Math.round(CONSTANTES.FP * (e.superficieM2 * e.dcalKwhM2 * (1 / e.etaI - 1 / scopRecortado) + terminoAcs) * cobertura);
+
   return {
     tipoResultado: 'Estimación comercial: no es un cálculo técnicamente justificable hasta contrastar cada dato con su documento.',
     ae: Math.round(aeSinRedondear),
@@ -120,6 +156,7 @@ export function calcularRES060(e) {
     datos: { superficieM2: e.superficieM2, dcalKwhM2: e.dcalKwhM2, etaI: e.etaI, etaSH: e.etaSH, cobertura, acs: e.acs ?? null },
     scop, scopdhw, dacs: dacsKwh,
     terminos: { calefaccion: terminoCalefaccion, acs: terminoAcs },
+    dacsMetodo, controles, sensibilidadRecorteScop: { scopRecortado, ae: aeRecortado, diferencia: aeRecortado - Math.round(aeSinRedondear) },
     hipotesis, pendientes,
     documentacion: DOCUMENTACION,
     riesgosReduccion: RIESGOS,

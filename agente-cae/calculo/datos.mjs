@@ -32,7 +32,10 @@ export const PREGUNTAS = [
   { id: 'encendido', tipo: 'opcion', opciones: ['piloto', 'automatico'], pregunta: '¿La caldera de gas tenía piloto o encendido automático?', donde: 'Manual del fabricante.', aplica: (r) => es(r, 'combustible', 'gas') && !(num(r, 'anioCaldera') !== null && num(r, 'anioCaldera') < 1998) },
   { id: 'etaIDirecto', tipo: 'numero', pregunta: 'La tabla de la guía no cubre esta caldera: ¿qué rendimiento anterior (ηi, entre 0 y 1) se puede documentar y con qué documento?', donde: 'Documento original del fabricante o criterio oficial; si no se puede documentar, dilo y no se estima.', aplica: sinTabla },
   { id: 'calderaDaAcs', tipo: 'si_no', pregunta: '¿La caldera anterior también producía el agua caliente (ACS)?', donde: 'CEE previo (generadores) y fotos de la instalación.' },
-  { id: 'litrosDia', tipo: 'numero', pregunta: '¿Cuántos litros/día de ACS pone el CEE previo?', donde: 'CEE previo (demanda de ACS en l/día). La demanda se calcula con la fórmula del catálogo, no se deriva del CEE.', aplica: daAcs },
+  { id: 'litrosDia', tipo: 'numero', pregunta: '¿Cuántos litros/día de ACS pone el CEE previo?', donde: 'CEE previo (demanda de ACS en l/día). Sirve para el control con la fórmula del catálogo.', aplica: daAcs },
+  { id: 'epAcsKwhM2', tipo: 'numero', pregunta: '¿Qué energía primaria no renovable de ACS pone el CEE previo (kWh/m²·año)?', donde: 'CEE previo, Anexo II, apartado 2 (energía primaria de ACS, situación previa).', aplica: daAcs },
+  { id: 'factorEP', tipo: 'numero', pregunta: '¿Cuál es el factor de paso a energía primaria no renovable del combustible de la caldera (kWhEP/kWh)?', donde: 'Documento reconocido «Factores de emisión de CO₂ y coeficientes de paso a energía primaria» (MITECO-IDAE). En los casos de José, gasóleo-C = 1,179. Para otro combustible hay que leerlo del documento: no se inventa.', aplica: daAcs },
+  { id: 'etaCert', tipo: 'numero', pregunta: '¿Qué rendimiento estacional da el certificado a la caldera (por ejemplo 64,8 % ó 0,648)?', donde: 'CEE previo, página 3, generador «Calefacción y ACS» (rendimiento estimado del CE3X). No es el ηi de la tabla B.3.', aplica: daAcs },
   { id: 'unicoGenerador', tipo: 'si_no', pregunta: '¿La caldera era el único generador de calefacción de la vivienda?', donde: 'CEE previo (lista de generadores).' },
   { id: 'cobertura', tipo: 'numero', pregunta: '¿Qué porcentaje pone el CEE en «Demanda cubierta» de esa caldera (por ejemplo 83,41)?', donde: 'CEE previo (CE3X), generador de calefacción, «Demanda cubierta».', aplica: (r) => es(r, 'unicoGenerador', 'no') },
   { id: 'temperaturaImpulsion', tipo: 'opcion', opciones: ['35', '55'], pregunta: '¿Qué emisores tiene la instalación: suelo radiante (35 °C) o radiadores (55 °C)?', donde: 'Confirmación del cliente/instalador. El CEE o las facturas pueden decir otra cosa: manda lo que hay instalado.' },
@@ -83,6 +86,9 @@ export function aEntrada(r) {
     acs = t('acsTipo') === 'conjunto'
       ? { litrosDia: num(r, 'litrosDia'), tipo: 'conjunto', etaWh: num(r, 'etaWh') }
       : { litrosDia: num(r, 'litrosDia'), tipo: 'deposito_aparte', copA7W55: num(r, 'copA7W55'), fcZona: num(r, 'fcZona') };
+    let etaCert = num(r, 'etaCert');
+    if (etaCert > 1) etaCert /= 100;
+    acs.derivado = { epAcsKwhM2: num(r, 'epAcsKwhM2'), factorEP: num(r, 'factorEP'), etaCert };
   }
   const cobertura = es(r, 'unicoGenerador', 'si') ? 1 : num(r, 'cobertura') / 100;
 

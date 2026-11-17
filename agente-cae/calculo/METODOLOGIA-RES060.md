@@ -24,6 +24,7 @@
 | Emisores y temperatura de impulsión | confirmación del cliente (el CEE puede decir otra cosa) |
 
 ## Reglas
+- **SCOP con todas las cifras significativas, sin recorte** (criterio 24/11.01: error de redondeo máximo 1 %). El calculador informa aparte de cuánto bajaría si el verificador lo recortara a 2 decimales (caso 1 de José: 12.217 → 12.213).
 - Un solo cálculo; las dudas se dicen aparte, no se esconden en el resultado.
 - Si un dato no se puede documentar, se dice; **no se inventa** (el calculador devuelve `null` o da error en vez de suponer).
 - Cada resultado enseña datos de entrada, hipótesis, fórmula, resultado, pendientes por confirmar, documentación necesaria y riesgos de reducción.
@@ -36,4 +37,5 @@ Zonas con clima conocido por la guía: B4 y D3 → cálido, E1 → medio; para o
 
 ## Excel de la estimación
 `generar_excel.py` crea el Excel de 4 hojas con fórmulas vivas a partir de un JSON de caso (ver `ejemplos/caso-ficticio.json`). Se comprueba con LibreOffice (recalcula y compara con el calculador). Los casos reales van en `agente-cae/casos/` (git lo ignora). Necesita Python 3 con `openpyxl`; para recalcular, LibreOffice.
-Con los datos del caso 3 de José (clima cálido, método de Dacs del catálogo) sale 46.378 CAE; su Excel, que deriva Dacs del CEE, da 46.399 (21 de diferencia por ese único dato).
+Comprobado con los Excel de José (clima y datos de cada caso): Caso 2 → 8.931 (igual que el validado), Caso 3 (clima cálido) → 46.399 (igual que su Excel), Caso 1 → 12.217 (el validado, 12.213, recorta el SCOP). Caso 3 con clima medio y Dacs de catálogo → 43.780, el validado.
+Cada paso del Excel indica su base (columna «Base», hoja Referencias) y lleva la sustitución numérica; hay dos controles (límite físico y contraste del Dacs con el catálogo).

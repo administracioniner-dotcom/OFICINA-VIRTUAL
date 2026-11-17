@@ -27,11 +27,16 @@ for ws in wb:
         for c in row:
             if isinstance(c.value, str) and c.value.startswith('#'): errs.append(f'{ws.title}!{c.coordinate} {c.value}')
 r = wb['Resumen']
-print(json.dumps({'hojas': wb.sheetnames, 'errores': errs, 'cae': r['D12'].value}))
+ca = wb['Cálculo']
+ctrl = sum(1 for row in ca.iter_rows() for c in row if isinstance(c.value, str) and c.value.startswith('Correcto') or isinstance(c.value, str) and c.value.startswith('Revisar') or isinstance(c.value, str) and c.value.startswith('Aviso'))
+print(json.dumps({'hojas': wb.sheetnames, 'errores': errs, 'cae': r['D12'].value, 'controles': ctrl}))
 `, join(dir, 'recalc', 'caso.xlsx')]).toString();
   return JSON.parse(salida);
 }
-const entrada = (d) => ({ superficieM2: d.superficieM2, dcalKwhM2: d.dcalKwhM2, etaI: d.etaI, etaSH: d.etaShPorcentaje / 100, cobertura: d.cobertura, acs: d.acs });
+const entrada = (d) => {
+  const acs = d.acs && (d.acs.tipo === 'conjunto' ? { ...d.acs, etaWh: d.acs.etaWhPorcentaje / 100 } : d.acs);
+  return { superficieM2: d.superficieM2, dcalKwhM2: d.dcalKwhM2, etaI: d.etaI, etaSH: d.etaShPorcentaje / 100, cobertura: d.cobertura, superficieCubiertaM2: d.superficieCubiertaM2, acs };
+};
 
 describe.skipIf(!hayHerramientas)('Excel de 4 hojas (fórmulas vivas)', () => {
   it('tiene las 4 hojas, sin errores, y el resultado coincide con el calculador (depósito aparte)', () => {
@@ -47,6 +52,16 @@ describe.skipIf(!hayHerramientas)('Excel de 4 hojas (fórmulas vivas)', () => {
     const r = generarYRecalcular(caso);
     expect(r.errores).toEqual([]);
     expect(r.cae).toBe(calcularRES060({ ...entrada(caso.datos), acs: { tipo: 'conjunto', litrosDia: 100, etaWh: 1.3 } }).ae);
+  }, 120000);
+  it('ACS derivado del CEE (método principal) con control de catálogo, y superficie cubierta', () => {
+    const caso = structuredClone(base);
+    delete caso.datos.cobertura;
+    caso.datos.superficieCubiertaM2 = 80;
+    caso.datos.acs = { tipo: 'deposito_aparte', litrosDia: 100, copA7W55: 2.98, fcZona: 1.113, derivado: { epAcsKwhM2: 18.89, factorEP: 1.179, etaCert: 0.648 } };
+    const r = generarYRecalcular(caso);
+    expect(r.errores).toEqual([]);
+    expect(r.cae).toBe(calcularRES060(entrada(caso.datos)).ae);
+    expect(r.controles).toBeGreaterThanOrEqual(2);
   }, 120000);
   it('solo calefacción (sin ACS)', () => {
     const caso = structuredClone(base);

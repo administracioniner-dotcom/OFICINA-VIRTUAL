@@ -73,7 +73,7 @@ def construir(caso):
     # ---------- Cálculo: datos de entrada ----------
     titulo(ca, 'B1', 'Cálculo del ahorro energético · Ficha RES060 V1.1' + (' (calefacción y ACS)' if acs else ' (solo calefacción)'))
     ca['B2'] = 'Cada resultado es una fórmula enlazada a los datos de entrada. Azul sobre crema = dato introducido; negro = resultado calculado.'
-    seccion(ca, 4, '1 · DATOS DE ENTRADA')
+    seccion(ca, 4, '1 · DATOS DE ENTRADA', 'I')
     cabecera(ca, 5, ['Nº', 'Dato', 'Símbolo', 'Valor', 'Unidad', 'Documento de origen', 'Ubicación en el documento'])
     ref = {}
     fila = [6]
@@ -94,13 +94,21 @@ def construir(caso):
     entrada('superficieM2', 'Superficie útil habitable', 'S', d['superficieM2'], 'm²')
     entrada('dcalKwhM2', 'Demanda de energía en calefacción (situación original)', 'Dcal', d['dcalKwhM2'], 'kWh/m²·año')
     entrada('etaI', 'Rendimiento de la caldera retirada (referido a PCS)', 'ηi', d['etaI'], '—')
-    entrada('cobertura', 'Parte de la demanda cubierta por la caldera', 'f', d.get('cobertura', 1), '—')
+    if d.get('superficieCubiertaM2') is not None:
+        entrada('scal', 'Superficie de calefacción cubierta por la caldera', 'S_cal', d['superficieCubiertaM2'], 'm²')
+    else:
+        entrada('cobertura', 'Parte de la demanda cubierta por la caldera', 'f', d.get('cobertura', 1), '—')
     entrada('zona', f"Zona climática (clima de referencia: {d.get('clima', '¿?')})", 'Zona', d['zona'], '—')
     entrada('temperatura', 'Temperatura de impulsión de la instalación', 'T', d['temperaturaImpulsion'], '°C')
-    entrada('etaSh', 'Eficiencia energética estacional en calefacción (a esa temperatura y clima)', 'ηs,h', d['etaShPorcentaje'], '%',
-            'EPREL o catálogo del fabricante' if False else None)
+    entrada('etaSh', 'Eficiencia energética estacional en calefacción (a esa temperatura y clima)', 'ηs,h', d['etaShPorcentaje'], '%')
+    der = acs.get('derivado') if acs else None
+    if der:
+        entrada('epAcs', 'Energía primaria no renovable de ACS (situación previa)', 'EP_ACS', der['epAcsKwhM2'], 'kWh/m²·año')
+        entrada('fEp', 'Factor de paso a energía primaria no renovable del combustible de la caldera', 'f_EP', der['factorEP'], 'kWhEP/kWh')
+        entrada('etaCert', 'Rendimiento estacional de la caldera en el certificado', 'ηcert', der['etaCert'], '—')
+    if acs and acs.get('litrosDia') is not None:
+        entrada('litros', 'Demanda de ACS del certificado previo' + (' (para el control con el catálogo)' if der else ''), 'l/día', acs['litrosDia'], 'l/día')
     if acs:
-        entrada('litros', 'Demanda de ACS del certificado previo', 'l/día', acs['litrosDia'], 'l/día')
         if acs['tipo'] == 'conjunto':
             entrada('etaWh', 'Eficiencia energética de calentamiento de agua del conjunto', 'ηwh', acs['etaWhPorcentaje'], '%')
         else:
@@ -109,14 +117,14 @@ def construir(caso):
     entrada('fp', 'Factor de ponderación', 'FP', 1, '—', 'D5 · Ficha RES060 V1.1', 'Apartado 3, tabla de variables')
     entrada('cc', 'Coeficiente de conversión a energía primaria de la electricidad', 'CC', 2.5, '—', 'D5 · Ficha RES060 V1.1', 'Anexo IV, nota 1')
     entrada('f1', 'Factor de corrección F(1) de la bomba aerotérmica', 'F(1)', 0.03, '—', 'D5 · Ficha RES060 V1.1', 'Anexo IV, nota 2 (F(2) = 0 en aerotermia)')
-    if acs:
+    if acs and acs.get('litrosDia') is not None:
         entrada('ce', 'Calor específico del agua (ACS)', 'Ce', 0.001162, 'kWh/l·°C', 'Fórmula del catálogo (IND040/TER040/TER100)', 'Dacs = l/día · Ce · ΔT · 365')
         entrada('dt', 'Salto de temperatura del ACS (60 − 14)', 'ΔT', 46, '°C', 'Fórmula del catálogo (IND040/TER040/TER100)', 'ΔT = 60 − 14')
 
     # ---------- Cálculo: pasos ----------
     f0 = fila[0] + 1
-    seccion(ca, f0, '2 · CÁLCULO PASO A PASO')
-    cabecera(ca, f0 + 1, ['Nº', 'Concepto', 'Símbolo', 'Resultado', 'Unidad', 'Fórmula', 'Sustitución numérica'])
+    seccion(ca, f0, '2 · CÁLCULO PASO A PASO', 'I')
+    cabecera(ca, f0 + 1, ['Nº', 'Concepto', 'Símbolo', 'Resultado', 'Unidad', 'Fórmula', 'Sustitución numérica', 'Base (hoja Referencias)'])
     fila[0] = f0 + 2
     paso = {}
     n = [0]
@@ -128,7 +136,7 @@ def construir(caso):
             trozos.append(f'ROUND({p},4)' if p.startswith('$') or p.startswith('E') else f'"{p}"')
         return '=' + '&'.join(trozos) + f'&" = "&ROUND({res},1)'
 
-    def calc(clave, concepto, simbolo, formula, unidad, texto_formula, partes, resultado=False):
+    def calc(clave, concepto, simbolo, formula, unidad, texto_formula, partes, base='', resultado=False):
         f = fila[0]
         n[0] += 1
         celda(ca, f'B{f}', n[0])
@@ -138,33 +146,42 @@ def construir(caso):
         celda(ca, f'F{f}', unidad)
         celda(ca, f'G{f}', texto_formula)
         celda(ca, f'H{f}', sust(partes, f'E{f}'))
+        celda(ca, f'I{f}', base)
         paso[clave] = f'E{f}'
         fila[0] += 1
 
-    S, DC, EI, FF = ref['superficieM2'], ref['dcalKwhM2'], ref['etaI'], ref['cobertura']
-    calc('dcalS', 'Demanda anual de calefacción del edificio', 'Dcal·S', f'={DC}*{S}', 'kWh/año', 'Dcal × S', [DC, ' × ', S])
+    S, DC, EI = ref['superficieM2'], ref['dcalKwhM2'], ref['etaI']
+    if 'scal' in ref:
+        calc('f', 'Parte de la calefacción que cubría la caldera', 'f', f"={ref['scal']}/{S}", '—', 'S_cal ÷ S', [ref['scal'], ' / ', S], 'N2')
+        FF = paso['f']
+    else:
+        FF = ref['cobertura']
+    calc('dcalS', 'Demanda anual de calefacción del edificio', 'Dcal·S', f'={DC}*{S}', 'kWh/año', 'Dcal × S', [DC, ' × ', S], 'N1, N2')
     if acs:
-        calc('dacs', 'Demanda anual de ACS del edificio (fórmula del catálogo)', 'Dacs', f"={ref['litros']}*{ref['ce']}*{ref['dt']}*365", 'kWh/año', 'l/día × Ce × ΔT × 365', [ref['litros'], ' × ', ref['ce'], ' × ', ref['dt'], ' × 365'])
-    calc('dc', 'Demanda de calefacción cubierta por la caldera', 'Dc', f"={paso['dcalS']}*{FF}", 'kWh/año', 'Dcal·S × f', [paso['dcalS'], ' × ', FF])
+        if der:
+            calc('dacs', 'Demanda anual de ACS del edificio (derivada del CEE previo)', 'Dacs', f"={ref['epAcs']}/{ref['fEp']}*{ref['etaCert']}*{S}", 'kWh/año', 'EP_ACS ÷ f_EP × ηcert × S  (consumo final de ACS × rendimiento del certificado)', [ref['epAcs'], ' / ', ref['fEp'], ' × ', ref['etaCert'], ' × ', S], 'N2 (Dacs según el CEE previo)')
+        else:
+            calc('dacs', 'Demanda anual de ACS del edificio (fórmula del catálogo)', 'Dacs', f"={ref['litros']}*{ref['ce']}*{ref['dt']}*365", 'kWh/año', 'l/día × Ce × ΔT × 365', [ref['litros'], ' × ', ref['ce'], ' × ', ref['dt'], ' × 365'], 'Fórmula del catálogo')
+    calc('dc', 'Demanda de calefacción cubierta por la caldera', 'Dc', f"={paso['dcalS']}*{FF}", 'kWh/año', 'Dcal·S × f', [paso['dcalS'], ' × ', FF], 'N1')
     if acs:
-        calc('da', 'Demanda de ACS cubierta por la caldera', 'Da', f"={paso['dacs']}*{FF}", 'kWh/año', 'Dacs × f', [paso['dacs'], ' × ', FF])
-    calc('scop', 'SCOP de calefacción según Anexo IV', 'SCOP', f"={ref['cc']}*({ref['etaSh']}/100+{ref['f1']})", '—', 'CC × (ηs,h + F(1))', [ref['cc'], ' × (', ref['etaSh'], ' / 100 + ', ref['f1'], ')'])
+        calc('da', 'Demanda de ACS cubierta por la caldera', 'Da', f"={paso['dacs']}*{FF}", 'kWh/año', 'Dacs × f', [paso['dacs'], ' × ', FF], 'N1')
+    calc('scop', 'SCOP de calefacción según Anexo IV (todas las cifras significativas, sin recorte)', 'SCOP', f"={ref['cc']}*({ref['etaSh']}/100+{ref['f1']})", '—', 'CC × (ηs,h + F(1))', [ref['cc'], ' × (', ref['etaSh'], ' / 100 + ', ref['f1'], ')'], 'N4, N7')
     if acs:
         if acs['tipo'] == 'conjunto':
-            calc('scopdhw', 'SCOP de ACS según Anexo VI, caso 1 (conjunto del mismo fabricante)', 'SCOPdhw', f"={ref['cc']}*{ref['etaWh']}/100", '—', 'CC × ηwh', [ref['cc'], ' × ', ref['etaWh'], ' / 100'])
+            calc('scopdhw', 'SCOP de ACS según Anexo VI, caso 1 (conjunto del mismo fabricante)', 'SCOPdhw', f"={ref['cc']}*{ref['etaWh']}/100", '—', 'CC × ηwh', [ref['cc'], ' × ', ref['etaWh'], ' / 100'], 'N6')
         else:
-            calc('scopdhw', 'SCOP de ACS según Anexo VI, caso 3 (depósito no suministrado como conjunto)', 'SCOPdhw', f"={ref['cop']}*{ref['fc']}", '—', 'COP A7/W55 × FC', [ref['cop'], ' × ', ref['fc']])
-    calc('eci', 'Consumo de calefacción con la caldera retirada', 'Ec,i', f"={paso['dc']}/{EI}", 'kWh/año', 'Dc ÷ ηi', [paso['dc'], ' / ', EI])
-    calc('ecf', 'Consumo de calefacción con la bomba de calor', 'Ec,f', f"={paso['dc']}/{paso['scop']}", 'kWh/año', 'Dc ÷ SCOP', [paso['dc'], ' / ', paso['scop']])
-    calc('aecal', 'Ahorro anual en calefacción', 'AEcal', f"={paso['eci']}-{paso['ecf']}", 'kWh/año', 'Ec,i − Ec,f', [paso['eci'], ' − ', paso['ecf']])
+            calc('scopdhw', 'SCOP de ACS según Anexo VI, caso 3 (depósito no suministrado como conjunto)', 'SCOPdhw', f"={ref['cop']}*{ref['fc']}", '—', 'COP A7/W55 × FC', [ref['cop'], ' × ', ref['fc']], 'N6')
+    calc('eci', 'Consumo de calefacción con la caldera retirada', 'Ec,i', f"={paso['dc']}/{EI}", 'kWh/año', 'Dc ÷ ηi', [paso['dc'], ' / ', EI], 'N1, N9')
+    calc('ecf', 'Consumo de calefacción con la bomba de calor', 'Ec,f', f"={paso['dc']}/{paso['scop']}", 'kWh/año', 'Dc ÷ SCOP', [paso['dc'], ' / ', paso['scop']], 'N1')
+    calc('aecal', 'Ahorro anual en calefacción', 'AEcal', f"={paso['eci']}-{paso['ecf']}", 'kWh/año', 'Ec,i − Ec,f', [paso['eci'], ' − ', paso['ecf']], 'N1')
     if acs:
-        calc('eai', 'Consumo de ACS con la caldera retirada', 'Ea,i', f"={paso['da']}/{EI}", 'kWh/año', 'Da ÷ ηi', [paso['da'], ' / ', EI])
-        calc('eaf', 'Consumo de ACS con la bomba de calor', 'Ea,f', f"={paso['da']}/{paso['scopdhw']}", 'kWh/año', 'Da ÷ SCOPdhw', [paso['da'], ' / ', paso['scopdhw']])
-        calc('aeacs', 'Ahorro anual en ACS', 'AEacs', f"={paso['eai']}-{paso['eaf']}", 'kWh/año', 'Ea,i − Ea,f', [paso['eai'], ' − ', paso['eaf']])
-        calc('ae', 'Ahorro anual de energía final', 'AE', f"={ref['fp']}*({paso['aecal']}+{paso['aeacs']})", 'kWh/año', 'FP × (AEcal + AEacs)', [ref['fp'], ' × (', paso['aecal'], ' + ', paso['aeacs'], ')'])
+        calc('eai', 'Consumo de ACS con la caldera retirada', 'Ea,i', f"={paso['da']}/{EI}", 'kWh/año', 'Da ÷ ηi', [paso['da'], ' / ', EI], 'N1, N9')
+        calc('eaf', 'Consumo de ACS con la bomba de calor', 'Ea,f', f"={paso['da']}/{paso['scopdhw']}", 'kWh/año', 'Da ÷ SCOPdhw', [paso['da'], ' / ', paso['scopdhw']], 'N1')
+        calc('aeacs', 'Ahorro anual en ACS', 'AEacs', f"={paso['eai']}-{paso['eaf']}", 'kWh/año', 'Ea,i − Ea,f', [paso['eai'], ' − ', paso['eaf']], 'N1')
+        calc('ae', 'Ahorro anual de energía final', 'AE', f"={ref['fp']}*({paso['aecal']}+{paso['aeacs']})", 'kWh/año', 'FP × (AEcal + AEacs)', [ref['fp'], ' × (', paso['aecal'], ' + ', paso['aeacs'], ')'], 'N1')
     else:
-        calc('ae', 'Ahorro anual de energía final', 'AE', f"={ref['fp']}*{paso['aecal']}", 'kWh/año', 'FP × AEcal', [ref['fp'], ' × ', paso['aecal']])
-    calc('cae', 'Certificados de ahorro energético (1 CAE = 1 kWh)', 'CAE', f"=ROUND({paso['ae']},0)", 'CAE', 'CAE = AE (redondeado)', [paso['ae']], resultado=True)
+        calc('ae', 'Ahorro anual de energía final', 'AE', f"={ref['fp']}*{paso['aecal']}", 'kWh/año', 'FP × AEcal', [ref['fp'], ' × ', paso['aecal']], 'N1')
+    calc('cae', 'Certificados de ahorro energético (1 CAE = 1 kWh)', 'CAE', f"=ROUND({paso['ae']},0)", 'CAE', 'CAE = AE (redondeado)', [paso['ae']], 'N12', resultado=True)
 
     f = fila[0]
     ca[f'B{f}'] = ('Fórmula de la ficha: AE = FP · [ (Dcal · S) · (1/ηi − 1/SCOP)' + (' + Dacs · (1/ηi − 1/SCOPdhw)' if acs else '') + ' ] · f. '
@@ -184,7 +201,16 @@ def construir(caso):
     celda(ca, f'F{f + 2}', '%')
     celda(ca, f'G{f + 2}', 'El ahorro no puede superar el consumo que se evita (criterio 25-07.03)')
     celda(ca, f'H{f + 2}', f'=IF({paso["ae"]}<{consumo_previo},"Correcto: el ahorro es menor que el consumo previo","Revisar: el ahorro supera el consumo previo")')
-    anchos(ca, {'A': 2, 'B': 6, 'C': 52, 'D': 11, 'E': 14, 'F': 14, 'G': 46, 'H': 52})
+    if der and 'litros' in ref:
+        r2 = f + 3
+        celda(ca, f'B{r2}', 2)
+        celda(ca, f'C{r2}', 'Demanda de ACS: contraste con la fórmula del catálogo (l/día × Ce × ΔT × 365)')
+        celda(ca, f'D{r2}', '')
+        celda(ca, f'E{r2}', f"=({ref['litros']}*{ref['ce']}*{ref['dt']}*365-{paso['dacs']})/{paso['dacs']}", fmt='0.00%')
+        celda(ca, f'F{r2}', '%')
+        celda(ca, f'G{r2}', 'Diferencia entre la demanda de ACS del catálogo y la derivada del CEE (aviso si supera el 3 %)')
+        celda(ca, f'H{r2}', f'=IF(ABS(E{r2})<=0.03,"Correcto: diferencia dentro del 3 %","Aviso: diferencia superior al 3 %, revisar los datos de ACS")')
+    anchos(ca, {'A': 2, 'B': 6, 'C': 52, 'D': 11, 'E': 14, 'F': 14, 'G': 46, 'H': 52, 'I': 22})
 
     # ---------- Resumen ----------
     titulo(rs, 'B1', 'Certificados de Ahorro Energético (CAE) · Ficha RES060 V1.1', 16)

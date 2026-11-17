@@ -72,6 +72,9 @@ describe('calcularRES060', () => {
   it('con cobertura menor que 100 % deja constancia de dónde sale el dato', () => {
     expect(calcularRES060({ ...base, cobertura: 0.8341 }).hipotesis.join(' ')).toMatch(/cobertura/i);
   });
+  it('sin litros ni datos derivados no se puede calcular el ACS (error claro)', () => {
+    expect(() => calcularRES060({ ...base, acs: { tipo: 'conjunto', etaWh: 1.3 } })).toThrow(/litrosDia|derivado/);
+  });
   it('datos que faltan o no son números → error en español, no un 0 silencioso', () => {
     expect(() => calcularRES060({ ...base, superficieM2: undefined })).toThrow(/superficieM2/);
     expect(() => calcularRES060({ ...base, dcalKwhM2: '50' })).toThrow(/dcalKwhM2/);
@@ -85,5 +88,62 @@ describe('calcularRES060', () => {
     const r = calcularRES060({ ...base, etaI: 0.99, etaSH: 0.2 });
     expect(r.ae).toBeLessThan(0);
     expect(r.pendientes.join(' ')).toMatch(/negativ/i);
+  });
+});
+
+describe('Dacs derivado del CEE (método principal) y controles', () => {
+  // Datos del Caso 2 de José (Excel validado): sale 8.931 CAE
+  const caso2 = {
+    superficieM2: 90.69, dcalKwhM2: 76.57, etaI: 0.79, etaSH: 1.28, cobertura: 1,
+    acs: { tipo: 'conjunto', etaWh: 1.3, litrosDia: 112, derivado: { epAcsKwhM2: 42.38, factorEP: 1.179, etaCert: 0.724 } },
+  };
+  it('Dacs = EP_ACS ÷ f_EP × ηcert × S y reproduce el Caso 2 validado: 8.931', () => {
+    const r = calcularRES060(caso2);
+    expect(r.dacs).toBeCloseTo(2360.18, 1);
+    expect(r.dacsMetodo).toBe('derivado_cee');
+    expect(r.ae).toBe(8931);
+  });
+  it('control con la fórmula del catálogo: lo calcula y avisa si se separa más de un 3 %', () => {
+    const c = calcularRES060(caso2).controles.find((x) => x.id === 'dacs_catalogo');
+    expect(c.catalogoKwh).toBeCloseTo(112 * 19.50998, 2);
+    expect(c.diferenciaPct).toBeCloseTo(-7.42, 1);
+    expect(c.ok).toBe(false);
+    const cercano = calcularRES060({ ...caso2, acs: { ...caso2.acs, litrosDia: 121 } }).controles.find((x) => x.id === 'dacs_catalogo');
+    expect(cercano.ok).toBe(true);
+  });
+  it('sin litros no hay control de catálogo; solo con litros (sin derivado) se usa el catálogo', () => {
+    const { litrosDia: _l, ...sinLitros } = caso2.acs;
+    expect(calcularRES060({ ...caso2, acs: sinLitros }).controles.some((x) => x.id === 'dacs_catalogo')).toBe(false);
+    expect(calcularRES060({ ...caso2, acs: { tipo: 'conjunto', etaWh: 1.3, litrosDia: 112 } }).dacsMetodo).toBe('catalogo');
+  });
+  it('datos derivados mal escritos → error que dice cuál', () => {
+    expect(() => calcularRES060({ ...caso2, acs: { ...caso2.acs, derivado: { epAcsKwhM2: 42.38, etaCert: 0.724 } } })).toThrow(/factorEP/);
+    expect(() => calcularRES060({ ...caso2, acs: { ...caso2.acs, derivado: { epAcsKwhM2: 42.38, factorEP: 1.179, etaCert: 1.5 } } })).toThrow(/etaCert/);
+  });
+  it('control de límite físico: el ahorro es menor que el consumo previo', () => {
+    const c = calcularRES060(caso2).controles.find((x) => x.id === 'ahorro_vs_consumo');
+    expect(c.ok).toBe(true);
+    expect(c.valorPct).toBeGreaterThan(0);
+    expect(c.valorPct).toBeLessThan(100);
+  });
+});
+
+describe('SCOP con todos los decimales; el recorte solo se informa', () => {
+  // Caso 1 de José: solo calefacción, f = 126,45/151,6, validado 12.213 con SCOP recortado a 4,07
+  const caso1 = { superficieM2: 151.6, dcalKwhM2: 100.7, etaI: 0.83, etaSH: 1.6, superficieCubiertaM2: 126.45, acs: null };
+  it('calcula con el SCOP completo (4,075 → 12.217) y la cobertura sale de la superficie cubierta', () => {
+    const r = calcularRES060(caso1);
+    expect(r.scop).toBeCloseTo(4.075, 6);
+    expect(r.datos.cobertura).toBeCloseTo(126.45 / 151.6, 6);
+    expect(r.ae).toBe(12217);
+  });
+  it('informa de cuánto bajaría si el verificador recortara el SCOP a 2 decimales (12.213, −4)', () => {
+    const s = calcularRES060(caso1).sensibilidadRecorteScop;
+    expect(s.scopRecortado).toBeCloseTo(4.07, 6);
+    expect(s.ae).toBe(12213);
+    expect(s.diferencia).toBe(-4);
+  });
+  it('la superficie cubierta no puede ser mayor que la total', () => {
+    expect(() => calcularRES060({ ...caso1, superficieCubiertaM2: 200 })).toThrow(/superficieCubiertaM2/);
   });
 });

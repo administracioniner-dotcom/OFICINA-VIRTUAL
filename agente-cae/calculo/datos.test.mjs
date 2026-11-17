@@ -44,6 +44,12 @@ describe('siguientesPreguntas', () => {
     expect(ids({ unicoGenerador: 'si' }, 99)).not.toContain('cobertura');
     expect(ids({ unicoGenerador: 'no' }, 99)).toContain('cobertura');
   });
+  it('para el ACS derivado del CEE pide energía primaria de ACS, factor del combustible y rendimiento del certificado', () => {
+    expect(ids({ calderaDaAcs: 'si' }, 99)).toEqual(expect.arrayContaining(['epAcsKwhM2', 'factorEP', 'etaCert']));
+    expect(ids({ calderaDaAcs: 'no' }, 99)).not.toContain('epAcsKwhM2');
+    const f = PREGUNTAS.find((p) => p.id === 'factorEP');
+    expect(f.donde).toMatch(/no se inventa/i);
+  });
   it('ηwh si es conjunto; COP y factor de zona si el depósito va aparte', () => {
     const r = { calderaDaAcs: 'si' };
     expect(ids({ ...r, acsTipo: 'conjunto' }, 99)).toContain('etaWh');
@@ -67,7 +73,7 @@ describe('climaDeZona: solo lo que da la guía', () => {
 describe('aEntrada: de las respuestas al cálculo', () => {
   const completas = {
     superficieM2: '100', zonaClimatica: 'D3', dcalKwhM2: '50', combustible: 'gas', anioCaldera: '2005', condensacion: 'no', encendido: 'automatico',
-    calderaDaAcs: 'si', litrosDia: '100', unicoGenerador: 'si', temperaturaImpulsion: '55', etaSH: '1,78',
+    calderaDaAcs: 'si', litrosDia: '100', epAcsKwhM2: '18,89', factorEP: '1,179', etaCert: '0,648', unicoGenerador: 'si', temperaturaImpulsion: '55', etaSH: '1,78',
     acsTipo: 'deposito_aparte', copA7W55: '2,98', fcZona: '1,113', retiradaCaldera: 'si',
   };
   it('con todo contestado produce la entrada del calculador (ηi de la tabla B.3, coma decimal aceptada)', () => {
@@ -81,6 +87,15 @@ describe('aEntrada: de las respuestas al cálculo', () => {
   it('si la caldera no daba ACS, no hay término de ACS', () => {
     const { entrada } = aEntrada({ ...completas, calderaDaAcs: 'no' });
     expect(entrada.acs).toBeNull();
+  });
+  it('la entrada lleva el ACS derivado del CEE y los litros como control', () => {
+    const { entrada } = aEntrada(completas);
+    expect(entrada.acs.derivado).toEqual({ epAcsKwhM2: 18.89, factorEP: 1.179, etaCert: 0.648 });
+    expect(entrada.acs.litrosDia).toBe(100);
+    expect(calcularRES060(entrada).dacsMetodo).toBe('derivado_cee');
+  });
+  it('el rendimiento del certificado se acepta como 0,648 o como 64,8 %', () => {
+    expect(aEntrada({ ...completas, etaCert: '64,8' }).entrada.acs.derivado.etaCert).toBeCloseTo(0.648, 6);
   });
   it('la cobertura se escribe en % (83,41) y se convierte', () => {
     expect(aEntrada({ ...completas, unicoGenerador: 'no', cobertura: '83,41' }).entrada.cobertura).toBeCloseTo(0.8341, 6);
