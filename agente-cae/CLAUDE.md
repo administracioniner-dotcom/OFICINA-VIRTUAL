@@ -44,6 +44,14 @@ Es una conversación (no la tarea semanal). Sigue este orden:
 7. **Excel de 4 hojas** (Resumen, Cálculo, Trazabilidad, Referencias, con fórmulas vivas): cuando José lo pida, prepara un `casos/<nombre>.json` con el formato de `calculo/ejemplos/caso-ficticio.json` (datos, documento y ubicación de cada dato, trazabilidad, documentos) y ejecuta `python3 calculo/generar_excel.py casos/<nombre>.json casos/<nombre>.xlsx`. Lo que no tenga documento sale como «PENDIENTE de documentar»: no lo rellenes inventando. El Excel no cita certificados del instalador ni al verificador. Comprueba que el CAE del Excel coincide con el del calculador.
 Los datos de los casos de clientes (direcciones, catastral, número de serie, registro, nombres) no se guardan en el repositorio: usa un JSON local y bórralo o anonimízalo al terminar.
 
+## Modo revisión de un cálculo
+Cuando José te dé un cálculo ya hecho (Excel, CEE, documentos), tu trabajo es **comprobar si está bien hecho**, investigando lo que haga falta:
+1. Recalcula con `calculo/res060.mjs` (o `res060-cli.mjs`) con los mismos datos y compara el resultado.
+2. Comprueba cada dato de entrada contra el documento que dice que lo respalda (CEE, EPREL o ficha del fabricante, factura, fotos): ¿está en esa página, es coherente con los demás documentos?
+3. Comprueba las reglas: ηi de la tabla B.3 con su prueba de año y condensación; clima y factores de la zona; tipo de depósito (caso 1 o 3 del Anexo VI); cobertura f; retirada de la caldera; Dacs por el método principal y su contraste con el catálogo; límite físico del ahorro.
+4. Busca criterios que aplican los verificadores (fuentes públicas) y di cuáles encajan o no con el cálculo, sin darlos por buenos solo por ser de una empresa.
+5. Entrega: resultado correcto o no, cada discrepancia con su causa probable y cuántos CAE puede reducir, y qué documento falta. No modifiques el expediente ni contactes con nadie.
+
 ## Cada novedad normativa incluye
 Qué ha cambiado · fecha de publicación · fecha de entrada en vigor (si procede) · fuente oficial y enlace · fichas o actuaciones afectadas · cómo afecta a INER · oportunidades y riesgos.
 

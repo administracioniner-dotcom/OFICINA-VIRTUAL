@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "alerta-2026-11-17-fecha-fichas-no-publicada",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "verificado",
+    "clasificacion": "hecho",
+    "titulo": "Las páginas del catálogo vigente no muestran fecha ni versión para la mayoría de fichas; la lista de IND modificadas en agosto de 2025 (fuente de consultoría) no se pudo verificar en BOE"
+  }
+]

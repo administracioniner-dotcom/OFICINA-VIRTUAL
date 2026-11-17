@@ -1,1 +1,1328 @@
-[]
+[
+  {
+    "id": "ficha-res010",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES010",
+    "denominacion": "Rehabilitación envolvente térmica, superficie afectada >25 %",
+    "sector": "residencial",
+    "version": "v1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res011",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES011",
+    "denominacion": "Rehabilitación envolvente térmica >25 % (Canarias)",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res020",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES020",
+    "denominacion": "Rehabilitación parte opaca, superficie ≤25 %",
+    "sector": "residencial",
+    "version": "V1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res021",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES021",
+    "denominacion": "Rehabilitación parte opaca ≤25 % (Canarias)",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res022",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES022",
+    "denominacion": "Rehabilitación de buhardillas o desvanes no habitables",
+    "sector": "residencial",
+    "version": "V1.0",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res030",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES030",
+    "denominacion": "Instalación térmica y piscina con solar térmica",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res040",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES040",
+    "denominacion": "Sistema de automatización y control (BACS)",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res050",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES050",
+    "denominacion": "Frigoríficos de alta eficiencia",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res051",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES051",
+    "denominacion": "Frigorífico-congelador de alta eficiencia",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res052",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES052",
+    "denominacion": "Congelador de alta eficiencia",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res053",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES053",
+    "denominacion": "Lavadoras de alta eficiencia",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res054",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES054",
+    "denominacion": "Lavavajillas de alta eficiencia",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res060",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES060",
+    "denominacion": "Sustitución de caldera por bomba de calor",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res070",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES070",
+    "denominacion": "Renovación o sustitución de ventanas",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res071",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES071",
+    "denominacion": "Renovación o sustitución de ventanas (Canarias)",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res080",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES080",
+    "denominacion": "Rehabilitación profunda de edificios de viviendas",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res090",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES090",
+    "denominacion": "Hibridación paralela caldera/bomba de calor, zona A3-A4",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res091",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES091",
+    "denominacion": "Hibridación paralela, zona B3-B4",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res092",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES092",
+    "denominacion": "Hibridación paralela, zona C1-C4",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res093",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES093",
+    "denominacion": "Hibridación paralela, zona D1-D3",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res094",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES094",
+    "denominacion": "Hibridación paralela, zona E1",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res095",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES095",
+    "denominacion": "Hibridación alternativa, zona A3-A4",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res096",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES096",
+    "denominacion": "Hibridación alternativa, zona B3-B4",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res097",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES097",
+    "denominacion": "Hibridación alternativa, zona C1-C4",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res098",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES098",
+    "denominacion": "Hibridación alternativa, zona D1-D3",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res099",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES099",
+    "denominacion": "Hibridación alternativa, zona E1",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res210",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES210",
+    "denominacion": "Sustitución de calderas por conexión a red de calor",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res220",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES220",
+    "denominacion": "Ventilación mecánica de doble flujo con recuperación de calor",
+    "sector": "residencial",
+    "version": "v1.1",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res230",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "RES230",
+    "denominacion": "Ventilación mecánica de simple flujo higrorregulable",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind010",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND010",
+    "denominacion": "Mejora del aislamiento térmico de tuberías y superficies planas",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind020",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND020",
+    "denominacion": "Sustitución del refrigerante de una instalación frigorífica",
+    "sector": "industrial",
+    "version": "V1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind030",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND030",
+    "denominacion": "Sustitución de compresor en instalación frigorífica",
+    "sector": "industrial",
+    "version": "V1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind040",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND040",
+    "denominacion": "Sustitución de caldera de combustión por bomba de calor",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind050",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND050",
+    "denominacion": "Sustitución del alumbrado por LED",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind060",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND060",
+    "denominacion": "Sustitución de generador de climatización por bomba de calor",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind070",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND070",
+    "denominacion": "Sustitución de bomba de alta presión por bomba de pistones axiales",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind080",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND080",
+    "denominacion": "Instalación de cámara isobárica o intercambiador de presión (CIP)",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind081",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND081",
+    "denominacion": "Sustitución del recuperador, cámara isobárica o CIP",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind090",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND090",
+    "denominacion": "Sustitución de compresor de aire por otro más eficiente",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind110",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND110",
+    "denominacion": "Recuperación de calor de un compresor para calefacción",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind120",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND120",
+    "denominacion": "Sustitución de quemador modulante de caldera de gas",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind140",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND140",
+    "denominacion": "Planta enfriadora de procesos de alta eficiencia",
+    "sector": "industrial",
+    "version": "V1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind150",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND150",
+    "denominacion": "Central frigorífica de alta eficiencia con refrigeración directa",
+    "sector": "industrial",
+    "version": "V1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind160",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND160",
+    "denominacion": "Unidad condensadora de alta eficiencia",
+    "sector": "industrial",
+    "version": "V1.2",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind170",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND170",
+    "denominacion": "Sustitución de motores eléctricos de inducción",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind180",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND180",
+    "denominacion": "Sustitución de intercambiadores de calor para reducir la resistividad térmica",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind190",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND190",
+    "denominacion": "División de líneas de evaporación en instalación frigorífica centralizada",
+    "sector": "industrial",
+    "version": "V1.1",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind200",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND200",
+    "denominacion": "Economizadores o sistemas multietapa en instalación frigorífica",
+    "sector": "industrial",
+    "version": "V1.1",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind210",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND210",
+    "denominacion": "Reducción de la presión de condensación con tecnología más eficiente",
+    "sector": "industrial",
+    "version": "V1.1",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind220",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND220",
+    "denominacion": "Aumento de la presión de evaporación con tecnología más eficiente",
+    "sector": "industrial",
+    "version": "V1.1",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind230",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND230",
+    "denominacion": "Recuperación de calor de procesos exotérmicos para procesos endotérmicos",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind240",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND240",
+    "denominacion": "Implantación de variador de velocidad",
+    "sector": "industrial",
+    "version": "V1.1",
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind250",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND250",
+    "denominacion": "Sustitución de instalación térmica por solar térmica",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind260",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND260",
+    "denominacion": "Sustitución de un sistema de alimentación ininterrumpida (SAI)",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind270",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND270",
+    "denominacion": "Sustitución de transporte neumático de sólidos por transporte mecánico",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind280",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND280",
+    "denominacion": "Sustitución de bomba por otra más eficiente",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-ind290",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (industrial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/industria.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "codigo": "IND290",
+    "denominacion": "Recuperación de calor en circuito frigorífico",
+    "sector": "industrial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null
+  },
+  {
+    "id": "ficha-res010s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES010S",
+    "denominacion": "Ficha RES010S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res011s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES011S",
+    "denominacion": "Ficha RES011S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res020s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES020S",
+    "denominacion": "Ficha RES020S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res021s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES021S",
+    "denominacion": "Ficha RES021S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res030s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES030S",
+    "denominacion": "Ficha RES030S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res040s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES040S",
+    "denominacion": "Ficha RES040S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res050s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES050S",
+    "denominacion": "Ficha RES050S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res051s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES051S",
+    "denominacion": "Ficha RES051S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res052s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES052S",
+    "denominacion": "Ficha RES052S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res053s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES053S",
+    "denominacion": "Ficha RES053S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res054s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES054S",
+    "denominacion": "Ficha RES054S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res060s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES060S",
+    "denominacion": "Ficha RES060S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res070s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES070S",
+    "denominacion": "Ficha RES070S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res071s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES071S",
+    "denominacion": "Ficha RES071S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  },
+  {
+    "id": "ficha-res080s",
+    "fecha_consulta": "2026-11-17",
+    "fuente": {
+      "nombre": "MITECO - Catálogo vigente de fichas (residencial)",
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html",
+      "tipo": "oficial"
+    },
+    "fiabilidad": "no_confirmado",
+    "clasificacion": "hecho",
+    "codigo": "RES080S",
+    "denominacion": "Ficha RES080S (serie S, pobreza energética): denominación pendiente de leer del catálogo",
+    "sector": "residencial",
+    "version": null,
+    "fecha_ficha": null,
+    "nota": "La web de MITECO no publica la fecha de la ficha (fecha_ficha = null) ni, en la mayoría, su versión. Denominación resumida del listado, no del texto de la ficha. Texto de la ficha sin leer.",
+    "formula_oficial": null,
+    "programa": "pobreza_energetica_serie_S",
+    "nota_programa": "Codigo recogido del informe del agente (ejecucion del 2026-11-17); denominacion y programa sin leer en el catalogo. Verificar."
+  }
+]

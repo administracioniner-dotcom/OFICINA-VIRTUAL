@@ -8,7 +8,7 @@ Solo **normativa CAE** y **fichas de actuaciones estandarizadas** de los sectore
 ## Puntos de partida (direcciones dadas por José, copiadas de un expediente; no comprobadas desde la sesión de desarrollo)
 - Catálogo vigente de fichas residenciales: `https://www.miteco.gob.es/es/energia/eficiencia/cae/catalogo-de-fichas/catalogo-vigente-de-fichas/residencial.html` (busca la página equivalente del sector industrial dentro del mismo catálogo).
 - Ficha RES210, Anexo II (rendimiento de caldera sustituida): `https://www.miteco.gob.es/content/dam/miteco/es/energia/files-1/Eficiencia/CAE/catalogo-vigente/fichas-autocompletables/residencial/Ficha%20RES210_Anexo%20II.pdf`
-- «Criterios de verificación del Sistema CAE» (José cita la v14.0): búscala en el portal CAE de MITECO y apunta la versión y la fecha vigentes.
+- Criterios de los verificadores: no hay un documento único (cada verificador aplica los suyos). Si encuentras criterios publicados por MITECO o por verificadores, regístralos en `verificadores.json` con su fuente y fecha, **sin darlos por válidos solo porque los aplique una empresa**. No es obligatorio encontrarlos.
 Si una dirección no funciona, dilo en el informe y busca la vigente.
 
 ## Pasos

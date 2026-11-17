@@ -1,1 +1,90 @@
-[]
+[
+  {
+    "id": "normativa-2024-07-03-res-actualiza-anexo-i-ted-845-2023",
+    "fecha_consulta": "2026-11-17",
+    "fiabilidad": "verificado",
+    "clasificacion": "hecho",
+    "fuente": {
+      "nombre": "BOE",
+      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14816",
+      "tipo": "oficial"
+    },
+    "titulo": "Resolución de 3 de julio de 2024, de la DG de Planificación y Coordinación Energética, por la que se actualiza el Anexo I de la Orden TED/845/2023 (catálogo consolidado de fichas)",
+    "estado": "aprobada",
+    "fecha_publicacion": "2024-07-18",
+    "entrada_en_vigor": "2024-07-18",
+    "afecta_a": [
+      "catálogo de fichas",
+      "RES",
+      "IND"
+    ],
+    "impacto_iner": "Catálogo consolidado base. Exige firma del responsable legal del sujeto obligado/delegado, permite una ficha para actuaciones replicables con informe de replicabilidad (límite: una CCAA, mismo año) y la clasificación sectorial no depende del CNAE del propietario del ahorro. Periodo transitorio de 3 meses. (BOE núm. 173, BOE-A-2024-14816; leído solo hasta el carácter 100000 de 164485.)",
+    "oportunidades_riesgos": "Posibilidad de usar fichas de otro sector si no hay equivalente. Riesgo: confirmar en el texto completo los requisitos antes de aplicarlos."
+  },
+  {
+    "id": "normativa-2026-07-30-res-actualiza-parcial-anexo-i-ted-845-2023",
+    "fecha_consulta": "2026-11-17",
+    "fiabilidad": "verificado",
+    "clasificacion": "hecho",
+    "fuente": {
+      "nombre": "BOE",
+      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-16993",
+      "tipo": "oficial"
+    },
+    "titulo": "Resolución de 30 de julio de 2026, de la DG de Planificación y Coordinación Energética, por la que se actualiza parcialmente el Anexo I de la Orden TED/845/2023",
+    "estado": "aprobada",
+    "fecha_publicacion": "2026-08-04",
+    "entrada_en_vigor": "2026-08-04",
+    "afecta_a": [
+      "TRA020",
+      "TRA040",
+      "TRA050.P",
+      "TRA050.E"
+    ],
+    "impacto_iner": "Solo afecta a fichas de transporte (fuera de alcance residencial/industrial). No menciona fichas RES ni IND. Periodo transitorio de 4 meses desde el 5-08-2026, ampliado hasta el 1-02-2027 por Resolución de 4-11-2026 (BOE-A-2026-23657, no leída directamente). Las fichas pasan a ser de solo lectura con hoja de cálculo del Coordinador Nacional.",
+    "oportunidades_riesgos": "Sin impacto directo en RES/IND. Vigilar si el cambio de mecánica (hoja de cálculo del Coordinador) llega a otros sectores."
+  },
+  {
+    "id": "normativa-2026-09-16-res-correccion-errores-20260730",
+    "fecha_consulta": "2026-11-17",
+    "fiabilidad": "verificado",
+    "clasificacion": "hecho",
+    "fuente": {
+      "nombre": "BOE",
+      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20135",
+      "tipo": "oficial"
+    },
+    "titulo": "Resolución de 16 de septiembre de 2026, de la DG de Planificación y Coordinación Energética, de corrección de errores de la Resolución de 30 de julio de 2026",
+    "estado": "aprobada",
+    "fecha_publicacion": "2026-09-28",
+    "entrada_en_vigor": "2026-09-28",
+    "afecta_a": [
+      "TRA040",
+      "TRA050.P",
+      "TRA050.E"
+    ],
+    "impacto_iner": "Corrige solo fichas de transporte. No afecta a RES ni IND.",
+    "oportunidades_riesgos": "Ninguna para el alcance de INER."
+  },
+  {
+    "id": "normativa-2026-consulta-snoee-ventas-consumos-energia-final",
+    "fecha_consulta": "2026-11-17",
+    "fiabilidad": "referencia_publica",
+    "clasificacion": "hecho",
+    "fuente": {
+      "nombre": "MITECO - Participación pública K-848",
+      "url": "https://www.miteco.gob.es/es/energia/participacion/2026/detalle-participacion-publica-k-848.html",
+      "tipo": "oficial"
+    },
+    "titulo": "Propuesta de resolución sobre ventas, suministros y consumos de energía final computables para la obligación de ahorro (SNOEE), que modifica la Resolución de 23-12-2024 por el RDL 7/2026",
+    "estado": "consulta_publica",
+    "fecha_publicacion": null,
+    "entrada_en_vigor": null,
+    "afecta_a": [
+      "SNOEE",
+      "sujetos obligados"
+    ],
+    "impacto_iner": "Afecta a cómo se calcula la obligación anual de ahorro de los sujetos obligados (posible efecto indirecto en demanda de CAE). La página no menciona CAE ni fichas.",
+    "oportunidades_riesgos": "Es una propuesta, NO normativa aprobada. Plazo 31-07-2026 a 11-09-2026; la web la marca «Cerrado». Hay que vigilar la resolución definitiva."
+  }
+]
