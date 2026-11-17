@@ -29,3 +29,7 @@
 - Cada resultado enseña datos de entrada, hipótesis, fórmula, resultado, pendientes por confirmar, documentación necesaria y riesgos de reducción.
 - No mezclar el borrador RES060FC con la V1.1.
 - Si el ahorro sale negativo, el resultado lo avisa como no presentable.
+
+## Cuestionario guiado
+`datos.mjs` define las preguntas que hay que hacer (con el origen de cada dato y cuándo aplican) y `res060-cli.mjs` las usa: pregunta solo lo que falta y calcula cuando está todo. Los números se aceptan con coma o punto.
+Zonas con clima conocido por la guía: B4 y D3 → cálido, E1 → medio; para otras hay que consultar la tabla del Anexo III. Factores de zona del SCOPdhw conocidos: D3 = 1,113, E1 = 1,056; para otros, leer la ficha.

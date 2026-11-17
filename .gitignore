@@ -7,3 +7,4 @@ capturas
 agente-cae/informes/*
 !agente-cae/informes/.gitkeep
 agente-cae/referencias/
+agente-cae/respuestas-*.json
