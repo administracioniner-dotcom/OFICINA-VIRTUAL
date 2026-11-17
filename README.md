@@ -32,6 +32,9 @@ npm test           # pruebas del plano, texturas y cámara
 ## Agentes reales (Claude Code)
 **＋ Nuevo agente** → «Real» → en su ficha, **Conectar a Claude Code** (guía: `docs/conectar-claude-code.md`). Prueba en navegador: `npm run build && node scripts/verificar-claude-code.mjs`.
 
+## Agente CAE (en preparación)
+Carpeta `agente-cae/`: instrucciones del agente (`CLAUDE.md`), formato de su base de conocimiento (`FORMATO.md`) y validador (`node agente-cae/validar.mjs`). Fase 1 hecha (estructura, sin investigar). Se ejecutará los miércoles a las 23:00.
+
 ## Comprobaciones (`scripts/captura.mjs`)
 Con `npm run build` hecho: `node scripts/captura.mjs prefijo` genera capturas en `capturas/` y mide fotogramas. Usa el Playwright que ya trae el entorno de desarrollo; no es dependencia del proyecto.
 

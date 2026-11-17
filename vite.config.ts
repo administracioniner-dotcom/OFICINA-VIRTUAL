@@ -10,5 +10,5 @@ export default defineConfig({
   // fs.deny: la clave del puente (.oficina) nunca se sirve a ninguna web.
   server: { host: '127.0.0.1', port: 5173, strictPort: true, fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/.oficina/**'] } },
   preview: { host: '127.0.0.1' },
-  test: { environment: 'node', include: ['src/**/*.test.ts'] },
+  test: { environment: 'node', include: ['src/**/*.test.ts', 'agente-cae/**/*.test.mjs'] },
 });

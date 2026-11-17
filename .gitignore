@@ -4,3 +4,5 @@ capturas
 .superpowers
 *.log
 .oficina
+agente-cae/informes/*
+!agente-cae/informes/.gitkeep
