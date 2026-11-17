@@ -20,7 +20,7 @@ La carpeta `casos/` no se sube a GitHub. Sin probar en Windows.
 ## Conectar con la oficina virtual
 1. Abre la oficina con `iniciar.bat` (la de la carpeta principal) y déjala abierta.
 2. Haz clic en el agente del departamento **CAE** → **Editar** → ponle de nombre **Agente CAE** y marca **«Real: lo mueve un Claude Code mío»** → Guardar.
-3. En `agente-cae`, doble clic en **`conectar-oficina.bat`**. Crea `.claude\settings.json` con los hooks (usa la ruta de tu carpeta, por eso no se sube a GitHub). Si el agente se llama de otra forma: `node conectar-oficina.mjs "Otro nombre"`.
+3. En `agente-cae`, doble clic en **`conectar-oficina.bat`**. Te pregunta el nombre del agente (Intro = «Agente CAE»): escribe **exactamente el mismo** que le pusiste en la oficina. Crea `.claude\settings.json` con los hooks (usa la ruta de tu carpeta, por eso no se sube a GitHub). Si cambias el nombre del agente en la oficina, vuelve a ejecutarlo.
 4. Lanza `ejecutar-semanal.bat` (o espera al miércoles 23:00 con la oficina abierta). Verás al agente trabajar y, en su ficha, las tareas, la actividad y **«Base de conocimiento CAE»** (fichas, normativa, alertas, oportunidades, último informe; se actualiza cada 30 s).
 
 Qué se envía a la oficina: estado, herramienta usada (primera palabra de comandos o nombre de fichero; de las páginas web solo «Consulta la web»), la orden recortada a 80 caracteres y solo a este ordenador. El panel lee solo recuentos y títulos cortos de `conocimiento/` e `informes/`, nunca fórmulas ni contenido de fichas.
