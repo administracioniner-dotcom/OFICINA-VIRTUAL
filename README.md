@@ -9,6 +9,9 @@ Oficina virtual 2D en pixel art para INER SMART, de **uso personal** (en tu prop
 
 **Tus agentes se guardan en el navegador**, ligados a la dirección `localhost:5173`: ábrela siempre con `iniciar.bat` y en el mismo navegador. Si borras los datos del sitio, la lista vuelve a los 9 agentes de ejemplo.
 
+## Actualizar (si la carpeta se bajó con `git clone`)
+Doble clic en `actualizar.bat`: baja las novedades de GitHub y reinstala lo necesario. Después, cierra y abre la oficina con `iniciar.bat`.
+
 ## Crear y gestionar agentes
 - **＋ Nuevo agente** (arriba a la izquierda): nombre, puesto de trabajo libre, chico o chica y aspecto.
 - Clic en un agente → su ficha, con **Editar** y **Quitar**.
