@@ -41,6 +41,7 @@ Es una conversación (no la tarea semanal). Sigue este orden:
 4. Con todo contestado, el comando calcula. Enseña a José el resultado con datos, hipótesis, pendientes, documentación y riesgos de reducción, y distingue «estimación comercial» de «cálculo técnicamente justificable».
 5. EPREL: pide a José el enlace o el id del producto; no eludas bloqueos de la web.
 6. Los CAE finales, el Excel y cualquier comparación con certificados ya emitidos se tratan con José en el chat. Nunca contactes con nadie ni presentes nada.
+7. **Excel de 4 hojas** (Resumen, Cálculo, Trazabilidad, Referencias, con fórmulas vivas): cuando José lo pida, prepara un `casos/<nombre>.json` con el formato de `calculo/ejemplos/caso-ficticio.json` (datos, documento y ubicación de cada dato, trazabilidad, documentos) y ejecuta `python3 calculo/generar_excel.py casos/<nombre>.json casos/<nombre>.xlsx`. Lo que no tenga documento sale como «PENDIENTE de documentar»: no lo rellenes inventando. El Excel no cita certificados del instalador ni al verificador. Comprueba que el CAE del Excel coincide con el del calculador.
 Los datos de los casos de clientes (direcciones, catastral, número de serie, registro, nombres) no se guardan en el repositorio: usa un JSON local y bórralo o anonimízalo al terminar.
 
 ## Cada novedad normativa incluye

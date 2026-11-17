@@ -1,0 +1,28 @@
+{
+  "caso": "Caso de ejemplo (ficticio)",
+  "subtitulo": "Sustitución de caldera de gas por bomba de calor aerotérmica (calefacción y ACS)",
+  "identificacion": [
+    ["Emplazamiento", "Vivienda de ejemplo (dato ficticio) · zona climática D3"],
+    ["Referencia catastral", "(anonimizada)"],
+    ["Actuación", "Retirada de la caldera de gas e instalación de bomba de calor aerotérmica con depósito de ACS aparte"],
+    ["Certificado de eficiencia energética previo", "CE3X · (fechas anonimizadas)"],
+    ["Servicio y método", "Calefacción y ACS · ficha RES060 V1.1 · sin efecto multiplicador"]
+  ],
+  "datos": {
+    "superficieM2": 100, "dcalKwhM2": 50, "etaI": 0.73, "cobertura": 1,
+    "zona": "D3", "clima": "cálido", "temperaturaImpulsion": 55, "etaShPorcentaje": 178,
+    "acs": { "tipo": "deposito_aparte", "litrosDia": 100, "copA7W55": 2.98, "fcZona": 1.113 }
+  },
+  "origen": {
+    "superficieM2": { "doc": "D1 · Certificado previo", "ubicacion": "p. 2 · Superficie habitable" },
+    "dcalKwhM2": { "doc": "D1 · Certificado previo", "ubicacion": "Anexo III · situación original (0 % de ahorro)" },
+    "etaI": { "doc": "D6 · Criterio 24/11.03 + D7 · RES210 Anexo II", "ubicacion": "Tabla B.3: gas, sin condensación, encendido automático = 73 %" }
+  },
+  "documentos": [
+    { "cod": "D1", "doc": "Certificado de eficiencia energética previo (CE3X)", "emisor": "(anonimizado)", "ident": "(anonimizado)", "datos": "S, Dcal, zona, generador, ACS" },
+    { "cod": "D3", "doc": "Catálogo del fabricante · datos técnicos del modelo", "emisor": "Fabricante", "ident": "(enlace)", "datos": "ηs,h, COP A7/W55" }
+  ],
+  "trazabilidad": [
+    { "dato": "Superficie útil habitable (S)", "valor": "100 m²", "doc": "D1", "ubicacion": "p. 2", "comprobacion": "Coincide con el certificado posterior.", "observaciones": "" }
+  ]
+}

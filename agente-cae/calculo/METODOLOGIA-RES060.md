@@ -8,7 +8,7 @@
 - FP = 1; **1 CAE = 1 kWh/año** (se redondea al entero). CC = 2,5. F(1) = 3 %. F(2) = 0.
 - **SCOP = CC·(ηs,h + F1)** = 2,5·(ηs,h + 0,03).
 - **SCOPdhw:** bomba y depósito del mismo fabricante (Anexo VI, caso 1) → 2,5·ηwh; depósito aparte (Anexo VI, caso 3) → COP(A7/W55) × factor de la zona.
-- **Dacs = litros/día · 19,50998** (= 0,001162 · 46 · 365). Sin ACS en la caldera se omite ese término.
+- **Dacs = litros/día · 19,50998** (método elegido por José, 17/11/2026: es el que usa el verificador según la guía; con él se reproduce el caso 3 validado, 43.780 CAE con clima medio) (= 0,001162 · 46 · 365). Sin ACS en la caldera se omite ese término.
 - **f:** 100 % si la caldera era el único generador; si no, la «demanda cubierta» del CE3X.
 - Fuera de alcance: efecto multiplicador, Ceuta, Melilla y Canarias.
 
@@ -33,3 +33,7 @@
 ## Cuestionario guiado
 `datos.mjs` define las preguntas que hay que hacer (con el origen de cada dato y cuándo aplican) y `res060-cli.mjs` las usa: pregunta solo lo que falta y calcula cuando está todo. Los números se aceptan con coma o punto.
 Zonas con clima conocido por la guía: B4 y D3 → cálido, E1 → medio; para otras hay que consultar la tabla del Anexo III. Factores de zona del SCOPdhw conocidos: D3 = 1,113, E1 = 1,056; para otros, leer la ficha.
+
+## Excel de la estimación
+`generar_excel.py` crea el Excel de 4 hojas con fórmulas vivas a partir de un JSON de caso (ver `ejemplos/caso-ficticio.json`). Se comprueba con LibreOffice (recalcula y compara con el calculador). Los casos reales van en `agente-cae/casos/` (git lo ignora). Necesita Python 3 con `openpyxl`; para recalcular, LibreOffice.
+Con los datos del caso 3 de José (clima cálido, método de Dacs del catálogo) sale 46.378 CAE; su Excel, que deriva Dacs del CEE, da 46.399 (21 de diferencia por ese único dato).

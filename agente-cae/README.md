@@ -11,3 +11,8 @@ Solo puede buscar/leer en la web, leer y escribir en esta carpeta y ejecutar `no
 
 ## Sin probar todavía
 Todo esto está preparado pero **no probado en Windows real ni con Claude Code real**: desde la sesión de desarrollo no hay acceso a MITECO ni al BOE. La primera ejecución a mano (paso 2) es la prueba; si falla, mira el `.log`.
+
+## Excel de una estimación RES060
+Necesita Python 3 con `openpyxl` (`pip install openpyxl`). Con un fichero de caso en `casos/` (ver `calculo/ejemplos/caso-ficticio.json`):
+`python3 calculo/generar_excel.py casos/mi-caso.json casos/mi-caso.xlsx`
+La carpeta `casos/` no se sube a GitHub. Sin probar en Windows.
